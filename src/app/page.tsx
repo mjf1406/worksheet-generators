@@ -1,4 +1,4 @@
-import TopNav from "~/components/navigation/TopNav";
+import MainNav from "~/components/navigation/MainNav";
 import {
   Accordion,
   AccordionContent,
@@ -9,8 +9,8 @@ import {
 export default function HomePage() {
   return (
     <>
-      <TopNav />
-      <main className="bg-background text-foreground flex min-h-screen flex-col items-center justify-center gap-32 p-5">
+      <MainNav />
+      <main className="flex min-h-screen flex-col items-center justify-center gap-32 bg-background p-5 text-foreground">
         <div
           id="hero"
           className="container flex h-dvh flex-col items-center justify-center gap-12 px-4 py-16"
