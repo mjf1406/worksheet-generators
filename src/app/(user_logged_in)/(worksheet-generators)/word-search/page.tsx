@@ -11,9 +11,9 @@ import {
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 
-export default function UsersPage() {
+export default function WordSearchPage() {
   return (
-    <ContentLayout title="Users">
+    <ContentLayout title="Word Search">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -23,13 +23,7 @@ export default function UsersPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/dashboard">Dashboard</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Users</BreadcrumbPage>
+            <BreadcrumbPage>Word Search</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

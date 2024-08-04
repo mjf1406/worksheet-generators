@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { PanelsTopLeft } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 import { useStore } from "~/hooks/use-store";
@@ -7,6 +6,8 @@ import { Button } from "~/components/ui/button";
 import { Menu } from "~/components/admin-panel/menu";
 import { useSidebarToggle } from "~/hooks/use-sidebar-toggle";
 import { SidebarToggle } from "~/components/admin-panel/sidebar-toggle";
+import { APP_NAME } from "~/lib/constants";
+import Logo from "../brand/Logo";
 
 export function Sidebar() {
   const sidebar = useStore(useSidebarToggle, (state) => state);
@@ -30,8 +31,8 @@ export function Sidebar() {
           variant="link"
           asChild
         >
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <PanelsTopLeft className="mr-1 h-6 w-6" />
+          <Link href="/" className="flex items-center gap-2">
+            <Logo fill="hsl(var(--primary))" size="25" />
             <h1
               className={cn(
                 "whitespace-nowrap text-lg font-bold transition-[transform,opacity,display] duration-300 ease-in-out",
@@ -40,7 +41,7 @@ export function Sidebar() {
                   : "translate-x-0 opacity-100",
               )}
             >
-              Brand
+              {APP_NAME}
             </h1>
           </Link>
         </Button>

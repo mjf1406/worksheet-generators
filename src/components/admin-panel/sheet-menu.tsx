@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MenuIcon, PanelsTopLeft } from "lucide-react";
+import { MenuIcon } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
 import { Menu } from "~/components/admin-panel/menu";
@@ -9,6 +9,8 @@ import {
   SheetContent,
   SheetTrigger,
 } from "~/components/ui/sheet";
+import { APP_NAME } from "~/lib/constants";
+import Logo from "../brand/Logo";
 
 export function SheetMenu() {
   return (
@@ -25,9 +27,9 @@ export function SheetMenu() {
             variant="link"
             asChild
           >
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <PanelsTopLeft className="mr-1 h-6 w-6" />
-              <h1 className="text-lg font-bold">Brand</h1>
+            <Link href="/" className="flex items-center gap-2">
+              <Logo fill="hsl(var(--primary))" size="25" />
+              <h1 className="text-lg font-bold">{APP_NAME}</h1>
             </Link>
           </Button>
         </SheetHeader>

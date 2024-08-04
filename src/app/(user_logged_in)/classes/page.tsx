@@ -11,9 +11,9 @@ import {
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 
-export default function TagsPage() {
+export default function ClassesPage() {
   return (
-    <ContentLayout title="Tags">
+    <ContentLayout title="Classes">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -23,13 +23,7 @@ export default function TagsPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/dashboard">Dashboard</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Tags</BreadcrumbPage>
+            <BreadcrumbPage>Classes</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

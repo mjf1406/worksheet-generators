@@ -66,3 +66,7 @@ This is the collection of worksheet generators that I have created as I needed t
     - settings
 
 ## Change Log
+
+2024/08/04
+
+- UI: sidebar nav is used when a user is logged in
