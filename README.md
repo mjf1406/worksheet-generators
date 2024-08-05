@@ -55,6 +55,7 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ## Change Log
 
+<<<<<<< HEAD
 2024/08/05
 
 - added: user can now edit groups
@@ -63,6 +64,8 @@ This is the collection of worksheet generators that I have created as I needed t
 - UX: groups are now displayed on the `[classId]`
 - added: user can add a class
 
+=======
+>>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
 2024/08/04
 
 - UI: sidebar nav is used when a user is logged in

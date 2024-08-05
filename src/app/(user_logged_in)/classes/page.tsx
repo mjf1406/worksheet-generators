@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 "use client";
 
 import NewClassDialog from "./components/NewClassDialog";
 import ClassList from "./components/ClassList";
 import Link from "next/link";
+=======
+import Link from "next/link";
+
+import PlaceholderContent from "~/components/demo/placeholder-content";
+>>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
 import { ContentLayout } from "~/components/admin-panel/content-layout";
 import {
   Breadcrumb,
@@ -12,6 +18,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
+<<<<<<< HEAD
 import { Button } from "~/components/ui/button";
 import { useState } from "react";
 import addDemoClasses from "~/server/actions/addDemoClasses";
@@ -29,6 +36,12 @@ export default function MyClassesPage() {
 
   return (
     <ContentLayout title="My Classes">
+=======
+
+export default function ClassesPage() {
+  return (
+    <ContentLayout title="Classes">
+>>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -38,6 +51,7 @@ export default function MyClassesPage() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
+<<<<<<< HEAD
             <BreadcrumbPage>My Classes</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
@@ -59,6 +73,13 @@ export default function MyClassesPage() {
         </div>
         <ClassList />
       </div>
+=======
+            <BreadcrumbPage>Classes</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <PlaceholderContent />
+>>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
     </ContentLayout>
   );
 }
