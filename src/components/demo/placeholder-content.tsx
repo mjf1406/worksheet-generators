@@ -10,8 +10,8 @@ export default function PlaceholderContent() {
         <div className="flex min-h-[calc(100vh-56px-64px-20px-24px-56px-48px)] items-center justify-center">
           <div className="relative flex flex-col">
             <Image
-              src="/placeholder.png"
-              alt="Placeholder Image"
+              src="/under-construction.webp"
+              alt="Under Construction"
               width={500}
               height={500}
               priority
@@ -21,7 +21,7 @@ export default function PlaceholderContent() {
                 href="https://www.freepik.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs text-muted-foreground"
+                className="text-xs text-muted-foreground underline hover:opacity-50"
               >
                 Designed by Freepik
               </Link>

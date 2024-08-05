@@ -1,6 +1,6 @@
 import { ModeToggle } from "~/components/mode-toggle";
-import { UserNav } from "~/components/admin-panel/user-nav";
 import { SheetMenu } from "~/components/admin-panel/sheet-menu";
+import { SignedIn, UserButton } from "@clerk/nextjs";
 
 interface NavbarProps {
   title: string;
@@ -15,8 +15,16 @@ export function Navbar({ title }: NavbarProps) {
           <h1 className="font-bold">{title}</h1>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
-          <ModeToggle />
-          <UserNav />
+          <div className="grid grid-cols-2 gap-2">
+            <div className="col-span-1">
+              <ModeToggle />
+            </div>
+            <div className="col-span-1">
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </div>
+          </div>
         </div>
       </div>
     </header>

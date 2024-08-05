@@ -75,7 +75,7 @@ html {
 /* Clerk Modifiecations */
 
 .cl-formButtonPrimary {
-  @apply bg-primary text-background transform-none text-xs;
+  @apply transform-none bg-primary text-xs text-background;
 }
 
 .cl-formButtonPrimary:hover,
@@ -99,4 +99,37 @@ html {
 
 .cl-internal-b3fm6y {
   @apply bg-secondary text-foreground;
+}
+
+.text-2xs {
+  font-size: 0.6rem; /* 10px */
+  line-height: 0.9rem; /* 14px */
+}
+.text-3xs {
+  font-size: 0.5rem; /* 8px */
+  line-height: 0.9rem; /* 10px */
+}
+.text-4xs {
+  font-size: 0.4rem; /* px */
+  line-height: 0.8rem; /* px */
+}
+.text-5xs {
+  font-size: 0.3rem; /* px */
+  line-height: 0.7rem; /* px */
+}
+.text-10xl {
+  font-size: 10rem; /* 160px */
+  line-height: 1; /* 16px */
+}
+.text-11xl {
+  font-size: 12rem; /* 192px */
+  line-height: 1; /* 16px */
+}
+.text-12xl {
+  font-size: 14rem; /* 224px */
+  line-height: 1; /* 16px */
+}
+.text-13xl {
+  font-size: 16rem; /* 256px */
+  line-height: 1; /* 16px */
 }

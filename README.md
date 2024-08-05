@@ -12,24 +12,15 @@ This is the collection of worksheet generators that I have created as I needed t
   - [WordsAPI](https://www.wordsapi.com/)
 -
 
-### p1
+### p2
 
 - integrate Google Gemini API (because it's the only one that's free)
 - integrate other models and let the user purchase tokens
   - Stripe
 - tool: text scaffolder (duplicates [this](https://www.magicschool.ai/tools/text-scaffolder-tool). This tool only outputs vocabulary and questions, it does NOT scaffold.)
 
-### p0
+### p1
 
-- pages
-  - account
-  - settings
-  - tools (lists all tools with a short description)
-  - worksheets (lists all worksheets with a short description)
-  - classes
-- added: user can add a class
-  - added: user is asked to assign each student a reading level by grade
-- added: user can assign students to various groups
 - worksheet: word search
 - worksheet: scramble words
 - worksheet: cloze
@@ -56,13 +47,22 @@ This is the collection of worksheet generators that I have created as I needed t
   - team
   - shuffle students (duplicates [Shuffle](https://mjf1406.github.io/various-classroom-tools/))
     - ensuring each student goes first and last before allowing anyone to go first or last again
-- nav: hamburger nav with sections for
-  - top aligned
-    - classes
-    - tools
-    - worksheets
-  - bottom aligned
-    - account
-    - settings
+
+### p0
+
+- UX: user can add student(s) to an existing class
+- UX: user can edit existing students (in the table?)
 
 ## Change Log
+
+2024/08/05
+
+- added: user can now edit groups
+- UI: My Classes page works
+- added: user can now create groups within classes
+- UX: groups are now displayed on the `[classId]`
+- added: user can add a class
+
+2024/08/04
+
+- UI: sidebar nav is used when a user is logged in
