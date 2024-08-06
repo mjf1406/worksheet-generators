@@ -1,7 +1,7 @@
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import { google, type classroom_v1 } from 'googleapis';
 import { type NextRequest, NextResponse } from 'next/server';
-
+export const dynamic = 'force-dynamic'
 async function fetchStudents(classroomClient: classroom_v1.Classroom, courseId: string) {
   try {
     const res = await classroomClient.courses.students.list({

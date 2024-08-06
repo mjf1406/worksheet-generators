@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { getClasses } from '~/server/db/functions/classes'; // Adjust this path to where your database functions are stored
 import { auth } from '@clerk/nextjs/server';
 import type { TeacherCourse } from "~/server/db/types";
-
+export const dynamic = 'force-dynamic'
 type Data = {
   classes: {
     class_id: string;

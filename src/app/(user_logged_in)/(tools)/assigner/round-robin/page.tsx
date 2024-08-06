@@ -9,7 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 
-export default function AssignerPage() {
+export default function RoundrobinAssignerPage() {
   return (
     <ContentLayout title="Assigner">
       <Breadcrumb>

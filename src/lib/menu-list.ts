@@ -19,6 +19,7 @@ type Submenu = {
   href: string;
   label: string;
   active: boolean;
+  under_construction: boolean;
 };
 
 type Menu = {
@@ -73,12 +74,25 @@ export function getMenuList(pathname: string): Group[] {
       menus: [
         {
           href: "/assigner",
-          label: "Assigner",
+          label: "Assigners",
           active: pathname.includes("/assigner"),
           icon: Signpost,
 
           under_construction: false,
-          submenus: []
+          submenus: [
+            {
+              href: "/assigner/round-robin",
+              label: "Round-robin",
+              active: pathname.includes("/assigner/round-robin"),
+              under_construction: false,
+            },
+            {
+              href: "/assigner/random",
+              label: "Random",
+              active: pathname.includes("/assigner/random"),
+              under_construction: false,
+            },
+          ]
         },
         {
           href: "/random-event",

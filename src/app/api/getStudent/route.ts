@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { getStudent } from '~/server/actions/getStudentById'
-
+export const dynamic = 'force-dynamic'
 // This is the GET handler for the '/api/classes' endpoint
 export async function GET(req: NextRequest) {
   try {

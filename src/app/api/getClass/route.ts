@@ -1,7 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
-// import { auth } from '@clerk/nextjs/server';
 import { getClassById } from '~/server/actions/getClassById';
-
+export const dynamic = 'force-dynamic'
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const classId: string | null = req.nextUrl.searchParams.get('classId');
