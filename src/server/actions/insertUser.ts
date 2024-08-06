@@ -7,7 +7,7 @@ import {
 import { type UserDb } from "../db/types";
 import { clerkClient } from "@clerk/nextjs/server";
 
-export default async function insertTeacher(userId: string) {
+export default async function insertUser(userId: string) {
     try {
         const user = await clerkClient.users.getUser(userId);
         const userName = `${user.firstName} ${user.lastName}`
