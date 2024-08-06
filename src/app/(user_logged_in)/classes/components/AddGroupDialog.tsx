@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { useParams } from "next/navigation";
@@ -32,6 +32,10 @@ const AddGroupDialog: React.FC<AddGroupDialogProps> = ({ students }) => {
   >({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const selectedCount = useMemo(() => {
+    return Object.values(selectedStudents).filter(Boolean).length;
+  }, [selectedStudents]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,6 +121,7 @@ const AddGroupDialog: React.FC<AddGroupDialogProps> = ({ students }) => {
                 </div>
               ))}
             </div>
+            <div>Selected: {selectedCount}</div>
           </div>
           {error && <p className="rounded-lg bg-destructive p-2">{error}</p>}
           <Button type="submit" disabled={isSubmitting}>

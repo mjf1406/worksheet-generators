@@ -65,7 +65,7 @@ export type DataButt = {
             joined_date: string | undefined,
             updated_date: string | undefined,
             student_sex: "male" | "female",
-            student_number: string,
+            student_number: number | undefined,
             student_grade: string | undefined;
             student_reading_level: string | undefined;
         }

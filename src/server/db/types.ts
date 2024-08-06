@@ -45,6 +45,7 @@ export type Group = {
     class_id: string,
     created_date: string,
     updated_date: string,
+    students: Student[];
 }
 
 export type Teacher = {

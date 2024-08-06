@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -27,7 +27,7 @@ async function fetchGroups(classId: string): Promise<Group[]> {
     if (!response.ok) {
       throw new Error("Failed to fetch groups");
     }
-    return await response.json();
+    return (await response.json()) as Group[];
   } catch (error) {
     console.error("Error fetching groups:", error);
     throw error;
@@ -49,21 +49,22 @@ const EditGroupDialog = ({
   const [selectedStudents, setSelectedStudents] = useState<
     Record<string, boolean>
   >(
-    allStudents.reduce(
-      (acc, student) => ({
-        ...acc,
-        [student.student_id]: group.students.some(
-          (s) => s.student_id === student.student_id,
-        ),
-      }),
-      {},
+    Object.fromEntries(
+      allStudents.map((student) => [
+        student.student_id!,
+        group.students.some((s) => s.student_id === student.student_id),
+      ]),
     ),
   );
+
+  const selectedCount = useMemo(() => {
+    return Object.values(selectedStudents).filter(Boolean).length;
+  }, [selectedStudents]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const updatedStudents = allStudents.filter(
-      (student) => selectedStudents[student.student_id],
+      (student) => selectedStudents[student.student_id ?? ""],
     );
     onSave({ ...group, group_name: groupName, students: updatedStudents });
   };
@@ -96,9 +97,9 @@ const EditGroupDialog = ({
               >
                 <Checkbox
                   id={`student-${student.student_id}`}
-                  checked={selectedStudents[student.student_id] || false}
+                  checked={selectedStudents[student.student_id ?? ""] ?? false}
                   onCheckedChange={() =>
-                    handleStudentToggle(student.student_id)
+                    handleStudentToggle(student.student_id ?? "")
                   }
                 />
                 <Label htmlFor={`student-${student.student_id}`}>
@@ -107,6 +108,7 @@ const EditGroupDialog = ({
               </div>
             ))}
           </div>
+          <div>Selected: {selectedCount}</div>
         </div>
         <Button type="submit" disabled={isSaving}>
           {isSaving ? (
@@ -136,7 +138,7 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
   useEffect(() => {
     const loadGroups = async () => {
       try {
-        const fetchedGroups = await fetchGroups(course.class_id);
+        const fetchedGroups = await fetchGroups(course.class_id ?? "");
         setGroups(fetchedGroups);
       } catch (err) {
         setError("Failed to load groups");
@@ -145,18 +147,18 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
       }
     };
 
-    loadGroups();
+    void loadGroups();
   }, [course.class_id]);
 
   const handleSaveGroup = async (updatedGroup: Group) => {
     try {
       setIsSaving(true);
       const formData = new FormData();
-      formData.append("groupId", updatedGroup.group_id);
-      formData.append("groupName", updatedGroup.group_name);
-      formData.append("classId", course.class_id);
+      formData.append("groupId", updatedGroup.group_id ?? "");
+      formData.append("groupName", updatedGroup.group_name ?? "");
+      formData.append("classId", course.class_id ?? "");
       updatedGroup.students.forEach((student) => {
-        formData.append("studentIds", student.student_id);
+        formData.append("studentIds", student.student_id ?? "");
       });
 
       console.log("🚀 ~ handleSaveGroup ~ formData:", formData);
@@ -178,7 +180,7 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
       );
       setEditingGroup(null);
     } catch (error) {
-      console.error("Failed to update group:", error);
+      console.error("Failed to update group:", error as Error);
       toast({
         title: "Error",
         description: "Failed to update group. Please try again.",
@@ -231,8 +233,11 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
             </Dialog>
           </div>
           <ul className="text-xs">
+            <div className="mb-1 text-base">
+              Members: {group.students.length}
+            </div>
             {group.students.map((student) => (
-              <li key={student.student_id}>{student.student_name_en}</li>
+              <li key={student.student_id ?? ""}>{student.student_name_en}</li>
             ))}
           </ul>
         </div>

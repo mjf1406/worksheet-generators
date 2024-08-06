@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
   
     try {
       const coursesResponse = await classroomClient.courses.list({});
-      if (!coursesResponse.data || !coursesResponse.data.courses) {
+      if (!coursesResponse.data ?? !coursesResponse.data.courses) {
         return NextResponse.json({ message: 'No courses found' }, { status: 404 });
       }
 

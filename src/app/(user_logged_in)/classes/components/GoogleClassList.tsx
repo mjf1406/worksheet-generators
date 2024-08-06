@@ -26,8 +26,8 @@ async function fetchClassroomData(): Promise<Course[]> {
     if (!response.ok) {
       throw new Error("Failed to fetch classroom data");
     }
-    const data = await response.json();
-    return data as Course[];
+    const data = (await response.json()) as Course[];
+    return data;
   } catch (error) {
     console.error("Error fetching classroom data:", error);
     return [];
@@ -39,7 +39,7 @@ export default function ClassList() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetchClassroomData().then((data) => {
+    void fetchClassroomData().then((data) => {
       setCourses(data);
       setIsLoading(false);
     });

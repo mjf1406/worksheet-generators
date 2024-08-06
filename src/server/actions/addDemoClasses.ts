@@ -5,7 +5,6 @@ import { revalidatePath } from 'next/cache'
 import type { StudentField } from '~/server/db/types'
 import { LoremIpsum } from "lorem-ipsum";
 import type { StudentId } from '~/server/actions/insertClass'
-import updateStudentField from '~/server/actions/updateStudentField'
 import { auth } from '@clerk/nextjs/server';
 
 const lorem = new LoremIpsum({
@@ -263,7 +262,7 @@ export default async function addDemoClasses() {
     const completeData = completeStudentIdsJson.map(student => {
       return generateStudentFieldData(true, student)
     })
-    await updateStudentField(completeData)
+    // await updateStudentField(completeData)
     
     // Insert incomplete demo class
     const incompleteStudentIds: string = await insertClass(incompleteClassDemo, userId, false) 
@@ -271,7 +270,7 @@ export default async function addDemoClasses() {
     const incompleteData = incompleteStudentIdsJson.map(student => {
       return generateStudentFieldData(false, student)
     })
-    await updateStudentField(incompleteData)
+    // await updateStudentField(incompleteData)
 
     revalidatePath("/classes")
 }

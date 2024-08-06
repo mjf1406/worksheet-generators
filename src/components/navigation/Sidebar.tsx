@@ -23,11 +23,14 @@ import UserAndTheme from "./UserAndTheme";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
-  const [expandedCategory, setExpandedCategory] = useState(null);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
-  const toggleCategory = (category) => {
-    setExpandedCategory(expandedCategory === category ? null : category);
+  // Assuming your categories are strings, if not, replace string with the appropriate type
+  const toggleCategory = (category: string | null) => {
+    setExpandedCategory((prevCategory) =>
+      prevCategory === category ? null : category,
+    );
   };
 
   const navItems = [

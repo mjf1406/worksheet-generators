@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "~/server/db/index";
-import { students as studentsTable, student_fields as studentFieldsTable } from "../db/schema";
+import { students as studentsTable } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { isTeacherInClass } from "./isTeacherInClass";
 
@@ -20,7 +20,6 @@ const getStudent = async (studentId: string | null, classId: string | null, user
         const studentData = await db
             .select()
             .from(studentsTable)
-            .innerJoin(studentFieldsTable, eq(studentsTable.student_id, studentFieldsTable.student_id))
             .where(eq(studentsTable.student_id, studentId));
         return studentData;
     } catch (error) {
