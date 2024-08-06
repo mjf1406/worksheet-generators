@@ -71,7 +71,7 @@ export async function POST(req: Request) {
     if (isUserCreatedEventData(data)) {
       const userId = data.id;
       if (userId) { 
-        // Do something when the user is created
+        // TODO: Do something when the user is created
       }
     } else {
       console.error('Unexpected event data format for user.created:', data);

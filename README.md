@@ -50,10 +50,12 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ### p0
 
+## Change Log
+
+2024/08/06
+
 - UX: user can add student(s) to an existing class
 - UX: user can edit existing students (in the table?)
-
-## Change Log
 
 2024/08/05
 

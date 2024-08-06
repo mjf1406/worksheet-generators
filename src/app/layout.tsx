@@ -5,9 +5,8 @@ import { Toaster } from "~/components/ui/toaster";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 
 export const metadata = {
-  title: "Report Card Helper",
-  description:
-    "Reduce the amount of time and tedium on making your report cards.",
+  title: "ClassQuest",
+  description: "Various tools and worksheet generators for teachers",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

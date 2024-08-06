@@ -75,18 +75,19 @@ export type TeacherCourse = {
   }
 
 export type Student = {
-    enrollment_date: string | undefined;
-    enrollment_id: string | undefined;
-    student_id: string | undefined;
+    student_id?: string | undefined;
     student_name_en: string | undefined;
     student_name_alt: string | undefined;
     student_grade: string | undefined;
     student_reading_level: string | undefined;
-    student_email: string | undefined;
+    student_email: string | undefined | null;
     joined_date: string | undefined;
     updated_date: string | undefined;
-    student_sex: string | undefined;
-    student_number: string | undefined;
+    student_sex: "male" | "female" | undefined;
+    student_number: number | undefined;
+    enrollment_date?: string | undefined;
+    enrollment_id?: string | undefined;
+    isEditing?: boolean | undefined;
 }
 
 export type StudentField = {

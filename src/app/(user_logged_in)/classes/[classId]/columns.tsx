@@ -1,18 +1,19 @@
-"use client";
-
+import React from "react";
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
 import { Checkbox } from "~/components/ui/checkbox";
+import { Input } from "~/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import type { Student } from "~/server/db/types";
+import { GRADES } from "~/lib/constants";
+import type { CustomTableMeta } from "~/components/ui/data-table";
 
 export const columns: ColumnDef<Student>[] = [
   {
@@ -53,108 +54,122 @@ export const columns: ColumnDef<Student>[] = [
   },
   {
     accessorKey: "student_name_en",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+    header: "Name",
+    cell: ({ row, table }): JSX.Element => {
+      const meta = table.options.meta as CustomTableMeta;
+      const isEditing = meta.isEditing;
+
+      return isEditing ? (
+        <Input
+          value={row.getValue("student_name_en")}
+          onChange={(e) =>
+            meta.updateData(row.index, "student_name_en", e.target.value)
+          }
+        />
+      ) : (
+        <>{row.getValue("student_name_en")}</>
       );
     },
   },
   {
     accessorKey: "student_name_alt",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Alt. Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+    header: "Alt. Name",
+    cell: ({ row, table }): JSX.Element => {
+      const meta = table.options.meta as CustomTableMeta;
+      const isEditing = meta.isEditing;
+
+      return isEditing ? (
+        <Input
+          value={row.getValue("student_name_alt")}
+          onChange={(e) =>
+            meta.updateData(row.index, "student_name_alt", e.target.value)
+          }
+        />
+      ) : (
+        row.getValue("student_name_alt")
       );
     },
   },
   {
     accessorKey: "student_sex",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    header: "Sex",
+    cell: ({ row, table }): JSX.Element => {
+      const meta = table.options.meta as CustomTableMeta;
+      const isEditing = meta.isEditing;
+      const initialValue: string = row.getValue("student_sex");
+
+      return isEditing ? (
+        <Select
+          value={initialValue}
+          onValueChange={(value) =>
+            meta.updateData(row.index, "student_sex", value)
+          }
         >
-          Sex
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          {/* ... SelectContent ... */}
+        </Select>
+      ) : (
+        <>{row.getValue("student_sex")}</>
       );
     },
   },
   {
     accessorKey: "student_grade",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    header: "Grade",
+    cell: ({ row, table }): JSX.Element => {
+      const meta = table.options.meta as CustomTableMeta;
+      const isEditing = meta.isEditing;
+
+      return isEditing ? (
+        <Select
+          value={row.getValue("student_grade")}
+          onValueChange={(value) =>
+            meta.updateData(row.index, "student_grade", value)
+          }
         >
-          Grade
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {GRADES.map((grade) => (
+              <SelectItem key={grade} value={grade}>
+                {grade}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      ) : (
+        row.getValue("student_grade")
       );
     },
   },
   {
     accessorKey: "student_reading_level",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+    header: "Reading Level",
+    cell: ({ row, table }): JSX.Element => {
+      const meta = table.options.meta as CustomTableMeta;
+      const isEditing = meta.isEditing;
+
+      return isEditing ? (
+        <Select
+          value={row.getValue("student_reading_level")}
+          onValueChange={(value) =>
+            meta.updateData(row.index, "student_reading_level", value)
+          }
         >
-          Reading Level
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {GRADES.map((level) => (
+              <SelectItem key={level} value={level}>
+                {level}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      ) : (
+        row.getValue("student_reading_level")
       );
     },
   },
-  // {
-  //   id: "actions",
-  //   enableHiding: false,
-  //   cell: ({ row }) => {
-  //     const exercise: Exercises = row.original;
-
-  //     return (
-  //       <DropdownMenu>
-  //         <DropdownMenuTrigger asChild>
-  //           <Button variant="ghost" className="h-8 w-8 p-0">
-  //             <span className="sr-only">Open menu</span>
-  //             <MoreHorizontal className="h-4 w-4" />
-  //           </Button>
-  //         </DropdownMenuTrigger>
-  //         <DropdownMenuContent align="end">
-  //           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-  //           <DropdownMenuItem
-  //             className="bg-destructive"
-  //             onClick={() => {
-  //               void deleteExercise(exercise?.id);
-  //               window.location.reload();
-  //             }}
-  //           >
-  //             <Trash className="mr-2" /> Delete exercise
-  //           </DropdownMenuItem>
-  //           <DropdownMenuItem>
-  //             <Edit className="mr-2" /> Edit exercise
-  //           </DropdownMenuItem>
-  //           {/* <DropdownMenuSeparator />
-  //           <DropdownMenuItem>View customer</DropdownMenuItem>
-  //           <DropdownMenuItem>View exercise details</DropdownMenuItem> */}
-  //         </DropdownMenuContent>
-  //       </DropdownMenu>
-  //     );
-  //   },
-  // },
 ];

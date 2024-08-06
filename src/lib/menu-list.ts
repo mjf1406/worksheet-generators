@@ -10,14 +10,9 @@ import {
   Text, 
   Newspaper, 
   Signpost,
-<<<<<<< HEAD
-  School,
   Dice5,
   BookKey,
-  Construction
-=======
   School
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
 } from "lucide-react";
 
 type Submenu = {
@@ -64,16 +59,11 @@ export function getMenuList(pathname: string): Group[] {
       menus: [
         {
           href: "/classes",
-<<<<<<< HEAD
+
           label: "My Classes",
           active: pathname.includes("/classes"),
           icon: School,
           under_construction: false,
-=======
-          label: "Classes",
-          active: pathname.includes("/classes"),
-          icon: School,
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
           submenus: []
         }
       ]
@@ -86,7 +76,7 @@ export function getMenuList(pathname: string): Group[] {
           label: "Assigner",
           active: pathname.includes("/assigner"),
           icon: Signpost,
-<<<<<<< HEAD
+
           under_construction: false,
           submenus: []
         },
@@ -107,19 +97,15 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-=======
-          submenus: []
-        },
-        {
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
           href: "/randomizer",
           label: "Randomizer",
           active: pathname.includes("/randomizer"),
           icon: Dices,
-<<<<<<< HEAD
+
           under_construction: false,
-=======
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
+
           submenus: []
         },
         {
@@ -127,10 +113,10 @@ export function getMenuList(pathname: string): Group[] {
           label: "Shuffler",
           active: pathname.includes("/shuffler"),
           icon: Shuffle,
-<<<<<<< HEAD
+
           under_construction: false,
-=======
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
+
           submenus: []
         },
         {
@@ -138,10 +124,10 @@ export function getMenuList(pathname: string): Group[] {
           label: "Classroom Clock",
           active: pathname.includes("/classroom-clock"),
           icon: Clock,
-<<<<<<< HEAD
+
           under_construction: true,
-=======
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
+
           submenus: []
         },
         {
@@ -149,10 +135,10 @@ export function getMenuList(pathname: string): Group[] {
           label: "Reading Passage",
           active: pathname.includes("/reading-passage"),
           icon: Text,
-<<<<<<< HEAD
+
           under_construction: true,
-=======
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
+
           submenus: []
         }
       ]
@@ -165,10 +151,10 @@ export function getMenuList(pathname: string): Group[] {
           label: "Word Search",
           active: pathname.includes("/word-search"),
           icon: Newspaper,
-<<<<<<< HEAD
+
           under_construction: true,
-=======
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
+
           submenus: []
         },
         {
@@ -176,10 +162,10 @@ export function getMenuList(pathname: string): Group[] {
           label: "Crossword",
           active: pathname.includes("/crossword"),
           icon: Newspaper,
-<<<<<<< HEAD
+
           under_construction: true,
-=======
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
+
           submenus: []
         },
         {
@@ -187,10 +173,10 @@ export function getMenuList(pathname: string): Group[] {
           label: "Scramble",
           active: pathname.includes("/scramble"),
           icon: Newspaper,
-<<<<<<< HEAD
+
           under_construction: false,
-=======
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
+
           submenus: []
         },
         {
@@ -198,10 +184,10 @@ export function getMenuList(pathname: string): Group[] {
           label: "Cloze",
           active: pathname.includes("/cloze"),
           icon: Newspaper,
-<<<<<<< HEAD
+
           under_construction: true,
-=======
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
+
           submenus: []
         },
         {
@@ -209,10 +195,10 @@ export function getMenuList(pathname: string): Group[] {
           label: "Vocabulary Hunt",
           active: pathname.includes("/vocabulary-hunt"),
           icon: Newspaper,
-<<<<<<< HEAD
+
           under_construction: true,
-=======
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
+
           submenus: []
         },
         {
@@ -220,10 +206,10 @@ export function getMenuList(pathname: string): Group[] {
           label: "Custom",
           active: pathname.includes("/custom"),
           icon: Newspaper,
-<<<<<<< HEAD
+
           under_construction: true,
-=======
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
+
           submenus: []
         }
       ]
@@ -236,10 +222,10 @@ export function getMenuList(pathname: string): Group[] {
           label: "Account",
           active: pathname.includes("/account"),
           icon: User,
-<<<<<<< HEAD
+
           under_construction: false,
-=======
->>>>>>> e0d6f1092b8b20146b15935eeb157bf2d8626001
+
+
           submenus: []
         },
         {
@@ -265,9 +251,3 @@ export function getMenuList(pathname: string): Group[] {
 
   return sortedMenuList;
 }
-
-// export function getMenuList(pathname: string): Group[] {
-//   return [
-    
-//   ];
-// }

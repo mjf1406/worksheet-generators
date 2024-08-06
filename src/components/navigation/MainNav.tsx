@@ -3,22 +3,25 @@
 import React from "react";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "~/components/ui/navigation-menu";
 import { Button } from "~/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { ArrowRight, Menu } from "lucide-react";
 import UserAndTheme from "./UserAndTheme";
 import NavLogo from "./NavLogo";
 
 const MainNav = () => {
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const menuItems = [{ title: "Dashboard", href: "/dashboard" }];
+  const menuItems = [
+    { title: "Features", href: "#features" },
+    { title: "Pricing", href: "#pricing" },
+    { title: "FAQ", href: "#faq" },
+    { title: "Classes", href: "/classes" },
+  ];
 
   const NavigationMenuDemo = () => (
     <>
@@ -31,6 +34,9 @@ const MainNav = () => {
                 className="rounded-xl px-2 py-1.5 hover:bg-secondary"
               >
                 {item.title}
+                {item.title === "Classes" && (
+                  <ArrowRight className="ml-0.5 inline-block h-5 w-5" />
+                )}
               </NavigationMenuLink>
             </NavigationMenuItem>
           ))}
@@ -42,7 +48,6 @@ const MainNav = () => {
 
   return (
     <header className="sticky top-0 z-20 w-full border-b border-accent bg-background">
-      {/* <header className="fixed bottom-0 z-20 w-full border-t border-accent bg-background md:sticky md:bottom-0 lg:top-0 lg:border-b lg:border-t-0"> */}
       <div className="mx-auto max-w-5xl px-4">
         <div className="flex items-center justify-between py-4">
           <NavLogo />
@@ -69,10 +74,13 @@ const MainNav = () => {
                     <a
                       key={item.title}
                       href={item.href}
-                      className="text-lg"
+                      className="flex w-full items-center text-lg"
                       onClick={() => setIsOpen(false)}
                     >
                       {item.title}
+                      {item.title === "Classes" && (
+                        <ArrowRight className="ml-2 inline-block h-4 w-4" />
+                      )}
                     </a>
                   ))}
                 </nav>

@@ -13,7 +13,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import type { Student } from "~/server/db/types";
-import { addGroup } from "./createGroup";
+import { addGroup } from "../[classId]/createGroup";
 import { useRouter } from "next/navigation";
 
 interface AddGroupDialogProps {
@@ -67,7 +67,8 @@ const AddGroupDialog: React.FC<AddGroupDialogProps> = ({ students }) => {
     }
   };
 
-  const handleStudentCheck = (studentId) => {
+  const handleStudentCheck = (studentId: string | undefined) => {
+    if (!studentId) return;
     setSelectedStudents((prev) => ({
       ...prev,
       [studentId]: !prev[studentId],
@@ -105,7 +106,7 @@ const AddGroupDialog: React.FC<AddGroupDialogProps> = ({ students }) => {
                 >
                   <Checkbox
                     id={`student-${student.student_id}`}
-                    checked={selectedStudents[student.student_id] || false}
+                    checked={selectedStudents[student.student_id!] ?? false}
                     onCheckedChange={() =>
                       handleStudentCheck(student.student_id)
                     }
