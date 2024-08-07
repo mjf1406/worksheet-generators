@@ -1,4 +1,3 @@
-// app/actions/addStudents.ts
 'use server'
 
 import { revalidatePath } from 'next/cache'

@@ -25,7 +25,7 @@ export default function RoundrobinAssignerPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="mt-5">
+      <div className="mt-5 flex w-full flex-col items-center justify-center">
         <p className="max-w-xl">
           You can use this to assign permanent or semi-permeate things to your
           students in your classroom, such as Chromebooks or jobs. I, for

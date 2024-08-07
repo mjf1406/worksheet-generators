@@ -83,7 +83,7 @@ export const teacher_classes = sqliteTable('teacher_classes',
     }, 
     (table) => {
         return {
-            classes_by_user_id_idx: index(" r").on(table.user_id)
+            classes_by_user_id_idx: index("classes_by_user_id_idx").on(table.user_id)
         }
     }
 )
@@ -98,6 +98,23 @@ export const student_groups = sqliteTable('student_groups',
     (table) => {
         return {
             groups_by_student_id_idx: index("groups_by_student_id_idx").on(table.student_id)
+        }
+    }
+)
+
+export const assigners = sqliteTable('assigners',
+    {
+        assigner_id: text('assigner_id').notNull().primaryKey(),
+        name: text('name').notNull(),
+        user_id: text('user_id').notNull().references(() => users.user_id),
+        assigner_type: text('assigner_type', { enum: ["random", "round-robin"] }),
+        items: text('items', { mode: 'json' }),
+        created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+        updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+    },
+    (table) => {
+        return {
+            assigner_by_user_id_idx: index("assigner_by_user_id_idx").on(table.user_id)
         }
     }
 )

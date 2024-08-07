@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect, useMemo } from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -19,7 +21,7 @@ interface ClassGroupsComponentProps {
   course: Course;
 }
 
-async function fetchGroups(classId: string): Promise<Group[]> {
+export async function fetchGroups(classId: string): Promise<Group[]> {
   try {
     const url = new URL("/api/getGroupsByClassId", window.location.origin);
     url.searchParams.append("classId", classId);

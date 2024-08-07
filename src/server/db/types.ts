@@ -113,3 +113,13 @@ export type StudentField = {
     comment: { s1: string, s2: string };
     // [key: string]: string | { s1: string; s2: string }; // Index signature
 }
+
+export type Assigner = {
+    assigner_id: string,
+    name: string,
+    user_id: string,
+    type: "random" | "round-robin",
+    items: string[],
+    created_date?: string,
+    updated_date?: string,
+}

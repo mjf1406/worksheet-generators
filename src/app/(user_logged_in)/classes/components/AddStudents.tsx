@@ -30,6 +30,7 @@ import { Plus, X } from "lucide-react";
 import type { Student } from "~/server/db/types";
 import { addStudents } from "../[classId]/addStudents";
 import { useToast } from "~/components/ui/use-toast";
+import { GRADES } from "~/lib/constants";
 
 interface AddStudentsDialogProps {
   classId: string;
@@ -45,22 +46,6 @@ const initialStudentState: Partial<Student> = {
   student_sex: undefined,
   student_email: "",
 };
-
-const gradeOptions = [
-  "K",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "10",
-  "11",
-  "12",
-];
 
 export function AddStudentsDialog({
   classId,
@@ -107,7 +92,6 @@ export function AddStudentsDialog({
     }));
 
     try {
-      // Validate each student against the schema
       const validatedStudents = studentsWithNumbers.map((student) => {
         const result = studentSchema.safeParse(student);
         if (!result.success) {
@@ -235,7 +219,7 @@ export function AddStudentsDialog({
                         <SelectValue placeholder="Grade" />
                       </SelectTrigger>
                       <SelectContent>
-                        {gradeOptions.map((grade) => (
+                        {GRADES.map((grade) => (
                           <SelectItem key={grade} value={grade}>
                             {grade}
                           </SelectItem>
@@ -255,7 +239,7 @@ export function AddStudentsDialog({
                         <SelectValue placeholder="Reading Level" />
                       </SelectTrigger>
                       <SelectContent>
-                        {gradeOptions.map((level) => (
+                        {GRADES.map((level) => (
                           <SelectItem key={level} value={level}>
                             {level}
                           </SelectItem>

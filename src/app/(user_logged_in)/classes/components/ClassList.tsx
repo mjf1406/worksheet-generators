@@ -22,7 +22,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
-async function fetchClassroomData(): Promise<TeacherCourse[]> {
+export async function fetchClassroomData(): Promise<TeacherCourse[]> {
   try {
     const response = await fetch("/api/getClasses");
     if (!response.ok) {
