@@ -153,7 +153,7 @@ export async function runRandomAssigner(
             }
           }  
         }
-        return { success: true, data: assignedData }
+        return { success: true, data: {assignedData, name} }
     } catch (error) {
         console.error('Failed run Assigner:', error)
         return { success: false, message: 'Failed to run Assigner' }

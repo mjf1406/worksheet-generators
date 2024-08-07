@@ -36,8 +36,8 @@ import {
 import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { useToast } from "~/components/ui/use-toast";
 import { AlertCircle } from "lucide-react";
-
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+import { generatePDF, PDFGenerator } from "../components/PDF";
 
 const runAssignerSchema = z.object({
   assignerId: z.string().min(1, "Assigner is required"),
@@ -87,6 +87,7 @@ export default function RandomAssignerPage() {
       );
       if (result?.success) {
         setAssignedData(result?.data);
+        // data is returned here, now need to print a PDF of the data as a table
       } else {
         setSubmitError(result?.message);
       }
@@ -243,7 +244,20 @@ export default function RandomAssignerPage() {
               </Button>
             </form>
           </Form>
-          <div>{assignedData && JSON.stringify(assignedData)}</div>
+          <div>
+            {assignedData && (
+              <div className="mt-4">
+                {/* <h3 className="text-lg font-semibold">Assignment Results:</h3>
+                <Button asChild>
+                  <div className="mt-4">{generatePDF(assignedData)}</div>
+                </Button>
+                <pre className="mt-2 whitespace-pre-wrap rounded-md bg-foreground/5 p-4 text-foreground">
+                  {JSON.stringify(assignedData, null, 2)}
+                </pre> */}
+                <PDFGenerator data={assignedData} />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </ContentLayout>
