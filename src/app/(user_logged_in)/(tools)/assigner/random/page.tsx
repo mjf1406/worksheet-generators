@@ -26,14 +26,18 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { runRandomAssigner } from "../actions";
+import { AssignedData, AssignedItem, runRandomAssigner } from "../actions";
 import { useAuth } from "@clerk/nextjs";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "~/components/ui/collapsible";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { useToast } from "~/components/ui/use-toast";
+import { AlertCircle } from "lucide-react";
+
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
 const runAssignerSchema = z.object({
   assignerId: z.string().min(1, "Assigner is required"),
@@ -43,10 +47,24 @@ const runAssignerSchema = z.object({
 
 type RunAssignerFormData = z.infer<typeof runAssignerSchema>;
 
+type AssignerResult = {
+  success: boolean;
+  data?: AssignedData;
+  message?: string;
+};
+
 export default function RandomAssignerPage() {
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
+  const [assignedData, setAssignedData] = useState<
+    AssignedData | null | undefined
+  >(null);
+  const [submitError, setSubmitError] = useState<string | null | undefined>(
+    null,
+  );
   const { userId } = useAuth();
+  const { toast } = useToast();
   const form = useForm<RunAssignerFormData>({
     resolver: zodResolver(runAssignerSchema),
     defaultValues: {
@@ -58,16 +76,32 @@ export default function RandomAssignerPage() {
 
   const onSubmit = async (data: RunAssignerFormData) => {
     try {
-      await runRandomAssigner(
+      setIsRunning(true);
+      setSubmitError(null);
+      setAssignedData(null);
+      const result: AssignerResult = await runRandomAssigner(
         userId,
         data.classId,
         data.assignerId,
         data.selectedGroups,
       );
-      // Handle successful submission (e.g., show a success message)
+      if (result?.success) {
+        setAssignedData(result?.data);
+      } else {
+        setSubmitError(result?.message);
+      }
     } catch (error) {
-      console.error("Failed to run assigner:", error);
-      // Handle error (e.g., show an error message)
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred",
+        variant: "destructive",
+      });
+      console.error("Error submitting students:", error);
+    } finally {
+      setIsRunning(false);
     }
   };
 
@@ -83,6 +117,10 @@ export default function RandomAssignerPage() {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbPage>Assigner</BreadcrumbPage>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Random</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -186,9 +224,26 @@ export default function RandomAssignerPage() {
                   )}
                 />
               </div>
-              <Button type="submit">Run Assigner</Button>
+              {submitError && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{submitError}</AlertDescription>
+                </Alert>
+              )}
+              <Button type="submit" disabled={isRunning}>
+                {isRunning ? (
+                  <>
+                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                    Running...
+                  </>
+                ) : (
+                  <>Run Assigner</>
+                )}
+              </Button>
             </form>
           </Form>
+          <div>{assignedData && JSON.stringify(assignedData)}</div>
         </div>
       </div>
     </ContentLayout>

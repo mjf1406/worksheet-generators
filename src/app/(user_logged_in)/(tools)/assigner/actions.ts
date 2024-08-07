@@ -13,7 +13,7 @@ import { auth } from '@clerk/nextjs/server';
 import { generateUuidWithPrefix } from '~/server/db/helperFunction';
 import { and, eq, inArray } from 'drizzle-orm';
 import { getClassById } from '~/server/actions/getClassById';
-import { Assigner } from '~/server/db/types';
+import { shuffleArray } from '~/server/functions';
 
 const assignerSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -66,6 +66,14 @@ export async function getAssignersByUserId(userId: string, type: "random" | "rou
       }
 }
 
+export type AssignedItem = {
+  item: string | undefined;
+  studentNumber: number | null | undefined;
+  studentName: string | undefined;
+};
+
+export type AssignedData = Record<string, AssignedItem[]>;
+
 export async function runRandomAssigner(
     userId: string | null | undefined, 
     classId: string, 
@@ -81,26 +89,74 @@ export async function runRandomAssigner(
         const students = selectedGroups?.length === 0 ? classData?.students : null
         const classGroupsData = selectedGroups?.length === 0 ? null : await getGroupsByClassId(classId)
         const groupsData = selectedGroups?.length === 0 ? null : classGroupsData?.filter(i => selectedGroups?.includes(i.group_id))
-        const assignersData: Assigner[] = await getAssignerById(assignerId) as Assigner[]
+        const assignersData = await getAssignerById(assignerId)
         const assignerData = assignersData[0]
-        const items = JSON.parse(assignerData?.items)
-        const name = assignerData?.nam
-        if (selectedGroups?.length === 0) {
-            for (const student of students!) {
-                
+        const itemsString = assignerData?.items as string
+        const items = JSON.parse(itemsString) as string[]
+        const name = assignerData?.name
+        const groupsWithInsufficientStudents = []
+
+        // Handling Errors
+        if (selectedGroups && selectedGroups?.length >= 1 && groupsData) {
+          for (const group of groupsData) {
+            const students = group.students
+            if (students.length > items.length) {
+              groupsWithInsufficientStudents.push({
+                name: group.group_name, // TODO: Why is this checking Student type? WTF...
+                studentsCount: students.length,
+              })
             }
+          }
         }
-        else {
-            for (const group of groupsData!) {
-                for (const student of group.students) {
-                    
-                }
-            }
+        if (selectedGroups?.length === 0 && students && items.length < students?.length) { 
+          return { 
+            success: false, 
+            message: `There are only ${items.length} items in the ${name} assigner, yet there are ${students.length} students. Should one or more groups be selected?`
+          }
+        } else if (selectedGroups && selectedGroups?.length >= 1 && groupsWithInsufficientStudents.length >= 1) {
+          const groupNames = groupsWithInsufficientStudents.map(group => group.name)
+          return { 
+            success: false, 
+            message: `There are only ${items.length} items in the ${name} assigner, yet there ${groupsWithInsufficientStudents.length > 1 ? "are" : "is"} ${groupsWithInsufficientStudents.length} group(s) (${groupNames.join(", ")}) with more than ${items.length} students. Should other groups be selected instead of the currently selected group(s)?`
+          }
         }
         
+        // The Algorithm
+        let assignedData
+        if (selectedGroups?.length === 0) { // If no groups are selected
+          assignedData = {} as AssignedData
+          const studentsShuffled = shuffleArray(students!)
+          const className = classData?.class_name
+          if (className && !assignedData[className]) assignedData[className] = [];
+          for (let index = 0; index < items.length; index++) {
+            const element = items[index];
+            if (className && assignedData[className]) assignedData[className].push({
+              item: element,
+              studentNumber: studentsShuffled[index]?.student_number,
+              studentName: studentsShuffled[index]?.student_name_en
+            })
+          }
+        }
+        else { // If groups are selected
+          assignedData = {} as AssignedData;
+          for (const group of groupsData!) {
+            const groupName = group.group_name;
+            if (!assignedData[groupName]) assignedData[groupName] = [];
+            const studentsShuffled = shuffleArray(group.students)
+            for (let index = 0; index < items.length; index++) {
+              const element = items[index];
+              assignedData[groupName].push({
+                item: element,
+                studentNumber: studentsShuffled[index]?.student_number,
+                studentName: studentsShuffled[index]?.student_name_en
+              })
+            }
+          }  
+        }
+        return { success: true, data: assignedData }
     } catch (error) {
         console.error('Failed run Assigner:', error)
-        return { success: false, message: 'Failed run Assigner' }
+        return { success: false, message: 'Failed to run Assigner' }
     }
 }
 // 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213
