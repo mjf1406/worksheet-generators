@@ -82,7 +82,7 @@ export function getMenuList(pathname: string): Group[] {
           submenus: [
             {
               href: "/assigner/round-robin",
-              label: "Round-robin",
+              label: "Round-Robin",
               active: pathname.includes("/assigner/round-robin"),
               under_construction: false,
             },
@@ -99,7 +99,7 @@ export function getMenuList(pathname: string): Group[] {
           label: "Random Event",
           active: pathname.includes("/random-event"),
           icon: Dice5,
-          under_construction: false,
+          under_construction: true,
           submenus: []
         },
         {
@@ -128,7 +128,7 @@ export function getMenuList(pathname: string): Group[] {
           active: pathname.includes("/shuffler"),
           icon: Shuffle,
 
-          under_construction: false,
+          under_construction: true,
 
 
           submenus: []
@@ -187,10 +187,7 @@ export function getMenuList(pathname: string): Group[] {
           label: "Scramble",
           active: pathname.includes("/scramble"),
           icon: Newspaper,
-
-          under_construction: false,
-
-
+          under_construction: true,
           submenus: []
         },
         {
@@ -198,10 +195,7 @@ export function getMenuList(pathname: string): Group[] {
           label: "Cloze",
           active: pathname.includes("/cloze"),
           icon: Newspaper,
-
           under_construction: true,
-
-
           submenus: []
         },
         {
@@ -209,10 +203,7 @@ export function getMenuList(pathname: string): Group[] {
           label: "Vocabulary Hunt",
           active: pathname.includes("/vocabulary-hunt"),
           icon: Newspaper,
-
           under_construction: true,
-
-
           submenus: []
         },
         {
@@ -220,10 +211,7 @@ export function getMenuList(pathname: string): Group[] {
           label: "Custom",
           active: pathname.includes("/custom"),
           icon: Newspaper,
-
           under_construction: true,
-
-
           submenus: []
         }
       ]
@@ -236,10 +224,7 @@ export function getMenuList(pathname: string): Group[] {
           label: "Account",
           active: pathname.includes("/account"),
           icon: User,
-
           under_construction: false,
-
-
           submenus: []
         },
         {

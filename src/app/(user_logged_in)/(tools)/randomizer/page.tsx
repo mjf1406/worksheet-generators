@@ -27,6 +27,16 @@ export default function RandomizerPage() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+      <div className="mt-5 flex w-full flex-col items-center justify-center gap-4">
+        <p>
+          Looking for a way to omit students/groups/classes that have already
+          been picked? Use{" "}
+          <Link className="underline" href={"/shuffler"}>
+            Shuffler
+          </Link>
+          .
+        </p>
+      </div>
       <PlaceholderContent />
     </ContentLayout>
   );

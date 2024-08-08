@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronDown, Dot, LucideIcon } from "lucide-react";
+import { ChevronDown, Dot, type LucideIcon } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
@@ -31,6 +31,7 @@ type Submenu = {
   href: string;
   label: string;
   active: boolean;
+  under_construction: boolean;
 };
 
 interface CollapseMenuButtonProps {
@@ -98,7 +99,7 @@ export function CollapseMenuButton({
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down overflow-hidden">
-        {submenus.map(({ href, label, active }, index) => (
+        {submenus.map(({ href, label, active, under_construction }, index) => (
           <Button
             key={index}
             variant={active ? "secondary" : "ghost"}
@@ -115,6 +116,7 @@ export function CollapseMenuButton({
                   isOpen
                     ? "translate-x-0 opacity-100"
                     : "-translate-x-96 opacity-0",
+                  under_construction && "opacity-40",
                 )}
               >
                 {label}
@@ -162,13 +164,21 @@ export function CollapseMenuButton({
           {label}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {submenus.map(({ href, label }, index) => (
-          <DropdownMenuItem key={index} asChild>
-            <Link className="cursor-pointer" href={href}>
-              <p className="max-w-[180px] truncate">{label}</p>
-            </Link>
-          </DropdownMenuItem>
-        ))}
+        {submenus.map(({ href, label, under_construction }, index) => {
+          return (
+            <DropdownMenuItem key={index} asChild>
+              <Link className={"cursor-pointer"} href={href}>
+                <p
+                  className={`max-w-[180px] truncate ${
+                    under_construction && "opacity-40"
+                  }`}
+                >
+                  {label}
+                </p>
+              </Link>
+            </DropdownMenuItem>
+          );
+        })}
         <DropdownMenuArrow className="fill-border" />
       </DropdownMenuContent>
     </DropdownMenu>

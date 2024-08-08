@@ -36,21 +36,25 @@ This is the collection of worksheet generators that I have created as I needed t
   - length (only appears if **generate for each student** is unchecked)
   - grade level (only appears if **generate for each student** is unchecked)
   - generate comprehension questions?
-- tool: Assigner, Random (Chromebook assigner by group/class/team)
-- tool: Assigner, Round-robin (classroom jobs assigner by group/class/team)
 - tool: classroom clock (duplicates [Class Timers](https://mjf1406.github.io/class-timers/index.html))
 - tool: Shuffler (randomize the order of the class by group)
+  - shuffle students (duplicates [Shuffle](https://mjf1406.github.io/various-classroom-tools/))
+    - ensuring each student goes first and last before allowing anyone to go first or last again
 - tool: Randomizer (random picker)
   - student
   - group
   - student from group
   - team
-  - shuffle students (duplicates [Shuffle](https://mjf1406.github.io/various-classroom-tools/))
-    - ensuring each student goes first and last before allowing anyone to go first or last again
+  - classes
 
 ### p0
 
 ## Change Log
+
+2024/08/08
+
+- added: Assigner, Round-Robin
+- added: Assigner, Random tool
 
 2024/08/06
 

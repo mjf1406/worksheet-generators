@@ -1,3 +1,5 @@
+import { DataModel } from "~/app/(user_logged_in)/(tools)/assigner/actions";
+
 // Server Types
 export type UserDb = {
     user_id: string;
@@ -120,6 +122,7 @@ export type Assigner = {
     user_id: string,
     type: "random" | "round-robin",
     items: string[],
+    student_item_status?: DataModel,
     created_date?: string,
     updated_date?: string,
 }

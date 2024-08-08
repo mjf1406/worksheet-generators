@@ -10,6 +10,7 @@ import {
   pdf,
 } from "@react-pdf/renderer";
 import { Button } from "~/components/ui/button";
+import { Download, Printer } from "lucide-react";
 
 Font.register({
   family: "Roboto",
@@ -189,11 +190,19 @@ const PDFActions = ({ data }: { data: AssignedData }) => {
       >
         {({ blob, url, loading, error }) => (
           <Button disabled={loading}>
-            {loading ? "Generating PDF..." : "Download PDF"}
+            {loading ? (
+              "Generating PDF..."
+            ) : (
+              <>
+                <Download className="mr-2 h-5 w-5" /> Download PDF
+              </>
+            )}
           </Button>
         )}
       </PDFDownloadLink>
-      <Button onClick={handlePrint}>Print PDF</Button>
+      <Button onClick={handlePrint}>
+        <Printer className="mr-2 h-5 w-5" /> Print PDF
+      </Button>
     </div>
   );
 };
