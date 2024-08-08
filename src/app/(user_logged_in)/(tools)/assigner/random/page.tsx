@@ -26,7 +26,7 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { type AssignedData, runRandomAssigner } from "../actions";
+import { runRandomAssigner } from "./actions";
 import { useAuth } from "@clerk/nextjs";
 import {
   Collapsible,
@@ -37,7 +37,7 @@ import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { useToast } from "~/components/ui/use-toast";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-import { PDFGenerator } from "../components/PDF";
+import { PDFGenerator, type AssignedData } from "../components/PDF";
 
 const runAssignerSchema = z.object({
   assignerId: z.string().min(1, "Assigner is required"),
@@ -80,12 +80,12 @@ export default function RandomAssignerPage() {
       setIsRunning(true);
       setSubmitError(null);
       setAssignedData(null);
-      const result: AssignerResult = await runRandomAssigner(
+      const result = (await runRandomAssigner(
         userId,
         data.classId,
         data.assignerId,
         data.selectedGroups,
-      );
+      )) as AssignerResult;
       if (result?.success) {
         setAssignedData(result?.data);
         // data is returned here, now need to print a PDF of the data as a table
@@ -159,7 +159,6 @@ export default function RandomAssignerPage() {
                     />
                     <FormField
                       control={form.control}
-                      d
                       name="classId"
                       render={({ field }) => (
                         <FormItem>

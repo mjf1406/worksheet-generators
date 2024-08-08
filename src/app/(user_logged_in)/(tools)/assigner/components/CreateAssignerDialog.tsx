@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Label } from "~/components/ui/label";
-import { createAssigner } from "../actions";
+import { createAssigner } from "../random/actions";
 import { useToast } from "~/components/ui/use-toast";
 
 const AssignerDialog = () => {

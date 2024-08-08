@@ -1,4 +1,4 @@
-import { DataModel } from "~/app/(user_logged_in)/(tools)/assigner/actions";
+import type { DataModel } from "~/app/(user_logged_in)/(tools)/assigner/random/actions";
 
 // Server Types
 export type UserDb = {

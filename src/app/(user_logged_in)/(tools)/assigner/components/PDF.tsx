@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   table: {
-    display: "table",
     width: "auto",
     borderStyle: "solid",
     borderWidth: 1,
@@ -64,7 +63,6 @@ const styles = StyleSheet.create({
 const AssignerPDF = ({ data }: { data: AssignedData }) => {
   const keys = Object.keys(data.assignedData);
   const totalWidth = 100;
-  const itemColWidth = 15;
   const numberColWidth = 10;
   const nameColWidth = 30;
   const keyWidth = numberColWidth + nameColWidth;
@@ -85,38 +83,58 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
         <Text style={styles.title}>{data.name} Assigner</Text>
         <View style={styles.table}>
           {/* Table Header */}
-          <View style={[styles.tableRow, styles.tableHeader]}>
+          <View style={styles.tableRow}>
             <View
-              style={[styles.tableCol, { width: `${adjustedItemColWidth}%` }]}
+              style={[
+                styles.tableCol,
+                styles.tableHeader,
+                { width: `${adjustedItemColWidth}%` },
+              ]}
             >
               <Text style={styles.tableCell}>{data.name}</Text>
             </View>
             {keys.map((key) => (
               <View
                 key={key}
-                style={[styles.tableCol, { width: `${keyWidth}%` }]}
+                style={[
+                  styles.tableCol,
+                  styles.keyHeader,
+                  { width: `${keyWidth}%` },
+                ]}
               >
-                <Text style={[styles.tableCell, styles.keyHeader]}>{key}</Text>
+                <Text style={styles.tableCell}>{key}</Text>
               </View>
             ))}
           </View>
           {/* Sub-header for student number and name */}
-          <View style={[styles.tableRow, styles.tableHeader]}>
+          <View style={styles.tableRow}>
             <View
-              style={[styles.tableCol, { width: `${adjustedItemColWidth}%` }]}
+              style={[
+                styles.tableCol,
+                styles.tableHeader,
+                { width: `${adjustedItemColWidth}%` },
+              ]}
             >
               <Text style={styles.tableCell}></Text>
             </View>
             {keys.flatMap((key) => [
               <View
                 key={`${key}-number`}
-                style={[styles.tableCol, { width: `${numberColWidth}%` }]}
+                style={[
+                  styles.tableCol,
+                  styles.tableHeader,
+                  { width: `${numberColWidth}%` },
+                ]}
               >
                 <Text style={styles.tableCell}>Number</Text>
               </View>,
               <View
                 key={`${key}-name`}
-                style={[styles.tableCol, { width: `${nameColWidth}%` }]}
+                style={[
+                  styles.tableCol,
+                  styles.tableHeader,
+                  { width: `${nameColWidth}%` },
+                ]}
               >
                 <Text style={styles.tableCell}>Name</Text>
               </View>,
@@ -131,7 +149,7 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
                 <Text style={styles.tableCell}>{item}</Text>
               </View>
               {keys.flatMap((key) => {
-                const assignment = data.assignedData[key].find(
+                const assignment = data.assignedData[key]?.find(
                   (a) => a.item === item,
                 );
                 return [
@@ -140,7 +158,7 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
                     style={[styles.tableCol, { width: `${numberColWidth}%` }]}
                   >
                     <Text style={styles.tableCell}>
-                      {assignment?.studentNumber || ""}
+                      {assignment?.studentNumber ?? ""}
                     </Text>
                   </View>,
                   <View
@@ -148,7 +166,7 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
                     style={[styles.tableCol, { width: `${nameColWidth}%` }]}
                   >
                     <Text style={styles.tableCell}>
-                      {assignment?.studentName || ""}
+                      {assignment?.studentName ?? ""}
                     </Text>
                   </View>,
                 ];
@@ -172,13 +190,13 @@ const PDFActions = ({ data }: { data: AssignedData }) => {
 
   const generatePdfBlob = async () => {
     const blob = await pdf(<AssignerPDF data={data} />).toBlob();
-    const url = URL.createObjectURL(blob);
-    setUrl(url);
-    return url;
+    const newUrl = URL.createObjectURL(blob);
+    setUrl(newUrl);
+    return newUrl;
   };
 
   const handlePrint = async () => {
-    const pdfUrl = url || (await generatePdfBlob());
+    const pdfUrl = url ?? (await generatePdfBlob());
     window.open(pdfUrl, "_blank");
   };
 
@@ -188,7 +206,7 @@ const PDFActions = ({ data }: { data: AssignedData }) => {
         document={<AssignerPDF data={data} />}
         fileName="assignment_results.pdf"
       >
-        {({ blob, url, loading, error }) => (
+        {({ loading }) => (
           <Button disabled={loading}>
             {loading ? (
               "Generating PDF..."
@@ -217,9 +235,7 @@ type AssignmentItem = {
   studentName: string;
 };
 
-type AssignedData = {
+export type AssignedData = {
   name: string;
-  assignedData: {
-    [key: string]: AssignmentItem[];
-  };
+  assignedData: Record<string, AssignmentItem[]>;
 };

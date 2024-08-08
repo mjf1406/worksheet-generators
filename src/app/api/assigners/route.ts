@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { getAssignersByUserId } from '~/app/(user_logged_in)/(tools)/assigner/actions';
+import { getAssignersByUserId } from '~/app/(user_logged_in)/(tools)/assigner/random/actions';
 export const dynamic = 'force-dynamic'
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {

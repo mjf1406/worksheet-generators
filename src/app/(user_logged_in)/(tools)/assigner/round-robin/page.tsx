@@ -26,7 +26,6 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { type AssignedData, runRoundRobinAssigner } from "../actions";
 import { useAuth } from "@clerk/nextjs";
 import {
   Collapsible,
@@ -37,7 +36,8 @@ import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
 import { useToast } from "~/components/ui/use-toast";
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-import { PDFGenerator } from "../components/PDF";
+import { PDFGenerator, type AssignedData } from "../components/PDF";
+import { runRoundRobinAssigner } from "./actions";
 
 const runAssignerSchema = z.object({
   assignerId: z.string().min(1, "Assigner is required"),
@@ -80,12 +80,12 @@ export default function RoundRobinAssignerPage() {
       setIsRunning(true);
       setSubmitError(null);
       setAssignedData(null);
-      const result: AssignerResult = await runRoundRobinAssigner(
+      const result = (await runRoundRobinAssigner(
         userId,
         data.classId,
         data.assignerId,
         data.selectedGroups,
-      );
+      )) as AssignerResult;
       if (result?.success) {
         setAssignedData(result?.data);
       } else {
@@ -158,7 +158,6 @@ export default function RoundRobinAssignerPage() {
                     />
                     <FormField
                       control={form.control}
-                      d
                       name="classId"
                       render={({ field }) => (
                         <FormItem>

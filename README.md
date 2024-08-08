@@ -53,8 +53,8 @@ This is the collection of worksheet generators that I have created as I needed t
 
 2024/08/08
 
-- added: Assigner, Round-Robin
-- added: Assigner, Random tool
+- added: Assigner, Round-Robin & user can download or print the resultant table as PDF
+- added: Assigner, Random tool & user can download or print the resultant table as PDF
 
 2024/08/06
 
