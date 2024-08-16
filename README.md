@@ -12,21 +12,18 @@ This is the collection of worksheet generators that I have created as I needed t
   - [WordsAPI](https://www.wordsapi.com/)
 -
 
-### p2
+### p3
 
 - integrate Google Gemini API (because it's the only one that's free)
 - integrate other models and let the user purchase tokens
   - Stripe
 - tool: text scaffolder (duplicates [this](https://www.magicschool.ai/tools/text-scaffolder-tool). This tool only outputs vocabulary and questions, it does NOT scaffold.)
 
-### p1
+### p2
 
-- worksheet: word search
-- worksheet: scramble words
-- worksheet: cloze
-- worksheet: crossword
 - worksheet: Custom (user picks and chooses which ones to include and the form is built dynamically to accommodate)
 - worksheet: Vocabulary Hunt (uses the reading passage generator tool)
+- worksheet: cloze
 - tool: reading passage generator (similar to [this](https://www.magicschool.ai/tools/vocabulary-based-text-generator))
   - use morphological variations?
   - generate one for each student?
@@ -36,18 +33,25 @@ This is the collection of worksheet generators that I have created as I needed t
   - length (only appears if **generate for each student** is unchecked)
   - grade level (only appears if **generate for each student** is unchecked)
   - generate comprehension questions?
+
+### p1
+
+- worksheet: word search
+- worksheet: scramble words
+- worksheet: crossword
 - tool: classroom clock (duplicates [Class Timers](https://mjf1406.github.io/class-timers/index.html))
+
+### p0
+
+- backend: redid the API using tRPC
+- tool: MagniText -- use a fullscreen modal to display the text
+- tool: local chat -- launch a chat window that allows the device to be passed between parties to have a silent chat.
 - tool: Shuffler (randomize the order of the class by group)
   - shuffle students (duplicates [Shuffle](https://mjf1406.github.io/various-classroom-tools/))
     - ensuring each student goes first and last before allowing anyone to go first or last again
-- tool: Randomizer (random picker)
-  - student
-  - group
-  - student from group
-  - team
-  - classes
-
-### p0
+- tool: Randomizer (random picker) -- allows the user to randomize basically everything
+- URLs: put tools behind `/tools/`
+- URLs: put worksheet generators behind `/worksheet-generators/`
 
 ## Change Log
 
