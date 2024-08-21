@@ -43,6 +43,9 @@ export function Sidebar() {
             >
               {APP_NAME}
             </h1>
+            <div className="text-top -ml-1 justify-start self-start text-xs">
+              [ALPHA]
+            </div>
           </Link>
         </Button>
         <Menu isOpen={sidebar?.isOpen} />

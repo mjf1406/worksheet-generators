@@ -30,6 +30,9 @@ export function SheetMenu() {
             <Link href="/" className="flex items-center gap-2">
               <Logo fill="hsl(var(--primary))" size="25" />
               <h1 className="text-lg font-bold">{APP_NAME}</h1>
+              <div className="text-top -ml-1 justify-start self-start text-xs">
+                [ALPHA]
+              </div>
             </Link>
           </Button>
         </SheetHeader>

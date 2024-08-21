@@ -40,12 +40,12 @@ This is the collection of worksheet generators that I have created as I needed t
 - worksheet: scramble words
 - worksheet: crossword
 - tool: classroom clock (duplicates [Class Timers](https://mjf1406.github.io/class-timers/index.html))
+- tool: MagniText -- use a fullscreen modal to display the text
+- tool: local chat -- launch a chat window that allows the device to be passed between parties to have a silent chat.
 
 ### p0
 
 - backend: redid the API using tRPC
-- tool: MagniText -- use a fullscreen modal to display the text
-- tool: local chat -- launch a chat window that allows the device to be passed between parties to have a silent chat.
 - tool: Shuffler (randomize the order of the class by group)
   - shuffle students (duplicates [Shuffle](https://mjf1406.github.io/various-classroom-tools/))
     - ensuring each student goes first and last before allowing anyone to go first or last again
@@ -53,8 +53,14 @@ This is the collection of worksheet generators that I have created as I needed t
 - URLs: put tools behind `/tools/`
 - URLs: put worksheet generators behind `/worksheet-generators/`
 - added: Assigner, Random now allows for one boy and one girl to be selected if there are two jobs with the same name
+- fixed: groups are now in the UI upon creation, no longer requiring a refresh
 
 ## Change Log
+
+2024/08/21
+
+- fixed: the DB no longer has strange errors
+- added: added [ALPHA] to the sidebar logo
 
 2024/08/08
 
