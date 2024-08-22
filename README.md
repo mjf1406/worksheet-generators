@@ -57,6 +57,10 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ## Change Log
 
+2024/08/22
+
+- fixed: server no longer loads stale data
+
 2024/08/21
 
 - fixed: the DB no longer has strange errors

@@ -44,6 +44,7 @@ async function fetchAssigners(
 
 export default function AssignerSelect({ onAssignerSelect }: SelectProps) {
   const [assigners, setAssigners] = useState<Assigner[]>([]);
+  console.log("🚀 ~ AssignerSelect ~ assigners:", assigners);
   const [isLoading, setIsLoading] = useState(true);
   const { userId } = useAuth();
   const pathname = usePathname();
@@ -60,7 +61,7 @@ export default function AssignerSelect({ onAssignerSelect }: SelectProps) {
       .catch((error) => {
         const err = error as Error;
         console.error("failed to fetch assigners data", err);
-        throw new Error("failed to fetch assigners", err);
+        // throw new Error("failed to fetch assigners", err);
       });
   }, [userId, urlParam]);
 

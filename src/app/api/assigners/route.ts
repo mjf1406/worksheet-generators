@@ -5,11 +5,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const userId: string | null = req.nextUrl.searchParams.get('userId');
     const type: string | null = req.nextUrl.searchParams.get('type');
-    console.log("🚀 ~ GET ~ type:", type)
     if (!userId) throw new Error('User not authenticated');
     if (!type || type != "random" && type != "round-robin") throw new Error('Type is undefined');
 
     const data: unknown = await getAssignersByUserId(userId, type);
+    console.log("🚀 ~ GET ~ data:", data)
 
     return new NextResponse(JSON.stringify(data), {
       status: 200,
