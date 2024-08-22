@@ -22,7 +22,6 @@ async function fetchAssigners(
   if (!type) throw new Error("Type is undefined");
   try {
     const params = new URLSearchParams({
-      userId: userId,
       type: type,
     });
 
