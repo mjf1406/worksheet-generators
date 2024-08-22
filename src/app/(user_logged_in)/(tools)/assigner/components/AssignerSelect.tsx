@@ -1,6 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import type { Assigner } from "~/server/db/types";
 import {
   Select,
@@ -32,19 +30,16 @@ async function fetchAssigners(
     if (!response.ok) {
       throw new Error("Failed to fetch assigners");
     }
-    const text: string = await response.text(); // Make this operation await so it completes here
-    const data: Assigner[] = JSON.parse(text) as Assigner[];
+    const data: Assigner[] = (await response.json()) as Assigner[];
     return data;
   } catch (err) {
-    const error = err as Error;
-    console.error("failed to parse assigners", error);
-    throw new Error("failed to parse assigners");
+    console.error("Failed to fetch or parse assigners", err);
+    throw new Error("Failed to fetch or parse assigners");
   }
 }
 
 export default function AssignerSelect({ onAssignerSelect }: SelectProps) {
   const [assigners, setAssigners] = useState<Assigner[]>([]);
-  console.log("🚀 ~ AssignerSelect ~ assigners:", assigners);
   const [isLoading, setIsLoading] = useState(true);
   const { userId } = useAuth();
   const pathname = usePathname();
@@ -52,26 +47,34 @@ export default function AssignerSelect({ onAssignerSelect }: SelectProps) {
     null,
   );
 
-  useEffect(() => {
-    void fetchAssigners(userId, urlParam)
-      .then((data) => {
+  const fetchAssignersData = useCallback(async () => {
+    if (userId && urlParam) {
+      setIsLoading(true);
+      try {
+        const data = await fetchAssigners(userId, urlParam);
         setAssigners(data);
+      } catch (error) {
+        console.error("Failed to fetch assigners data", error);
+      } finally {
         setIsLoading(false);
-      })
-      .catch((error) => {
-        const err = error as Error;
-        console.error("failed to fetch assigners data", err);
-        // throw new Error("failed to fetch assigners", err);
-      });
+      }
+    }
   }, [userId, urlParam]);
 
   useEffect(() => {
     if (pathname) {
       const segments = pathname.split("/");
-      const lastSegment = segments[segments.length - 1];
-      setUrlParam(lastSegment as "random" | "round-robin" | null);
+      const lastSegment = segments[segments.length - 1] as
+        | "random"
+        | "round-robin"
+        | null;
+      setUrlParam(lastSegment);
     }
   }, [pathname]);
+
+  useEffect(() => {
+    void fetchAssignersData();
+  }, [fetchAssignersData]);
 
   return (
     <div className="flex w-full items-center gap-2">

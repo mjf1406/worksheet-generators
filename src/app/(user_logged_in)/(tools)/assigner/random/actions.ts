@@ -49,7 +49,8 @@ export async function createAssigner(input: z.infer<typeof assignerSchema>){
             items: JSON.stringify(input.items),
             assigner_type: input.type
         })
-        revalidatePath(`/assigner`)
+        revalidatePath(`/assigner/random`)
+        revalidatePath(`/assigner/round-robin`)
         return { success: true, message: 'Students added successfully' }
     } catch (error) {
         if (error instanceof z.ZodError) {
