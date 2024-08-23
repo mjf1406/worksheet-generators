@@ -52,10 +52,13 @@ This is the collection of worksheet generators that I have created as I needed t
 - tool: Randomizer (random picker) -- allows the user to randomize basically everything
 - URLs: put tools behind `/tools/`
 - URLs: put worksheet generators behind `/worksheet-generators/`
-- added: Assigner, Random now allows for one boy and one girl to be selected if there are two jobs with the same name
 - fixed: groups are now in the UI upon creation, no longer requiring a refresh
 
 ## Change Log
+
+2024/08/23
+
+- added: Assigner, Random now allows for one boy and one girl to be selected if there are two jobs with the same name
 
 2024/08/22
 

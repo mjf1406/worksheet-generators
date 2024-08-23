@@ -86,6 +86,7 @@ export default function RoundRobinAssignerPage() {
         data.assignerId,
         data.selectedGroups,
       )) as AssignerResult;
+      // console.log("🚀 ~ onSubmit ~ result:", result);
       if (result?.success) {
         setAssignedData(result?.data);
       } else {
@@ -294,3 +295,46 @@ export default function RoundRobinAssignerPage() {
     </ContentLayout>
   );
 }
+
+// const styles = StyleSheet.create({
+//   page: {
+//     flexDirection: "column",
+//     backgroundColor: "#ffffff",
+//     padding: 10,
+//     fontFamily: "Roboto",
+//   },
+//   title: {
+//     fontSize: 24,
+//     marginBottom: 10,
+//     textAlign: "center",
+//   },
+//   table: {
+//     width: "auto",
+//     borderStyle: "solid",
+//     borderWidth: 1,
+//     borderRightWidth: 0,
+//     borderBottomWidth: 0,
+//     marginBottom: 5,
+//   },
+//   tableRow: {
+//     margin: "auto",
+//     flexDirection: "row",
+//   },
+//   tableCol: {
+//     borderStyle: "solid",
+//     borderWidth: 1,
+//     borderLeftWidth: 0,
+//     borderTopWidth: 0,
+//   },
+//   tableCell: {
+//     margin: 2,
+//     fontSize: 16,
+//     textAlign: "center",
+//   },
+//   tableHeader: {
+//     backgroundColor: "#f0f0f0",
+//   },
+//   keyHeader: {
+//     backgroundColor: "#e0e0e0",
+//   },
+// });

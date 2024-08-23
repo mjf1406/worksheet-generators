@@ -61,26 +61,22 @@ const styles = StyleSheet.create({
 });
 
 const AssignerPDF = ({ data }: { data: AssignedData }) => {
-  const keys = Object.keys(data.assignedData);
-  const totalWidth = 100;
+  const groups: string[] = Object.keys(data.assignedData);
+  const jobColWidth = 20;
   const numberColWidth = 10;
   const nameColWidth = 30;
-  const keyWidth = numberColWidth + nameColWidth;
+  const groupColWidth = numberColWidth + nameColWidth;
 
-  const adjustedItemColWidth = totalWidth - keys.length * keyWidth;
-
-  const allItems = Array.from(
-    new Set(
-      Object.values(data.assignedData).flatMap((items) =>
-        items.map((item) => item.item),
-      ),
-    ),
-  ).sort();
+  // Safely get the first group's data or use an empty array
+  const firstGroupKey = groups[0];
+  const rows: AssignmentItem[] = firstGroupKey
+    ? (data.assignedData[firstGroupKey] ?? [])
+    : [];
 
   return (
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
-        <Text style={styles.title}>{data.name} Assigner</Text>
+        <Text style={styles.title}>{data.name}</Text>
         <View style={styles.table}>
           {/* Table Header */}
           <View style={styles.tableRow}>
@@ -88,21 +84,21 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
               style={[
                 styles.tableCol,
                 styles.tableHeader,
-                { width: `${adjustedItemColWidth}%` },
+                { width: `${jobColWidth}%` },
               ]}
             >
               <Text style={styles.tableCell}>{data.name}</Text>
             </View>
-            {keys.map((key) => (
+            {groups.map((group) => (
               <View
-                key={key}
+                key={group}
                 style={[
                   styles.tableCol,
                   styles.keyHeader,
-                  { width: `${keyWidth}%` },
+                  { width: `${groupColWidth}%` },
                 ]}
               >
-                <Text style={styles.tableCell}>{key}</Text>
+                <Text style={styles.tableCell}>{group}</Text>
               </View>
             ))}
           </View>
@@ -112,14 +108,14 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
               style={[
                 styles.tableCol,
                 styles.tableHeader,
-                { width: `${adjustedItemColWidth}%` },
+                { width: `${jobColWidth}%` },
               ]}
             >
               <Text style={styles.tableCell}></Text>
             </View>
-            {keys.flatMap((key) => [
+            {groups.flatMap((group) => [
               <View
-                key={`${key}-number`}
+                key={`${group}-number`}
                 style={[
                   styles.tableCol,
                   styles.tableHeader,
@@ -129,7 +125,7 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
                 <Text style={styles.tableCell}>Number</Text>
               </View>,
               <View
-                key={`${key}-name`}
+                key={`${group}-name`}
                 style={[
                   styles.tableCol,
                   styles.tableHeader,
@@ -141,28 +137,25 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
             ])}
           </View>
           {/* Table Body */}
-          {allItems.map((item) => (
-            <View key={item} style={styles.tableRow}>
-              <View
-                style={[styles.tableCol, { width: `${adjustedItemColWidth}%` }]}
-              >
-                <Text style={styles.tableCell}>{item}</Text>
+          {rows.map((row: AssignmentItem, index: number) => (
+            <View key={index} style={styles.tableRow}>
+              <View style={[styles.tableCol, { width: `${jobColWidth}%` }]}>
+                <Text style={styles.tableCell}>{row.item}</Text>
               </View>
-              {keys.flatMap((key) => {
-                const assignment = data.assignedData[key]?.find(
-                  (a) => a.item === item,
-                );
+              {groups.flatMap((group) => {
+                const groupData = data.assignedData[group];
+                const assignment = groupData?.[index];
                 return [
                   <View
-                    key={`${key}-${item}-number`}
+                    key={`${group}-${index}-number`}
                     style={[styles.tableCol, { width: `${numberColWidth}%` }]}
                   >
                     <Text style={styles.tableCell}>
-                      {assignment?.studentNumber ?? ""}
+                      {assignment?.studentNumber?.toString() ?? ""}
                     </Text>
                   </View>,
                   <View
-                    key={`${key}-${item}-name`}
+                    key={`${group}-${index}-name`}
                     style={[styles.tableCol, { width: `${nameColWidth}%` }]}
                   >
                     <Text style={styles.tableCell}>
@@ -231,7 +224,7 @@ export const PDFGenerator = ({ data }: { data: AssignedData }) => {
 
 type AssignmentItem = {
   item: string;
-  studentNumber: string;
+  studentNumber: number | null;
   studentName: string;
 };
 
