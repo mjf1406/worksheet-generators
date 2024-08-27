@@ -5,6 +5,7 @@ import { Toaster } from "~/components/ui/toaster";
 import { ThemeProvider } from "~/components/theme/theme-provider";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Providers from "./providers";
 
 export const metadata = {
   title: "ClassQuest",
@@ -27,10 +28,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <main>{children}</main>
-            <Analytics />
-            <SpeedInsights />
-            <Toaster />
+            <Providers>
+              <main>{children}</main>
+              <Analytics />
+              <SpeedInsights />
+              <Toaster />
+            </Providers>
           </ThemeProvider>
         </body>
       </html>

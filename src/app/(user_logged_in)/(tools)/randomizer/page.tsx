@@ -1,6 +1,10 @@
-import Link from "next/link";
-
-import PlaceholderContent from "~/components/demo/placeholder-content";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import fetchClassesGroupsStudents from "~/app/api/fetches";
+import Randomizer from "./Randomizer"; // Adjust this import path as needed
 import { ContentLayout } from "~/components/admin-panel/content-layout";
 import {
   Breadcrumb,
@@ -10,34 +14,41 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
+import Link from "next/link";
 
-export default function RandomizerPage() {
+export default async function RandomizerPage() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["classes"],
+    queryFn: fetchClassesGroupsStudents,
+  });
+
+  /*
+    User needs to be able to randomly select...
+      - a class
+      - a group within a specified class
+      - a student within a specified group
+      - a student within a specified class
+  */
+
   return (
-    <ContentLayout title="Randomizer">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">Home</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Randomizer</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <div className="mt-5 flex w-full flex-col items-center justify-center gap-4">
-        <p>
-          Looking for a way to omit students/groups/classes that have already
-          been picked? Use{" "}
-          <Link className="underline" href={"/shuffler"}>
-            Shuffler
-          </Link>
-          .
-        </p>
-      </div>
-      <PlaceholderContent />
-    </ContentLayout>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <ContentLayout title="Randomizer">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/">Home</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Randomizer</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <Randomizer />
+      </ContentLayout>
+    </HydrationBoundary>
   );
 }

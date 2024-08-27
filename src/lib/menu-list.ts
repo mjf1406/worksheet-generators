@@ -102,14 +102,14 @@ export function getMenuList(pathname: string): Group[] {
           under_construction: true,
           submenus: []
         },
-        {
-          href: "/fact-of-the-day",
-          label: "Fact of the Day",
-          active: pathname.includes("/fact-of-the-day"),
-          icon: BookKey,
-          under_construction: true,
-          submenus: []
-        },
+        // {
+        //   href: "/fact-of-the-day",
+        //   label: "Fact of the Day",
+        //   active: pathname.includes("/fact-of-the-day"),
+        //   icon: BookKey,
+        //   under_construction: true,
+        //   submenus: []
+        // },
         {
 
           href: "/randomizer",
@@ -128,7 +128,7 @@ export function getMenuList(pathname: string): Group[] {
           active: pathname.includes("/shuffler"),
           icon: Shuffle,
 
-          under_construction: true,
+          under_construction: false,
 
 
           submenus: []
@@ -224,7 +224,7 @@ export function getMenuList(pathname: string): Group[] {
           label: "Account",
           active: pathname.includes("/account"),
           icon: User,
-          under_construction: false,
+          under_construction: true,
           submenus: []
         },
         {
@@ -232,7 +232,7 @@ export function getMenuList(pathname: string): Group[] {
           label: "Settings",
           active: pathname.includes("/settings"),
           icon: Settings,
-          under_construction: false,
+          under_construction: true,
           submenus: []
         }
       ]

@@ -13,28 +13,26 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
-import fetchClassesGroupsStudents from "~/app/api/fetches";
-import Shuffler from "./Shuffler";
+import PlaceholderContent from "~/components/demo/placeholder-content";
+
+async function getClasses() {
+  const res = await fetch("/api/getClasses");
+  if (!res.ok) {
+    throw new Error("Network response was not ok");
+  }
+  return res.json();
+}
 
 export default async function ShufflerPage() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["classes"],
-    queryFn: fetchClassesGroupsStudents,
+    queryFn: getClasses,
   });
-
-  /*
-    User needs to be able to shuffle -- while ensuring all 
-    items go first and last before anyone can go first and last again -- ...
-      - classes
-      - selected groups within a specified class
-      - selected students from within a specified group
-      - selected students from within a specified class
-  */
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ContentLayout title="Shuffler">
+      <ContentLayout title="Random Event">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -44,11 +42,12 @@ export default async function ShufflerPage() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Shuffler</BreadcrumbPage>
+              <BreadcrumbPage>Random Event</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <Shuffler />
+        <div className="mt-5 flex w-full flex-col items-center justify-center gap-4"></div>
+        <PlaceholderContent />
       </ContentLayout>
     </HydrationBoundary>
   );

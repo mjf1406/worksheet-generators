@@ -45,16 +45,24 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ### p0
 
+- tool: Random Event
 - backend: redid the API using tRPC
-- tool: Shuffler (randomize the order of the class by group)
-  - shuffle students (duplicates [Shuffle](https://mjf1406.github.io/various-classroom-tools/))
-    - ensuring each student goes first and last before allowing anyone to go first or last again
-- tool: Randomizer (random picker) -- allows the user to randomize basically everything
+- backend: all data fetching is done using ReactQuery now
+  - [ ] My classes
+  - [ ] Random assigner
+  - [ ] Round-Robin assigner
+  - [x] Randomizer
+  - [x] Shuffler
 - URLs: put tools behind `/tools/`
 - URLs: put worksheet generators behind `/worksheet-generators/`
 - fixed: groups are now in the UI upon creation, no longer requiring a refresh
 
 ## Change Log
+
+2024/08/27
+
+- tool: Shuffler
+- tool: Randomizer
 
 2024/08/23
 
