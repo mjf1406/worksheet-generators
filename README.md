@@ -4,7 +4,7 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ## To-do List
 
-### p2
+### p4
 
 - Look into the APIs to determine the tier of a vocabulary word
   - [Datamuse API](https://www.datamuse.com/api/)
@@ -24,7 +24,7 @@ This is the collection of worksheet generators that I have created as I needed t
 - worksheet: Custom (user picks and chooses which ones to include and the form is built dynamically to accommodate)
 - worksheet: Vocabulary Hunt (uses the reading passage generator tool)
 - worksheet: cloze
-- tool: reading passage generator (similar to [this](https://www.magicschool.ai/tools/vocabulary-based-text-generator))
+- worksheet: reading passage generator (similar to [this](https://www.magicschool.ai/tools/vocabulary-based-text-generator))
   - use morphological variations?
   - generate one for each student?
     - automatically set word count by the student's grade level
@@ -54,8 +54,12 @@ This is the collection of worksheet generators that I have created as I needed t
   - [x] Randomizer
   - [x] Shuffler
 - URLs: put tools behind `/tools/`
-- URLs: put worksheet generators behind `/worksheet-generators/`
+- URLs: put worksheet generators behind `/generators/`
 - fixed: groups are now in the UI upon creation, no longer requiring a refresh
+- tool: Shuffler -- shuffle history is now stored in the DB to persist across user sessions
+- tool: Shuffler -- UI now indicates who has been first/last and how many times and on what date
+- tool: Assigner, Round-Robin -- a history of items is now stored with a datetime object and is displayed in the UI as a table
+- Reading Passage is now a Worksheet Generator
 
 ## Change Log
 
