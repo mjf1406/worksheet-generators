@@ -42,6 +42,9 @@ This is the collection of worksheet generators that I have created as I needed t
 - tool: classroom clock (duplicates [Class Timers](https://mjf1406.github.io/class-timers/index.html))
 - tool: MagniText -- use a fullscreen modal to display the text
 - tool: local chat -- launch a chat window that allows the device to be passed between parties to have a silent chat.
+- screen: Class Screen -- a screen that displays the clock and displays shuffler.
+  - Shuffler can be run from another user session, like a phone, thene the results will apear on the screen.
+  - A timer can be set from another user session and will appear on the screen.
 
 ### p0
 
