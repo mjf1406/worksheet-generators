@@ -48,7 +48,14 @@ This is the collection of worksheet generators that I have created as I needed t
 - tool: Points -- track points on a per student, group, and class basis
   - add redemption items
   - implement streaks for doing things, like material check every day, etc.
-  - 
+  - the teacher can upload an image to represent each student.
+- tool: Attendance
+- screen: In-class screen for teacher
+  - quick access to randomizer, shuffler, create a timer -- all get pushed to the Classroom Screen
+  - quick access to attendance, local chat, magnitext
+  - quick access to each student to award/subtract points
+    - can filter the students by group
+  - can easily select multiple students
 
 ### p0
 
