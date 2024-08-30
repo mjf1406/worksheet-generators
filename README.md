@@ -45,6 +45,10 @@ This is the collection of worksheet generators that I have created as I needed t
 - screen: Class Screen -- a screen that displays the clock and displays shuffler.
   - Shuffler can be run from another user session, like a phone, thene the results will apear on the screen.
   - A timer can be set from another user session and will appear on the screen.
+- tool: Points -- track points on a per student, group, and class basis
+  - add redemption items
+  - implement streaks for doing things, like material check every day, etc.
+  - 
 
 ### p0
 
