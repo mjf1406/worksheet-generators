@@ -42,7 +42,7 @@ This is the collection of worksheet generators that I have created as I needed t
 - tool: classroom clock (duplicates [Class Timers](https://mjf1406.github.io/class-timers/index.html))
 - tool: MagniText -- use a fullscreen modal to display the text
 - tool: local chat -- launch a chat window that allows the device to be passed between parties to have a silent chat.
-- screen: Class Screen -- a screen that displays the clock and displays shuffler.
+- screen: Classroom Screen -- a screen that displays the clock and displays shuffler.
   - Shuffler can be run from another user session, like a phone, thene the results will apear on the screen.
   - A timer can be set from another user session and will appear on the screen.
 - tool: Points -- track points on a per student, group, and class basis
@@ -50,7 +50,7 @@ This is the collection of worksheet generators that I have created as I needed t
   - implement streaks for doing things, like material check every day, etc.
   - the teacher can upload an image to represent each student.
 - tool: Attendance based on user's local time zone and loads already input data every time it's clicked on the same day.
-- screen: In-class screen for teacher
+- screen: Teacher screen, in-class
   - quick access to randomizer, shuffler, create a timer -- all get pushed to the Classroom Screen
   - quick access to attendance, local chat, magnitext
   - quick access to each student to award/subtract points
