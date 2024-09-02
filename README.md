@@ -49,7 +49,7 @@ This is the collection of worksheet generators that I have created as I needed t
   - add redemption items
   - implement streaks for doing things, like material check every day, etc.
   - the teacher can upload an image to represent each student.
-- tool: Attendance
+- tool: Attendance based on user's local time zone and loads already input data every time it's clicked on the same day.
 - screen: In-class screen for teacher
   - quick access to randomizer, shuffler, create a timer -- all get pushed to the Classroom Screen
   - quick access to attendance, local chat, magnitext
