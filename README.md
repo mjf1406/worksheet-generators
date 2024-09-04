@@ -83,7 +83,7 @@ This is the collection of worksheet generators that I have created as I needed t
 - tool: Shuffler -- shuffle history is now stored in the DB to persist across user sessions
 - tool: Shuffler -- UI now indicates who has been first/last and how many times and on what date
 - tool: Assigner, Round-Robin -- a history of items is now stored with a datetime object and is displayed in the UI as a table
-- Reading Passage is now a Worksheet Generator
+- Reading Passage is now a Generator
 
 ## Change Log
 
