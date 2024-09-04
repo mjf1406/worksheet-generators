@@ -62,9 +62,10 @@ This is the collection of worksheet generators that I have created as I needed t
       - keep a list of students who are next to them in the DB and use the above to check it
       - this should still be over the year, though, to ensure they sit next to someone new as often as possible
   - Algo steps
-    1. randomly assign a seat where they haven't sat before
-    2. check adjacent person, if already sat next to them, back to step 1.
-    3. check group, if already in the group with the same person, back to step 1 (this one will have a limit because it's not as important as step 2. Maybe make this a convolution step? So once steps 1 and 2 are satisfied, go back over it to satisfy number 3 if it's even possible.)
+    1. shuffle the student list to ensure the order in which they are picked is random each time seats are assigned
+    2. randomly assign a seat where they haven't sat before
+    3. check adjacent person, if already sat next to them, back to step 1.
+    4. check group, if already in the group with the same person, back to step 1 (this one will have a limit because it's not as important as step 2. Maybe make this a convolution step? So once steps 1 and 2 are satisfied, go back over it to satisfy number 3 if it's even possible.)
 
 ### p0
 
