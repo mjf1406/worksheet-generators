@@ -32,7 +32,7 @@ type Class = {
   groups: Group[];
 };
 
-const Randomizer = () => {
+const RandomizerClient = () => {
   const {
     data: classes,
     isLoading,
@@ -185,4 +185,4 @@ const Randomizer = () => {
   );
 };
 
-export default Randomizer;
+export default RandomizerClient;

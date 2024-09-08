@@ -45,6 +45,7 @@ export default function MyClassesPage() {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="mt-5 flex flex-col items-center justify-center gap-10">
+        <h1 className="text-3xl">Classes</h1>
         <div className="flex gap-5">
           <NewClassDialog />
           <Button variant={"secondary"} disabled={true} onClick={addDemos}>

@@ -4,7 +4,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import fetchClassesGroupsStudents from "~/app/api/fetches";
-import Randomizer from "./Randomizer"; // Adjust this import path as needed
+import RandomizerClient from "./RandomizerClient"; // Adjust this import path as needed
 import { ContentLayout } from "~/components/admin-panel/content-layout";
 import {
   Breadcrumb,
@@ -47,7 +47,7 @@ export default async function RandomizerPage() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
-        <Randomizer />
+        <RandomizerClient />
       </ContentLayout>
     </HydrationBoundary>
   );
