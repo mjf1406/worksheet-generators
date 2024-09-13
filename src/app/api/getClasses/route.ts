@@ -39,6 +39,7 @@ async function databaseClassesToCourseMap(
       assigned_date: element.teacher_classes.assigned_date,
       role: element.teacher_classes.role,
       complete: element.classes.complete,
+      students: undefined,
     });
   }
   return classes;

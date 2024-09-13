@@ -1,5 +1,6 @@
 import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
+import { AssignerItemStatuses } from "./types";
 
 // Core Tables
 
@@ -109,7 +110,7 @@ export const assigners = sqliteTable('assigners',
         user_id: text('user_id').notNull().references(() => users.user_id),
         assigner_type: text('assigner_type', { enum: ["random", "round-robin"] }),
         items: text('items', { mode: 'json' }),
-        student_item_status: text('student_item_status', { mode: 'json' }),
+        student_item_status: text('student_item_status', { mode: 'json' }).$type<AssignerItemStatuses>(),
         created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
         updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
     },

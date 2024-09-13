@@ -12,12 +12,12 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import type { Student } from "~/server/db/types";
 import { addGroup } from "../[classId]/createGroup";
 import { useRouter } from "next/navigation";
+import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 
 interface AddGroupDialogProps {
-  students: Student[];
+  students: StudentData[] | undefined;
 }
 
 const AddGroupDialog: React.FC<AddGroupDialogProps> = ({ students }) => {
@@ -103,14 +103,14 @@ const AddGroupDialog: React.FC<AddGroupDialogProps> = ({ students }) => {
           <div className="space-y-2">
             <Label>Select Students</Label>
             <div className="grid grid-cols-2 gap-2">
-              {students.map((student) => (
+              {students?.map((student) => (
                 <div
                   key={student.student_id}
                   className="col-span-1 flex items-center gap-2"
                 >
                   <Checkbox
                     id={`student-${student.student_id}`}
-                    checked={selectedStudents[student.student_id!] ?? false}
+                    checked={selectedStudents[student.student_id] ?? false}
                     onCheckedChange={() =>
                       handleStudentCheck(student.student_id)
                     }

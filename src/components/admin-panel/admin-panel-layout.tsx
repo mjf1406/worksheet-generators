@@ -20,7 +20,7 @@ export default function AdminPanelLayout({
       <Sidebar />
       <main
         className={cn(
-          "min-h-[calc(100vh_-_56px)] bg-zinc-50 transition-[margin-left] duration-300 ease-in-out dark:bg-zinc-900",
+          "min-h-dvh bg-zinc-50 transition-[margin-left] duration-300 ease-in-out dark:bg-zinc-900",
           sidebar?.isOpen === false ? "lg:ml-[90px]" : "lg:ml-72",
         )}
       >
@@ -37,3 +37,5 @@ export default function AdminPanelLayout({
     </>
   );
 }
+
+// replaced min-h-[calc(100vh_-_56px)] from the <main> cn with min-h-dvh

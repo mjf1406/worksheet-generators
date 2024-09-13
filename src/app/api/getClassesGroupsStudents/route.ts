@@ -2,11 +2,11 @@ import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '~/server/db'; // Adjust this path to where your database instance is exported
 import { auth } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
-import { classes, teacher_classes, groups, students, student_groups } from '~/server/db/schema'; // Adjust this path to where your schema is defined
+import { classes, teacher_classes, groups, students, student_groups, student_classes } from '~/server/db/schema'; // Adjust this path to where your schema is defined
 
 export const dynamic = 'force-dynamic'
 
-type ClassData = {
+export type ClassData = {
     class_id: string;
     class_name: string;
     class_language: string;
@@ -18,25 +18,29 @@ type ClassData = {
       s1: boolean;
       s2: boolean;
     } | null;
-    assigned_date: string | null; // Changed to allow null
-    role: string | null; // Changed to allow null
+    assigned_date: string | null;
+    role: string | null;
     groups: {
       group_id: string;
       group_name: string;
-      students: {
-        student_id: string;
-        student_name_en: string;
-        student_name_alt: string | null;
-        student_reading_level: string | null;
-        student_grade: string | null;
-        student_sex: "male" | "female" | null;
-        student_number: number | null;
-        student_email: string | null;
-      }[];
+      students: StudentData[];
     }[];
-  };
+    students: StudentData[];
+};
 
-  async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
+export type StudentData = {
+    student_id: string;
+    student_name_en: string;
+    student_name_alt: string | null;
+    student_reading_level: string | null;
+    student_grade: string | null;
+    student_sex: "male" | "female" | null;
+    student_number: number | null;
+    student_email: string | null;
+    enrollment_date: string | null;
+};
+
+async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
     const classesData = await db
       .select({
         class_id: classes.class_id,
@@ -75,6 +79,7 @@ type ClassData = {
                 student_sex: students.student_sex,
                 student_number: students.student_number,
                 student_email: students.student_email,
+                enrollment_date: student_groups.enrollment_date,
               })
               .from(student_groups)
               .innerJoin(students, eq(student_groups.student_id, students.student_id))
@@ -89,15 +94,33 @@ type ClassData = {
           })
         );
   
+        const allStudentsData = await db
+          .select({
+            student_id: students.student_id,
+            student_name_en: students.student_name_en,
+            student_name_alt: students.student_name_alt,
+            student_reading_level: students.student_reading_level,
+            student_grade: students.student_grade,
+            student_sex: students.student_sex,
+            student_number: students.student_number,
+            student_email: students.student_email,
+            enrollment_date: student_classes.enrollment_date,
+          })
+          .from(student_classes)
+          .innerJoin(students, eq(student_classes.student_id, students.student_id))
+          .where(eq(student_classes.class_id, classData.class_id))
+          .all();
+  
         return {
           ...classData,
           groups: groupsWithStudents,
-        } as ClassData; // Use type assertion here
+          students: allStudentsData,
+        } as ClassData;
       })
     );
   
     return classesWithDetails;
-  }
+}
 
 export async function GET(req: NextRequest) {
   try {

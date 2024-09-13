@@ -1,4 +1,5 @@
-import type { DataModel } from "~/app/(user_logged_in)/(tools)/assigner/random/actions";
+import type { DataModel } from "~/app/(user_logged_in)/tool/assigner/random/actions";
+import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 
 // Server Types
 export type UserDb = {
@@ -34,11 +35,12 @@ export type Course = {
     updated_date: string | undefined;
     created_date: string | undefined;
     students: Student[];
-    teachers: Teacher[];
+    teachers?: Teacher[];
     complete: {
         s1: boolean,
         s2: boolean
     };
+    groups?: Group[]
 }
 
 export type Group = {
@@ -47,7 +49,7 @@ export type Group = {
     class_id: string,
     created_date: string,
     updated_date: string,
-    students: Student[];
+    students: StudentData[];
 }
 
 export type Teacher = {
@@ -75,6 +77,8 @@ export type TeacherCourse = {
         s1: boolean,
         s2: boolean
     };
+    groups?: Group[]
+    students: StudentData[] | undefined
   }
 
 export type Student = {
@@ -116,13 +120,20 @@ export type StudentField = {
     // [key: string]: string | { s1: string; s2: string }; // Index signature
 }
 
+// Assigners Table
 export type Assigner = {
     assigner_id: string,
     name: string,
     user_id: string,
-    type: "random" | "round-robin",
-    items: string[],
-    student_item_status?: DataModel,
-    created_date?: string,
-    updated_date?: string,
+    assigner_type: "random" | "round-robin",
+    items: string,
+    student_item_status: AssignerItemStatuses,
+    created_date: string,
+    updated_date: string,
 }
+
+export type AssignerItemStatusesStudent = number
+export type AssignerItemStatusesItem = Record<string, AssignerItemStatusesStudent>;
+export type AssignerItemStatusesAssigner = Record<string, AssignerItemStatusesItem>;
+export type AssignerItemStatusesClass = Record<string, AssignerItemStatusesAssigner>;
+export type AssignerItemStatuses = Record<string, AssignerItemStatusesClass>

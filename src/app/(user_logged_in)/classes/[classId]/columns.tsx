@@ -11,11 +11,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import type { Student } from "~/server/db/types";
 import { GRADES } from "~/lib/constants";
 import type { CustomTableMeta } from "~/components/ui/data-table";
+import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 
-export const columns: ColumnDef<Student>[] = [
+export const columns: ColumnDef<StudentData>[] = [
   {
     id: "select",
     header: ({ table }) => (

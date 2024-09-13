@@ -73,29 +73,35 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "Tools",
       menus: [
         {
-          href: "/assigner",
+          href: "/tool/assigner",
           label: "Assigners",
-          active: pathname.includes("/assigner"),
+          active: pathname.includes("/tool/assigner"),
           icon: Signpost,
 
           under_construction: false,
           submenus: [
             {
-              href: "/assigner/round-robin",
+              href: "/tool/assigner/round-robin",
               label: "Round-Robin",
-              active: pathname.includes("/assigner/round-robin"),
+              active: pathname.includes("/tool/assigner/round-robin"),
               under_construction: false,
             },
             {
-              href: "/assigner/random",
+              href: "/tool/assigner/random",
               label: "Random",
-              active: pathname.includes("/assigner/random"),
+              active: pathname.includes("/tool/assigner/random"),
               under_construction: false,
+            },
+            {
+              href: "/tool/assigner/seats",
+              label: "Seats",
+              active: pathname.includes("/tool/assigner/seats"),
+              under_construction: true,
             },
           ]
         },
         {
-          href: "/random-event",
+          href: "/tool/random-event",
           label: "Random Event",
           active: pathname.includes("/random-event"),
           icon: Dice5,
@@ -103,7 +109,7 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         // {
-        //   href: "/fact-of-the-day",
+        //   href: "/tool/fact-of-the-day",
         //   label: "Fact of the Day",
         //   active: pathname.includes("/fact-of-the-day"),
         //   icon: BookKey,
@@ -112,7 +118,7 @@ export function getMenuList(pathname: string): Group[] {
         // },
         {
 
-          href: "/randomizer",
+          href: "/tool/randomizer",
           label: "Randomizer",
           active: pathname.includes("/randomizer"),
           icon: Dices,
@@ -123,7 +129,7 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-          href: "/shuffler",
+          href: "/tool/shuffler",
           label: "Shuffler",
           active: pathname.includes("/shuffler"),
           icon: Shuffle,
@@ -134,7 +140,7 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-          href: "/classroom-clock",
+          href: "/tool/classroom-clock",
           label: "Classroom Clock",
           active: pathname.includes("/classroom-clock"),
           icon: Clock,
@@ -144,24 +150,13 @@ export function getMenuList(pathname: string): Group[] {
 
           submenus: []
         },
-        {
-          href: "/reading-passage",
-          label: "Reading Passage",
-          active: pathname.includes("/reading-passage"),
-          icon: Text,
-
-          under_construction: true,
-
-
-          submenus: []
-        }
       ]
     },
     {
       groupLabel: "Worksheet Generators",
       menus: [
         {
-          href: "/word-search",
+          href: "/generator/word-search",
           label: "Word Search",
           active: pathname.includes("/word-search"),
           icon: Newspaper,
@@ -172,7 +167,7 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-          href: "/crossword",
+          href: "/generator/crossword",
           label: "Crossword",
           active: pathname.includes("/crossword"),
           icon: Newspaper,
@@ -183,7 +178,18 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-          href: "/scramble",
+          href: "/generator/reading-passage",
+          label: "Reading Passage",
+          active: pathname.includes("/reading-passage"),
+          icon: Text,
+
+          under_construction: true,
+
+
+          submenus: []
+        },
+        {
+          href: "/generator/scramble",
           label: "Scramble",
           active: pathname.includes("/scramble"),
           icon: Newspaper,
@@ -191,7 +197,7 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-          href: "/cloze",
+          href: "/generator/cloze",
           label: "Cloze",
           active: pathname.includes("/cloze"),
           icon: Newspaper,
@@ -199,7 +205,7 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-          href: "/vocabulary-hunt",
+          href: "/generator/vocabulary-hunt",
           label: "Vocabulary Hunt",
           active: pathname.includes("/vocabulary-hunt"),
           icon: Newspaper,
@@ -207,7 +213,7 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-          href: "/custom",
+          href: "/generator/custom",
           label: "Custom",
           active: pathname.includes("/custom"),
           icon: Newspaper,

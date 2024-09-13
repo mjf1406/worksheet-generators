@@ -41,6 +41,7 @@ import {
 import type { Student } from "~/server/db/types";
 import { updateStudents } from "~/app/(user_logged_in)/classes/[classId]/updateStudents";
 import type { TableMeta } from "@tanstack/react-table";
+import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 
 export interface CustomTableMeta extends TableMeta<Student> {
   isEditing: boolean;
@@ -48,8 +49,8 @@ export interface CustomTableMeta extends TableMeta<Student> {
 }
 
 interface DataTableProps {
-  data: Student[];
-  columns: ColumnDef<Student>[];
+  data: StudentData[] | undefined;
+  columns: ColumnDef<StudentData>[];
 }
 
 export function DataTable({ data, columns }: DataTableProps) {
@@ -67,7 +68,7 @@ export function DataTable({ data, columns }: DataTableProps) {
   const updateData = useCallback(
     (rowIndex: number, columnId: string, value: unknown) => {
       setTableData((old) =>
-        old.map((row, index) => {
+        old?.map((row, index) => {
           if (index === rowIndex) {
             const updatedRow = {
               ...old[rowIndex]!,
@@ -75,8 +76,8 @@ export function DataTable({ data, columns }: DataTableProps) {
             };
             setChangedRows((prev) => ({
               ...prev,
-              [updatedRow.student_id!]: {
-                ...prev[updatedRow.student_id!],
+              [updatedRow.student_id]: {
+                ...prev[updatedRow.student_id],
                 [columnId]: value,
               },
             }));
@@ -123,8 +124,8 @@ export function DataTable({ data, columns }: DataTableProps) {
     setChangedRows({});
   };
 
-  const table = useReactTable<Student>({
-    data: tableData,
+  const table = useReactTable<StudentData>({
+    data: tableData!,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
