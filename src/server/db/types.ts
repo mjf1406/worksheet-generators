@@ -1,4 +1,4 @@
-import type { DataModel } from "~/app/(user_logged_in)/tool/assigner/random/actions";
+import type { DataModel } from "~/app/(user_logged_in)/assigners/random/actions";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 
 // Server Types

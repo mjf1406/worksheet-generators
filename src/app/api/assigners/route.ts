@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { getAssignersByUserId } from '~/app/(user_logged_in)/tool/assigner/random/actions';
+import { getAssignersByUserId } from '~/app/(user_logged_in)/assigners/random/actions';
 import { auth } from '@clerk/nextjs/server'
 
 export const dynamic = 'force-dynamic';

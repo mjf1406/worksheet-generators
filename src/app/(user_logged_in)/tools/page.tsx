@@ -5,22 +5,22 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { Suspense } from "react";
-import ClassList from "./components/ClassList";
-import LoadingPage from "~/components/Loading";
 import { classesOptions } from "~/app/api/queryOptions";
+import LoadingPage from "~/components/Loading";
+import ItemGrid from "~/components/ItemGrid";
+import { toolsData } from "~/lib/constants";
 
-export default async function MyClassesPage() {
+export default async function ToolsPage() {
   const queryClient = new QueryClient();
+
   await queryClient.prefetchQuery(classesOptions);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ContentLayout title="My Classes">
-        <div className="mt-5 flex flex-col items-center justify-center gap-10">
-          <Suspense fallback={<LoadingPage />}>
-            <ClassList />
-          </Suspense>
-        </div>
+      <ContentLayout title="Tools">
+        <Suspense fallback={<LoadingPage />}>
+          <ItemGrid data={toolsData} />
+        </Suspense>
       </ContentLayout>
     </HydrationBoundary>
   );

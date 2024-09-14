@@ -2,15 +2,6 @@
 
 import { useCallback } from "react";
 import { ContentLayout } from "~/components/admin-panel/content-layout";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "~/components/ui/breadcrumb";
-import Link from "next/link";
 import { useToast } from "~/components/ui/use-toast";
 import type { Student } from "~/server/db/types";
 import { DataTable } from "~/components/ui/data-table";
@@ -49,25 +40,6 @@ export default function ClassDetails({ params }: { params: Params }) {
   if (!courseData) {
     return (
       <ContentLayout title="Error">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/">Home</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href="/classes">My Classes</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>Error</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
         <div className="container flex flex-col items-center gap-12 px-4 py-16">
           <h1 className="text-5xl">Error retrieving student roster</h1>
         </div>
@@ -77,25 +49,6 @@ export default function ClassDetails({ params }: { params: Params }) {
 
   return (
     <ContentLayout title={courseData.class_name ? courseData.class_name : ""}>
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">Home</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/classes">My Classes</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>{courseData.class_name}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       <div className="container flex flex-col items-center gap-4 px-4 py-16">
         <div className="flex w-full flex-col gap-4">
           <div className="flex w-full gap-5">

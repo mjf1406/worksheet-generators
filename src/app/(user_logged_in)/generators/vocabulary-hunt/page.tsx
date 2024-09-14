@@ -1,9 +1,9 @@
 import PlaceholderContent from "~/components/demo/placeholder-content";
 import { ContentLayout } from "~/components/admin-panel/content-layout";
 
-export default function DashboardPage() {
+export default function VocabularyHuntPage() {
   return (
-    <ContentLayout title="Dashboard">
+    <ContentLayout title="Vocabulary Hunt">
       <PlaceholderContent />
     </ContentLayout>
   );

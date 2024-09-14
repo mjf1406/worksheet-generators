@@ -12,8 +12,13 @@ import {
   Signpost,
   Dice5,
   BookKey,
-  School
+  School,
+  BrainCircuit,
+  Hammer,
+  ScreenShare,
+  TvMinimal
 } from "lucide-react";
+import { AIBadge } from "~/components/AIBadge";
 
 type Submenu = {
   href: string;
@@ -70,175 +75,53 @@ export function getMenuList(pathname: string): Group[] {
       ]
     },
     {
-      groupLabel: "Tools",
+      groupLabel: "",
       menus: [
         {
-          href: "/tool/assigner",
+          href: "/assigners",
           label: "Assigners",
-          active: pathname.includes("/tool/assigner"),
+          active: pathname.includes("/assigners"),
           icon: Signpost,
-
           under_construction: false,
-          submenus: [
-            {
-              href: "/tool/assigner/round-robin",
-              label: "Round-Robin",
-              active: pathname.includes("/tool/assigner/round-robin"),
-              under_construction: false,
-            },
-            {
-              href: "/tool/assigner/random",
-              label: "Random",
-              active: pathname.includes("/tool/assigner/random"),
-              under_construction: false,
-            },
-            {
-              href: "/tool/assigner/seats",
-              label: "Seats",
-              active: pathname.includes("/tool/assigner/seats"),
-              under_construction: true,
-            },
-          ]
-        },
-        {
-          href: "/tool/random-event",
-          label: "Random Event",
-          active: pathname.includes("/random-event"),
-          icon: Dice5,
-          under_construction: true,
-          submenus: []
-        },
-        // {
-        //   href: "/tool/fact-of-the-day",
-        //   label: "Fact of the Day",
-        //   active: pathname.includes("/fact-of-the-day"),
-        //   icon: BookKey,
-        //   under_construction: true,
-        //   submenus: []
-        // },
-        {
-
-          href: "/tool/randomizer",
-          label: "Randomizer",
-          active: pathname.includes("/randomizer"),
-          icon: Dices,
-
-          under_construction: false,
-
-
-          submenus: []
-        },
-        {
-          href: "/tool/shuffler",
-          label: "Shuffler",
-          active: pathname.includes("/shuffler"),
-          icon: Shuffle,
-
-          under_construction: false,
-
-
-          submenus: []
-        },
-        {
-          href: "/tool/classroom-clock",
-          label: "Classroom Clock",
-          active: pathname.includes("/classroom-clock"),
-          icon: Clock,
-
-          under_construction: true,
-
-
-          submenus: []
-        },
-      ]
-    },
-    {
-      groupLabel: "Worksheet Generators",
-      menus: [
-        {
-          href: "/generator/word-search",
-          label: "Word Search",
-          active: pathname.includes("/word-search"),
-          icon: Newspaper,
-
-          under_construction: true,
-
-
-          submenus: []
-        },
-        {
-          href: "/generator/crossword",
-          label: "Crossword",
-          active: pathname.includes("/crossword"),
-          icon: Newspaper,
-
-          under_construction: true,
-
-
-          submenus: []
-        },
-        {
-          href: "/generator/reading-passage",
-          label: "Reading Passage",
-          active: pathname.includes("/reading-passage"),
-          icon: Text,
-
-          under_construction: true,
-
-
-          submenus: []
-        },
-        {
-          href: "/generator/scramble",
-          label: "Scramble",
-          active: pathname.includes("/scramble"),
-          icon: Newspaper,
-          under_construction: true,
-          submenus: []
-        },
-        {
-          href: "/generator/cloze",
-          label: "Cloze",
-          active: pathname.includes("/cloze"),
-          icon: Newspaper,
-          under_construction: true,
-          submenus: []
-        },
-        {
-          href: "/generator/vocabulary-hunt",
-          label: "Vocabulary Hunt",
-          active: pathname.includes("/vocabulary-hunt"),
-          icon: Newspaper,
-          under_construction: true,
-          submenus: []
-        },
-        {
-          href: "/generator/custom",
-          label: "Custom",
-          active: pathname.includes("/custom"),
-          icon: Newspaper,
-          under_construction: true,
           submenus: []
         }
       ]
     },
     {
-      groupLabel: "User",
+      groupLabel: "",
       menus: [
         {
-          href: "/account",
-          label: "Account",
-          active: pathname.includes("/account"),
-          icon: User,
-          under_construction: true,
+          href: "/generators",
+          label: "Generators",
+          active: pathname.includes("/generators"),
+          icon: Dices,
+          under_construction: false,
           submenus: []
-        },
+        }
+      ]
+    },
+    {
+      groupLabel: "",
+      menus: [
         {
-          href: "/settings",
-          label: "Settings",
-          active: pathname.includes("/settings"),
-          icon: Settings,
-          under_construction: true,
+          href: "/screens",
+          label: "Screens",
+          active: pathname.includes("/screens"),
+          icon: TvMinimal,
+          under_construction: false,
+          submenus: []
+        }
+      ]
+    },
+    {
+      groupLabel: "",
+      menus: [
+        {
+          href: "/tools",
+          label: "Tools",
+          active: pathname.includes("/tools"),
+          icon: Hammer,
+          under_construction: false,
           submenus: []
         }
       ]

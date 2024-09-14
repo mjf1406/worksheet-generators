@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Ellipsis, LogOut } from "lucide-react";
+import { Ellipsis, LogOut, Settings } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "~/lib/utils";
@@ -15,7 +15,9 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "~/components/ui/tooltip";
-import { SignOutButton } from "@clerk/nextjs";
+import { SignedIn, SignOutButton, UserButton } from "@clerk/nextjs";
+import { Separator } from "../ui/separator";
+import { ModeToggle } from "../mode-toggle";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -28,7 +30,7 @@ export function Menu({ isOpen }: MenuProps) {
   return (
     <ScrollArea className="overflow-hidden [&>div>div[style]]:!block">
       <nav className="mt-8 h-full w-full">
-        <ul className="flex min-h-[calc(100vh-48px-36px-16px-32px-8px)] flex-col items-start space-y-1 px-2 lg:min-h-[calc(100vh-32px-40px-32px-8px)]">
+        <ul className="flex min-h-[calc(100vh-48px-36px-16px-32px-8px)] flex-col items-start px-2 lg:min-h-[calc(100vh-32px-40px-32px-8px)]">
           {menuList.map(({ groupLabel, menus }, index) => (
             <li className={cn("w-full", groupLabel ? "pt-5" : "")} key={index}>
               {((isOpen && groupLabel) ?? isOpen === undefined) ? (
@@ -49,7 +51,7 @@ export function Menu({ isOpen }: MenuProps) {
                   </Tooltip>
                 </TooltipProvider>
               ) : (
-                <p className="pb-2"></p>
+                <p className="pb-1"></p>
               )}
               {menus.map(
                 (
@@ -70,7 +72,7 @@ export function Menu({ isOpen }: MenuProps) {
                           <TooltipTrigger asChild>
                             <Button
                               variant={active ? "secondary" : "ghost"}
-                              className="mb-1 h-10 w-full justify-start"
+                              className="h-10 w-full justify-start"
                               asChild
                             >
                               <Link
@@ -119,8 +121,70 @@ export function Menu({ isOpen }: MenuProps) {
               )}
             </li>
           ))}
-          <li className="flex w-full grow items-end">
-            <TooltipProvider disableHoverableContent>
+          <li className="flex w-full grow flex-col items-center justify-end gap-4">
+            <Separator />
+            {isOpen ? (
+              <div className="flex w-full items-center justify-center gap-2">
+                <div className="col-span-1">
+                  <SignedIn>
+                    <UserButton />
+                  </SignedIn>
+                </div>
+                <div>
+                  <Button
+                    asChild
+                    variant={"outline"}
+                    className="h-8 w-8 rounded-full"
+                    size={"icon"}
+                  >
+                    <Link href={"/settings"}>
+                      <Settings className="h-5 w-5" />
+                    </Link>
+                  </Button>
+                </div>
+                <div className="col-span-1">
+                  <ModeToggle />
+                </div>
+              </div>
+            ) : (
+              <div className="flex w-full flex-col items-center justify-center gap-3">
+                <div className="col-span-1">
+                  <ModeToggle />
+                </div>
+                <div>
+                  <TooltipProvider>
+                    <Tooltip delayDuration={100}>
+                      <TooltipTrigger asChild>
+                        <Button
+                          asChild
+                          variant={"outline"}
+                          className="h-8 w-8 rounded-full"
+                          size={"icon"}
+                        >
+                          <Link href={"/settings"}>
+                            <Settings className="h-5 w-5" />
+                          </Link>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side={isOpen ? "top" : "right"}>
+                        Settings
+                      </TooltipContent>
+                      {/* {isOpen ? (
+                        <TooltipContent side="top">Settings</TooltipContent>
+                      ) : (
+                        <TooltipContent side="right">Settings</TooltipContent>
+                      )} */}
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <div className="col-span-1">
+                  <SignedIn>
+                    <UserButton />
+                  </SignedIn>
+                </div>
+              </div>
+            )}
+            {/* <TooltipProvider disableHoverableContent>
               <Tooltip delayDuration={100}>
                 <TooltipTrigger asChild>
                   <SignOutButton>
@@ -146,7 +210,7 @@ export function Menu({ isOpen }: MenuProps) {
                   <TooltipContent side="right">Sign out</TooltipContent>
                 )}
               </Tooltip>
-            </TooltipProvider>
+            </TooltipProvider> */}
           </li>
         </ul>
       </nav>

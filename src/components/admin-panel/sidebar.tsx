@@ -32,20 +32,23 @@ export function Sidebar() {
           asChild
         >
           <Link href="/" className="flex items-center gap-2">
-            <Logo fill="hsl(var(--primary))" size="25" />
-            <h1
-              className={cn(
-                "whitespace-nowrap text-lg font-bold transition-[transform,opacity,display] duration-300 ease-in-out",
-                sidebar?.isOpen === false
-                  ? "hidden -translate-x-96 opacity-0"
-                  : "translate-x-0 opacity-100",
-              )}
-            >
-              {APP_NAME}
-            </h1>
-            <div className="text-top -ml-1 justify-start self-start text-xs">
-              [ALPHA]
-            </div>
+            {sidebar.isOpen ? (
+              <>
+                <Logo fill="hsl(var(--primary))" size="25" />
+                <h1
+                  className={cn(
+                    "whitespace-nowrap text-lg font-bold transition-[transform,opacity,display] duration-300 ease-in-out",
+                  )}
+                >
+                  {APP_NAME}
+                </h1>
+                <div className="text-top -ml-1 justify-start self-start text-xs">
+                  [ALPHA]
+                </div>
+              </>
+            ) : (
+              <Logo fill="hsl(var(--primary))" size="25" />
+            )}
           </Link>
         </Button>
         <Menu isOpen={sidebar?.isOpen} />
