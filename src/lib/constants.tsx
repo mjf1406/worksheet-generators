@@ -262,8 +262,6 @@ export const assignersData: ItemGridData[] = [
     description:
       "Randomly assign students to seats, ensuring boys sit next to girls!",
     icon: RockingChair,
-    badge: null,
     href: "/assigners/seats",
-    under_construction: true,
   },
 ];
