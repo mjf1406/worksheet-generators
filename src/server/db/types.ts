@@ -1,4 +1,4 @@
-import type { DataModel } from "~/app/(user_logged_in)/assigners/random/actions";
+import type { SeatGroup, SeatingHistory } from "~/app/(user_logged_in)/assigners/seats/utils";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 
 // Server Types
@@ -130,6 +130,7 @@ export type Assigner = {
     student_item_status: AssignerItemStatuses,
     created_date: string,
     updated_date: string,
+    groups?: SeatGroup[]
 }
 
 export type AssignerItemStatusesStudent = number
@@ -137,3 +138,12 @@ export type AssignerItemStatusesItem = Record<string, AssignerItemStatusesStuden
 export type AssignerItemStatusesAssigner = Record<string, AssignerItemStatusesItem>;
 export type AssignerItemStatusesClass = Record<string, AssignerItemStatusesAssigner>;
 export type AssignerItemStatuses = Record<string, AssignerItemStatusesClass>
+
+export type AssignerItemStatusesAssignerSeats = SeatingHistory;
+export type AssignerItemStatusesClassSeats = Record<string, AssignerItemStatusesAssignerSeats>;
+export type AssignerItemStatusesSeats = Record<string, AssignerItemStatusesClassSeats>
+
+export type RandomEvent = {
+    name: string,
+    description: string,
+}

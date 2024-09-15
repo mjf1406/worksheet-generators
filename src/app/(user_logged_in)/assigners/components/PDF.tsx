@@ -12,11 +12,31 @@ import {
 import { Button } from "~/components/ui/button";
 import { Download, Printer } from "lucide-react";
 
+// Type definitions
+export type AssignmentItem = {
+  item: string;
+  studentNumber: number | null;
+  studentName: string;
+};
+
+export type AssignedData = {
+  name: string;
+  assignedData: Record<string, AssignmentItem[]>;
+};
+
+// Font registration
 Font.register({
   family: "Roboto",
   src: "https://cdnjs.cloudflare.com/ajax/libs/ink/3.1.10/fonts/Roboto/roboto-light-webfont.ttf",
 });
 
+// Emoji registration
+Font.registerEmojiSource({
+  format: "png",
+  url: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/72x72/",
+});
+
+// Styles
 const styles = StyleSheet.create({
   page: {
     flexDirection: "column",
@@ -60,6 +80,7 @@ const styles = StyleSheet.create({
   },
 });
 
+// AssignerPDF component
 const AssignerPDF = ({ data }: { data: AssignedData }) => {
   const groups: string[] = Object.keys(data.assignedData);
   const jobColWidth = 20;
@@ -67,7 +88,6 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
   const nameColWidth = 30;
   const groupColWidth = numberColWidth + nameColWidth;
 
-  // Safely get the first group's data or use an empty array
   const firstGroupKey = groups[0];
   const rows: AssignmentItem[] = firstGroupKey
     ? (data.assignedData[firstGroupKey] ?? [])
@@ -172,6 +192,7 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
   );
 };
 
+// PDFActions component
 const PDFActions = ({ data }: { data: AssignedData }) => {
   const [url, setUrl] = useState<string | null>(null);
 
@@ -218,17 +239,7 @@ const PDFActions = ({ data }: { data: AssignedData }) => {
   );
 };
 
+// Main PDFGenerator component
 export const PDFGenerator = ({ data }: { data: AssignedData }) => {
   return <PDFActions data={data} />;
-};
-
-export type AssignmentItem = {
-  item: string;
-  studentNumber: number | null;
-  studentName: string;
-};
-
-export type AssignedData = {
-  name: string;
-  assignedData: Record<string, AssignmentItem[]>;
 };

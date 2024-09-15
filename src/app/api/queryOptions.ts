@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
-import type { Assigner, TeacherCourse } from '~/server/db/types';
+import type { Assigner, RandomEvent, TeacherCourse } from '~/server/db/types';
 
 export const assignerOptions = queryOptions<Assigner[]>({
     queryKey: ["assigners"],
@@ -15,4 +15,12 @@ export const classesOptions = queryOptions<TeacherCourse[]>({
         const response = await fetch("/api/getClassesGroupsStudents");
         return response.json();
       },
+})
+
+export const randomEventsOptions = queryOptions<RandomEvent[]>({
+  queryKey: ["random-events"],
+  queryFn: async () => {
+      const response = await fetch("/api/getRandomEvents");
+      return response.json();
+    },
 })

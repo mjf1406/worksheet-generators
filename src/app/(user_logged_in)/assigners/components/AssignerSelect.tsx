@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import type { AssignerGroup } from "./CreateAssignerDialog";
 
 interface Assigner {
   assigner_id: string;
@@ -16,6 +17,7 @@ interface Assigner {
   user_id: string;
   assigner_type: "random" | "round-robin";
   items: string;
+  group?: AssignerGroup[];
   student_item_status: Record<string, unknown> | null;
   created_date: string;
   updated_date: string;

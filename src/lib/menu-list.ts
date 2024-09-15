@@ -25,6 +25,7 @@ type Submenu = {
   label: string;
   active: boolean;
   under_construction: boolean;
+  icon?: LucideIcon;
 };
 
 type Menu = {
@@ -83,7 +84,7 @@ export function getMenuList(pathname: string): Group[] {
           active: pathname.includes("/assigners"),
           icon: Signpost,
           under_construction: false,
-          submenus: []
+          submenus: [ ]
         }
       ]
     },

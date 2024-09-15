@@ -161,7 +161,7 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
   };
 
   return (
-    <div className="flex gap-5">
+    <div className="flex flex-wrap gap-5">
       {groups.map((group) => (
         <div key={group.group_id} className="rounded-lg bg-secondary/30 p-3">
           <div className="flex items-center gap-2">

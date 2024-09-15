@@ -41,49 +41,36 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ### p2
 
-- worksheet: word search
-- worksheet: scramble words
-- worksheet: crossword
 - tool: classroom clock (duplicates [Class Timers](https://mjf1406.github.io/class-timers/index.html))
 - tool: MagniText -- (duplicates [MagniText](https://mjf1406.github.io/magni-text/index.html))
-- tool: local chat -- launch a chat window that allows the device to be passed between parties to have a silent chat.
+- tool: Random Event
 
 ### p1
 
+- worksheet: word search
+- worksheet: scramble words
+- worksheet: crossword
+- tool: local chat -- launch a chat window that allows the device to be passed between parties to have a silent chat.
+
+### p0
+
+- fixed: groups are now in the UI upon creation, no longer requiring a refresh
+  - ⚠️ this will probably require a complete rewrite... having a lot of issues with it
+- tool: Shuffler -- shuffle history is now stored in the DB to persist across user sessions
+- tool: Shuffler -- UI now indicates who has been first/last and how many times and on what date
+- tool: Assigner, Round-Robin -- a history of items is now stored with a datetime object and is displayed in the UI as a table
 - tool: Points -- track points on a per student, group, and class basis
   - add redemption items
   - implement streaks for doing things, like material check every day, etc.
   - the teacher can upload an image to represent each student.
 - tool: Attendance based on user's local time zone and loads already input data every time it's clicked on the same day.
-- tool: Assigner, Seats
-  - need a new way to add this type of assigner, one where they can create groups from the items that they input into the text box
-  - Randomize where girls and boys go? Odd or even
-    - to ensure they don't sit next to each other again, if number is odd, add 1, and if even, subtract 1.
-      - keep a list of students who are next to them in the DB and use the above to check it
-      - this should still be over the year, though, to ensure they sit next to someone new as often as possible
-  - seats are numbered 1-14
-    - 1-4 is Dragon
-    - 5-8 is Robot
-    - 9-11 is Alien
-    - 12-14 is Monkey
-  - Algo steps
-    1. shuffle student list to ensure randomness
-    2. Define weights for each constraint (e.g., gender matching: 3, new neighbor: 2, new group member: 1).
-    3. For each student, calculate a "suitability score" for each available seat based on these weighted constraints.
-    4. Assign the student to the seat with the highest suitability score.
-    5. If no seat meets a minimum threshold, add the student to a "difficult to place" list.
-    6. After initial assignments, attempt to place "difficult" students with relaxed constraints.
-
-### p0
-
-- tool: Random Event
-- fixed: groups are now in the UI upon creation, no longer requiring a refresh
-- tool: Shuffler -- shuffle history is now stored in the DB to persist across user sessions
-- tool: Shuffler -- UI now indicates who has been first/last and how many times and on what date
-- tool: Assigner, Round-Robin -- a history of items is now stored with a datetime object and is displayed in the UI as a table
-- fixed: new sidebar now no longer has a scroll bar on mobile
 
 ## Change Log
+
+2024/09/15
+
+- fixed: new sidebar now no longer has a scroll bar on mobile
+- tool: Assigner, Seats MVP released
 
 2024/09/14
 

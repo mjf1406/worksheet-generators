@@ -4,7 +4,9 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { ContentLayout } from "~/components/admin-panel/content-layout";
-import PlaceholderContent from "~/components/demo/placeholder-content";
+import RandomEventClient from "./RandomEventClient";
+import LoadingPage from "~/components/Loading";
+import { Suspense } from "react";
 
 async function getClasses() {
   const res = await fetch("/api/getClasses");
@@ -24,8 +26,9 @@ export default async function ShufflerPage() {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <ContentLayout title="Random Event">
-        <div className="mt-5 flex w-full flex-col items-center justify-center gap-4"></div>
-        <PlaceholderContent />
+        <Suspense fallback={<LoadingPage />}>
+          <RandomEventClient />
+        </Suspense>
       </ContentLayout>
     </HydrationBoundary>
   );

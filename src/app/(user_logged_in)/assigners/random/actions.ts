@@ -11,7 +11,7 @@ import {
 } from '~/server/db/schema'
 import { auth } from '@clerk/nextjs/server';
 import { generateUuidWithPrefix } from '~/server/db/helperFunction';
-import { and, eq, inArray } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { getClassById } from '~/server/actions/getClassById';
 import { shuffleArray } from '~/server/functions';
 
@@ -29,9 +29,15 @@ export type AssignerData = Record<string, ItemAssignments>;
 export type ClassData = Record<string, AssignerData>;
 export type DataModel = Record<string, ClassData>;
 
+const groupSchema = z.object({
+  name: z.string(),
+  items: z.array(z.string())
+})
+
 const assignerSchema = z.object({
     name: z.string().min(1, "Name is required"),
-    type: z.enum(['random', 'round-robin'], { required_error: "Type is required" }),
+    type: z.enum(['random', 'round-robin', 'seats'], { required_error: "Type is required" }),
+    groups: z.array(groupSchema).optional(),
     items: z.array(z.string()).min(2, "At least 2 items are required"),
     created_date: z.string().optional().nullable(),
     updated_date: z.string().optional().nullable(),
@@ -47,10 +53,13 @@ export async function createAssigner(input: z.infer<typeof assignerSchema>){
             user_id: userId,
             name: input.name,
             items: JSON.stringify(input.items),
-            assigner_type: input.type
+            assigner_type: input.type,
+            groups: input.groups,
         })
         revalidatePath(`/assigner/random`)
         revalidatePath(`/assigner/round-robin`)
+        revalidatePath(`/assigner/seats`)
+        
         return { success: true, message: 'Students added successfully' }
     } catch (error) {
         if (error instanceof z.ZodError) {
@@ -60,25 +69,6 @@ export async function createAssigner(input: z.infer<typeof assignerSchema>){
         console.error('Failed to add Assigner:', error)
         return { success: false, message: 'Failed to create Assigner' }
     }
-}
-
-export async function getAssignersByUserId(userId: string, type: "random" | "round-robin") {
-    try {
-        const userAssigners = await db
-          .select()
-          .from(assignerTable)
-          .where(
-                and(
-                    eq(assignerTable.user_id, userId),
-                    eq(assignerTable.assigner_type, type)
-                )
-        );
-        revalidatePath("/assigner")
-        return userAssigners;
-      } catch (error) {
-        console.error('Error fetching assigners:', error);
-        throw error;
-      }
 }
 
 export async function runRandomAssigner(
@@ -167,7 +157,7 @@ export async function runRandomAssigner(
     }
 }
 // 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213
-export async function getAssignerById(assignerId: string) {
+async function getAssignerById(assignerId: string) {
     if (!assignerId) throw new Error("Assigner ID is undefined")
     try {
         const userAssigners = await db
@@ -180,7 +170,7 @@ export async function getAssignerById(assignerId: string) {
         throw error;
       }
 }
-export async function getGroupsByClassId(classId: string) {
+async function getGroupsByClassId(classId: string) {
     if (!classId) {
         console.error(`Class ID is ${classId}`)
         throw new Error("Class ID is undefined")

@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -31,61 +29,76 @@ export default function CaseStudyCollapsible() {
       </div>
       <CollapsibleContent className="mt-4 space-y-4">
         <p className="text-lg font-semibold">
-          Meet Ms. Garcia: A Middle School Technology Teacher
+          Meet Ms. Thompson: A Middle School Science Teacher
         </p>
-        <div className="rounded-md bg-accent p-4 text-background">
+        <div className="rounded-md bg-accent p-4 text-black">
           <h3 className="mb-2 font-semibold">Classroom Setup:</h3>
           <ul className="ml-6 list-disc space-y-2">
-            <li>Total students: 25</li>
-            <li>Available Chromebooks: 25 (numbered 1-25)</li>
-            <li>Daily computer classes with shared devices</li>
+            <li>Total students: 28</li>
+            <li>Lab stations: 7 tables with 4 seats each, numbered 1-28</li>
+            <li>Mix of boys and girls</li>
+            <li>Various project groups within the class</li>
           </ul>
         </div>
         <p>
-          Ms. Garcia wants to randomly assign Chromebooks to her students each
-          day, ensuring fair usage and shared responsibility for the devices.
-          Here&apos;s how she uses the Random Assigner:
+          Ms. Thompson wants to assign students to lab stations in a way that
+          promotes collaboration, maintains a positive learning environment, and
+          rotates students through different stations over time. Here&apos;s how
+          she uses the Seating Assignment Tool:
         </p>
         <ol className="ml-6 list-decimal space-y-2">
           <li>
-            She selects the &quot;Chromebook Assigner&quot; from the tool
+            She selects the &quot;Seating Assignment Tool&quot; from the
             options.
           </li>
-          <li>She chooses her technology class from the dropdown menu.</li>
-          <li>She ensures all students are included in the assignment pool.</li>
+          <li>She chooses her Science class from the dropdown menu.</li>
+          <li>She inputs her seat identifiers (numbers 1-28 for each seat).</li>
           <li>
-            She clicks &quot;Run Assigner&quot; to generate the random
-            Chromebook assignments.
+            She specifies her project groups, which the tool will try to keep
+            together when possible.
+          </li>
+          <li>
+            She clicks &quot;Generate Assignments&quot; to create the new
+            seating arrangement.
           </li>
         </ol>
-        <p>The Random Assigner ensures that:</p>
+        <p>The Seating Assignment Tool ensures that:</p>
         <ul className="ml-6 list-disc space-y-2">
-          <li>Each student is assigned a Chromebook for the day.</li>
+          <li>Each student is assigned to a specific numbered seat.</li>
           <li>
-            The assignment is truly random, which means a student might get the
-            same Chromebook two days in a row, but that does not matter because
-            Chromebooks are fungible.
+            Boys and girls are distributed evenly across lab stations when
+            possible.
           </li>
           <li>
-            The process is quick and fair, saving Ms. Garcia time at the start
-            of each class.
+            Students are seated with different classmates than in previous
+            assignments as much as possible.
+          </li>
+          <li>
+            Project group members are kept close together when the algorithm
+            allows.
+          </li>
+          <li>
+            The process is quick and fair, saving Ms. Thompson time and avoiding
+            any perception of favoritism.
           </li>
         </ul>
-        <div className="mt-4 rounded-md bg-accent p-4 text-background">
+        <div className="mt-4 rounded-md bg-accent p-4 text-black">
           <h3 className="mb-2 font-semibold">
-            Benefits of Random Assignment for Chromebooks:
+            Benefits of Smart Seating Assignments:
           </h3>
           <p>
-            Unlike a fixed assignment system, the Random Assigner prevents
-            students from becoming too attached to &quot;their&quot; Chromebook.
-            This promotes shared responsibility for all devices and helps in
-            early detection of any issues with specific Chromebooks.
+            This system encourages students to work with a variety of peers over
+            time, fostering a more inclusive classroom environment. It also
+            helps manage lab dynamics by rotating students through different
+            stations, ensuring everyone gets experience with all equipment while
+            creating opportunities for new collaborations.
           </p>
         </div>
         <p className="italic">
-          By using this tool, Ms. Garcia ensures equitable access to technology,
-          teaches students about shared resources, and simplifies her classroom
-          management.
+          By using this tool regularly, Ms. Thompson keeps her science lab
+          dynamic, encourages diverse interactions, and maintains an optimal
+          learning environment for all her students while ensuring they gain
+          experience at every lab station.
         </p>
       </CollapsibleContent>
     </Collapsible>

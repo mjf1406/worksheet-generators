@@ -5,8 +5,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "~/components/ui/button";
-import AssignerDialog from "../components/CreateAssignerDialog";
-import AssignerSelect from "../components/AssignerSelect";
 import ClassSelect from "~/app/(user_logged_in)/classes/components/ClassesSelect";
 import GroupsSelect from "~/app/(user_logged_in)/classes/components/GroupsSelect";
 import {
@@ -19,34 +17,27 @@ import {
 import { useToast } from "~/components/ui/use-toast";
 import { AlertCircle, Loader2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
-import { PDFGenerator, type AssignedData } from "../components/PDF";
 import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { assignerOptions, classesOptions } from "~/app/api/queryOptions";
-import { runAssignerSeats } from "./utils";
 import type { Assigner, TeacherCourse } from "~/server/db/types";
-import DescriptionCollapsible from "./Description";
-import CaseStudyCollapsible from "./CaseStudy";
+import DescriptionCollapsible from "./components/Description";
+import CaseStudyCollapsible from "./components/CaseStudy";
 
 const runAssignerSchema = z.object({
-  assignerId: z.string().min(1, "Assigner is required"),
   classId: z.string().min(1, "Class is required"),
   selectedGroups: z.array(z.string()),
 });
 
 type RunAssignerFormData = z.infer<typeof runAssignerSchema>;
 
-type AssignerResult = {
-  success: boolean;
-  data?: AssignedData;
-  message?: string;
-};
+// export type AssignerResult = {
+//   success: boolean;
+//   message?: string;
+// };
 
-export default function RoundRobinClient() {
+export default function RandomEventClient() {
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const [isRunning, setIsRunning] = useState(false);
-  const [assignedData, setAssignedData] = useState<
-    AssignedData | null | undefined
-  >(null);
   const [submitError, setSubmitError] = useState<string | null | undefined>(
     null,
   );
@@ -56,7 +47,7 @@ export default function RoundRobinClient() {
   const { data: assigners } = useSuspenseQuery(assignerOptions);
   const { data: classesData } = useSuspenseQuery(classesOptions);
 
-  const handleAssignerCreated = async () => {
+  const handleEventCreated = async () => {
     try {
       await queryClient.invalidateQueries({
         queryKey: assignerOptions.queryKey,
@@ -74,7 +65,6 @@ export default function RoundRobinClient() {
   const form = useForm<RunAssignerFormData>({
     resolver: zodResolver(runAssignerSchema),
     defaultValues: {
-      assignerId: "",
       classId: "",
       selectedGroups: [],
     },
@@ -84,25 +74,20 @@ export default function RoundRobinClient() {
     try {
       setIsRunning(true);
       setSubmitError(null);
-      setAssignedData(null);
 
       const classData: TeacherCourse | undefined =
         classesData.find((i) => i.class_id === data.classId) ?? undefined;
-      const assignerData: Assigner | undefined =
-        assigners.find((i) => i.assigner_id === data.assignerId) ?? undefined;
       if (!classData) return "Class data is undefined";
-      if (!assignerData) return "Assigner data is undefined";
-      const result: AssignerResult = await runAssignerSeats(
-        classData,
-        assignerData,
-        data.selectedGroups,
-      );
-      console.log("🚀 ~ onSubmit ~ result:", result);
-      if (result?.success) {
-        setAssignedData(result?.data);
-      } else {
-        setSubmitError(result?.message);
-      }
+      //   const result: AssignerResult = await roundRobinAssigner(
+      //     classData,
+      //     assignerData,
+      //     data.selectedGroups,
+      //   );
+      //   if (result?.success) {
+      //     setAssignedData(result?.data);
+      //   } else {
+      //     setSubmitError(result?.message);
+      //   }
     } catch (error) {
       toast({
         title: "Error",
@@ -126,28 +111,11 @@ export default function RoundRobinClient() {
           <DescriptionCollapsible />
         </div>
         <div className="rounded-lg bg-background p-6 shadow-md">
-          <h2 className="mb-2 text-2xl font-bold">Seats Assigner</h2>
-          <h3 className="mb-4 text-base">
-            Randomly assign students to seats, ensuring boys sit next to girls!
-            Muahahaha!
-          </h3>
-          <AssignerDialog onAssignerCreated={handleAssignerCreated} />
+          <h2 className="mb-2 text-2xl font-bold">Random Event</h2>
+          <h3 className="mb-4 text-base">Roll a random event for the day!</h3>
+          {/* Create Random Event goes here */}
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
-                control={form.control}
-                name="assignerId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Assigner</FormLabel>
-                    <AssignerSelect
-                      onAssignerSelect={(value) => field.onChange(value)}
-                      assigners={assigners}
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="classId"
@@ -194,16 +162,11 @@ export default function RoundRobinClient() {
                     Running...
                   </>
                 ) : (
-                  <>Run Assigner</>
+                  <>Roll an event</>
                 )}
               </Button>
             </form>
           </Form>
-          {assignedData && (
-            <div className="mt-4">
-              <PDFGenerator data={assignedData} />
-            </div>
-          )}
         </div>
       </div>
     </div>

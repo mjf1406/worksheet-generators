@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -8,9 +6,8 @@ import {
   CollapsibleTrigger,
 } from "~/components/ui/collapsible";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import Link from "next/link";
 
-export default function DescriptionCollapsible() {
+export default function SeatingAlgorithmDescription() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -30,60 +27,62 @@ export default function DescriptionCollapsible() {
       </div>
       <CollapsibleContent className="mt-4 space-y-4">
         <p className="text-lg">
-          Welcome, educators! The Random Assigner is designed to help you
-          quickly and fairly distribute tasks or roles among your students.
-          Here&apos;s how it works:
+          Welcome, teachers! Our Seating Chart Creator is designed to help you
+          arrange your classroom seating quickly and effectively. Here&apos;s
+          how it works:
         </p>
         <ol className="ml-6 list-decimal space-y-2">
           <li>
-            <strong>True Randomness:</strong> The tool uses a robust random
-            selection process to assign tasks or roles, ensuring no bias in the
-            selections.
+            <strong>Smart Seat Selection:</strong> The tool considers several
+            factors when deciding where to seat each student, aiming to create a
+            balanced and productive classroom environment.
           </li>
           <li>
-            <strong>Fungibility:</strong> We recommend you use this assigner for
-            fungible things, such as Chromebook assignments, because it
-            doesn&apos;t matter if a student get&apos;s assigned the same
-            Chromebook many times in a row.
+            <strong>Boy-Girl Balance:</strong> It tries to alternate between
+            seating boys and girls, which can help with classroom management and
+            encourage diverse interactions.
           </li>
           <li>
-            <strong>Group Handling:</strong> It can work with entire classes or
-            specific groups within a class, allowing for flexible use in various
-            classroom structures.
+            <strong>Remembers Past Arrangements:</strong> The tool keeps track
+            of where students have sat before. It tries to avoid seating
+            students next to the same classmates repeatedly, encouraging them to
+            interact with different peers over time.
           </li>
           <li>
-            <strong>Equal Opportunity:</strong> While not guaranteeing equal
-            distribution over time like the Round-Robin method, it provides
-            equal opportunity for all students in each assignment round.
+            <strong>Works for Whole Class or Groups:</strong> You can use it to
+            arrange seating for your entire class or for specific groups within
+            the class, like reading groups or project teams.
           </li>
           <li>
-            <strong>Quick Assignments:</strong> Ideal for frequent reassignments
-            or when you want to shake things up in your classroom dynamics.
+            <strong>Finds the Best Fit:</strong> For each student, the tool
+            looks at all available seats and chooses the one that best meets the
+            goals of balance and varied interactions.
           </li>
           <li>
-            <strong>Customizable Items:</strong> You can create and save
-            different sets of items or roles for various classroom activities or
-            subjects.
+            <strong>Handles Tricky Situations:</strong> If it can&apos;t find an
+            ideal seat for a student, the tool will relax some of its rules to
+            ensure everyone gets a seat.
+          </li>
+          <li>
+            <strong>Respects Your Class Structure:</strong> If you&apos;ve set
+            up specific groups in your class, the tool will keep students within
+            their assigned groups while still optimizing their seating within
+            that group.
           </li>
         </ol>
         <p>
-          This approach is perfect for situations where you want to maintain an
-          element of surprise or when equal long-term distribution is less
-          critical than immediate fairness and engagement.
+          This approach helps create a fair, balanced, and dynamic seating
+          arrangement that can adapt to your classroom&apos;s needs throughout
+          the school year.
         </p>
-        <div className="mt-4 rounded-md bg-accent p-4 text-background">
-          <h3 className="mb-2 font-semibold">Pro Tip:</h3>
+        <div className="mt-4 rounded-md bg-accent p-4 text-black">
+          <h3 className="mb-2 font-semibold">Teacher Tip:</h3>
           <p>
-            Use the Random Assigner for fungible things, short-term projects, or
-            daily tasks. For longer-term roles or when you want to ensure every
-            student experiences every role, consider using the{" "}
-            <Link
-              href="/tool/assigner/round-robin"
-              className="text-blue-600 underline hover:text-blue-800"
-            >
-              Round-Robin Assigner
-            </Link>
-            &nbsp;instead.
+            Consider using this tool every few weeks or at the start of new
+            units. (I use it every week!) Regular seating changes can keep the
+            classroom environment fresh, encourage new friendships, and prevent
+            students from becoming too comfortable (or uncomfortable) with their
+            usual neighbors.
           </p>
         </div>
       </CollapsibleContent>
