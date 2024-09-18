@@ -52,19 +52,20 @@ This is the collection of worksheet generators that I have created as I needed t
 - worksheet: scramble words
 - worksheet: crossword
 - tool: local chat -- launch a chat window that allows the device to be passed between parties to have a silent chat.
+- tool: Shuffler -- shuffle history is now stored in the DB to persist across user sessions
+- tool: Shuffler -- UI now indicates who has been first/last and how many times and on what date
+- tool: Assigner, Round-Robin -- a history of items is now stored with a datetime object and is displayed in the UI as a table
 
 ### p0
 
 - fixed: groups are now in the UI upon creation, no longer requiring a refresh
   - ⚠️ this will probably require a complete rewrite... having a lot of issues with it
-- tool: Shuffler -- shuffle history is now stored in the DB to persist across user sessions
-- tool: Shuffler -- UI now indicates who has been first/last and how many times and on what date
-- tool: Assigner, Round-Robin -- a history of items is now stored with a datetime object and is displayed in the UI as a table
 - tool: Points -- track points on a per student, group, and class basis
   - add redemption items
   - implement streaks for doing things, like material check every day, etc.
   - the teacher can upload an image to represent each student.
 - tool: Attendance based on user's local time zone and loads already input data every time it's clicked on the same day.
+- UI: user can now delete groups from the db
 
 ## Change Log
 

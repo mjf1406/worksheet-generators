@@ -13,6 +13,7 @@ import { Loader2 } from "lucide-react";
 import fetchClassesGroupsStudents from "~/app/api/fetches";
 import type { Course } from "~/server/db/types";
 import AnimatedShuffle from "./components/AnimatedShuffle";
+import AnimatedShuffle2 from "./components/AnimatedShuffle2";
 
 const ShufflerClient = () => {
   const {
@@ -147,13 +148,24 @@ const ShufflerClient = () => {
           </p>
         )}
       </div>
-      <div>
-        {itemsToShuffle.length > 0 && (
-          <AnimatedShuffle
-            items={itemsToShuffle}
-            onShuffleComplete={handleShuffleComplete}
-          />
-        )}
+      {/* <div className="grid grid-cols-2"> */}
+      <div className="">
+        {/* <div className="col-span-1">
+          {itemsToShuffle.length > 0 && (
+            <AnimatedShuffle
+              items={itemsToShuffle}
+              onShuffleComplete={handleShuffleComplete}
+            />
+          )}
+        </div> */}
+        <div className="col-span-1">
+          {itemsToShuffle.length > 0 && (
+            <AnimatedShuffle2
+              items={itemsToShuffle}
+              onShuffleComplete={handleShuffleComplete}
+            />
+          )}
+        </div>
         {/* {shuffleResult.length > 0 && (
           <div className="mt-4 rounded-md bg-foreground/5 p-4">
             <h3 className="mb-2 font-semibold">Shuffle Result:</h3>
