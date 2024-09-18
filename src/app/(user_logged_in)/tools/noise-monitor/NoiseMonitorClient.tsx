@@ -12,6 +12,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "~/components/ui/chart";
+import Link from "next/link";
 
 interface WindowWithWebkitAudioContext extends Window {
   webkitAudioContext: typeof AudioContext;
@@ -241,7 +242,7 @@ const NoiseMonitor: React.FC = () => {
       <div className="text-sm text-muted-foreground">
         {getNoiseDescription(noiseLevel)}
       </div>
-      <div className="text-warning text-sm font-semibold">
+      <div className="text-sm font-semibold text-warning">
         Threshold Exceeded: {thresholdExceededCount} times
       </div>
       <div className="text-sm font-semibold text-primary">
@@ -309,6 +310,14 @@ const NoiseMonitor: React.FC = () => {
             <li className="text-warning">85-119 dB: Potentially Harmful</li>
             <li className="text-destructive">120+ dB: Dangerous</li>
           </ul>
+          <Link
+            className="underline"
+            href={
+              "https://lexiehearing.com/us/library/decibel-examples-noise-levels-of-common-sounds"
+            }
+          >
+            Data source
+          </Link>
         </AlertDescription>
       </Alert>
     </div>
