@@ -110,17 +110,17 @@ export default function HomePage() {
                 >
                   Michael Fitzgerald
                 </a>{" "}
-                and I'm from Chicago, IL, but I reside and teach the 5th grade
-                in Seoul, South Korea. I'm making {APP_NAME} because Classcraft
-                was{" "}
+                and I&apos;m from Chicago, IL, but I reside and teach the 5th
+                grade in Seoul, South Korea. I&apos;m making {APP_NAME} because
+                Classcraft was{" "}
                 <a
                   href="https://www.classcraft.com/blog/important-announcement-the-future-of-classcraft/"
                   className="underline"
                 >
                   acquired by HMH
                 </a>{" "}
-                and we don't know when, if ever, they'll implement all of the
-                Classcraft features into HMH Classcraft.
+                and we don&apos;t know when, if ever, they&apos;ll implement all
+                of the Classcraft features into HMH Classcraft.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
