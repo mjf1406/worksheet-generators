@@ -11,6 +11,7 @@ This is the collection of worksheet generators that I have created as I needed t
     https://www.npmjs.com/package/datamuse
   - [WordsAPI](https://www.wordsapi.com/)
 - integrate Google Gemini API (because it's the only one that's free)
+  - when exporting the generated content, ensure the answer key is on a separate page to the work sheet. Also, format these better than MagicSchoolAI. Their formatting is very rudimentary.
 - integrate other models and let the user purchase tokens
   - Stripe
 - tool: text scaffolder (duplicates [this](https://www.magicschool.ai/tools/text-scaffolder-tool). This tool only outputs vocabulary and questions, it does NOT scaffold.)

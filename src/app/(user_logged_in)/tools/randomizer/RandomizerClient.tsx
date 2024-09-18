@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -9,111 +9,93 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Button } from "~/components/ui/button";
-import fetchClassesGroupsStudents from "~/app/api/fetches";
 import { Loader2 } from "lucide-react";
-
-// Define types for your data structure
-type Student = {
-  student_id: string;
-  student_name_en: string;
-  // Add other student properties as needed
-};
-
-type Group = {
-  group_id: string;
-  group_name: string;
-  students: Student[];
-};
-
-type Class = {
-  class_id: string;
-  class_name: string;
-  groups: Group[];
-};
+import SpinningWheel, { type WheelItem } from "./components/SpinningWheel";
+import fetchClassesGroupsStudents from "~/app/api/fetches";
+import type { Course } from "~/server/db/types";
 
 const RandomizerClient = () => {
   const {
-    data: classes,
+    data: courses,
     isLoading,
     error,
-  } = useQuery<Class[], Error>({
-    queryKey: ["classes"],
+  } = useQuery<Course[], Error>({
+    queryKey: ["courses"],
     queryFn: fetchClassesGroupsStudents,
   });
-  console.log("🚀 ~ RandomizerClient ~ classes:", classes);
 
-  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedGroup, setSelectedGroup] = useState("");
+  const [randomizationType, setRandomizationType] = useState<
+    "course" | "group" | "studentInCourse" | "studentInGroup"
+  >();
   const [randomResult, setRandomResult] = useState("");
-  const [isError, setIsError] = useState(false);
+  console.log("🚀 ~ RandomizerClient ~ selectedGroup:", selectedGroup);
+  console.log("🚀 ~ RandomizerClient ~ selectedCourse:", selectedCourse);
+  console.log("🚀 ~ RandomizerClient ~ randomizationType:", randomizationType);
 
-  const getRandomItem = <T,>(array: T[]): T | undefined => {
-    return array.length > 0
-      ? array[Math.floor(Math.random() * array.length)]
-      : undefined;
-  };
+  const wheelItems = useMemo(() => {
+    if (!courses) return [];
 
-  const setResult = (message: string, error = false) => {
-    setRandomResult(message);
-    setIsError(error);
-  };
-
-  const randomizeClass = () => {
-    if (classes && classes.length > 0) {
-      const randomClass = getRandomItem(classes);
-      setResult(`Random Class: ${randomClass?.class_name}`);
-    } else {
-      setResult("No classes available.", true);
+    switch (randomizationType) {
+      case "course":
+        return courses.map((c) => c.class_name ?? "Unnamed Course");
+      case "group":
+        return selectedCourse
+          ? (courses
+              .find((c) => c.class_id === selectedCourse)
+              ?.groups?.map((g) => g.group_name) ?? [])
+          : [];
+      case "studentInCourse":
+        return selectedCourse
+          ? (courses
+              .find((c) => c.class_id === selectedCourse)
+              ?.students.map(
+                (s) =>
+                  s.student_name_en ?? s.student_name_alt ?? "Unnamed Student",
+              ) ?? [])
+          : [];
+      case "studentInGroup":
+        return selectedCourse && selectedGroup
+          ? (courses
+              .find((c) => c.class_id === selectedCourse)
+              ?.groups?.find((g) => g.group_id === selectedGroup)
+              ?.students.map(
+                (s) =>
+                  s.student_name_en ?? s.student_name_alt ?? "Unnamed Student",
+              ) ?? [])
+          : [];
+      default:
+        return [];
     }
-  };
+  }, [courses, selectedCourse, selectedGroup, randomizationType]);
+  console.log("🚀 ~ wheelItems ~ wheelItems:", wheelItems);
 
-  const randomizeGroup = () => {
-    if (selectedClass) {
-      const classData = classes?.find((c) => c.class_id === selectedClass);
-      if (classData && classData.groups.length > 0) {
-        const randomGroup = getRandomItem(classData.groups);
-        setResult(`Random Group: ${randomGroup?.group_name}`);
-      } else {
-        setResult("No groups available in the selected class.", true);
-      }
-    } else {
-      setResult("Please select a class first.", true);
+  const handleSelectItem = (item: WheelItem) => {
+    let detailedResult = "";
+    switch (randomizationType) {
+      case "course":
+        const selectedCourseData = courses?.find((c) => c.class_name === item);
+        detailedResult = `Course: ${item}\nGrade: ${selectedCourseData?.class_grade}\nYear: ${selectedCourseData?.class_year}`;
+        break;
+      case "group":
+        const groupData = courses
+          ?.find((c) => c.class_id === selectedCourse)
+          ?.groups?.find((g) => g.group_name === item);
+        detailedResult = `Group: ${item}\nStudents: ${groupData?.students.length}`;
+        break;
+      case "studentInCourse":
+      case "studentInGroup":
+        const studentData = courses
+          ?.find((c) => c.class_id === selectedCourse)
+          ?.students.find(
+            (s) => s.student_name_en === item ?? s.student_name_alt === item,
+          );
+        detailedResult = `Student: ${item}\nGrade: ${studentData?.student_grade}\nReading Level: ${studentData?.student_reading_level}`;
+        break;
     }
-  };
-
-  const randomizeStudentInGroup = () => {
-    if (selectedClass && selectedGroup) {
-      const classData = classes?.find((c) => c.class_id === selectedClass);
-      const groupData = classData?.groups.find(
-        (g) => g.group_id === selectedGroup,
-      );
-      if (groupData && groupData.students.length > 0) {
-        const randomStudent = getRandomItem(groupData.students);
-        setResult(`Random Student: ${randomStudent?.student_name_en}`);
-      } else {
-        setResult("No students available in the selected group.", true);
-      }
-    } else {
-      setResult("Please select both a class and a group.", true);
-    }
-  };
-
-  const randomizeStudentInClass = () => {
-    if (selectedClass) {
-      const classData = classes?.find((c) => c.class_id === selectedClass);
-      if (classData) {
-        const allStudents = classData.groups.flatMap((group) => group.students);
-        if (allStudents.length > 0) {
-          const randomStudent = getRandomItem(allStudents);
-          setResult(`Random Student: ${randomStudent?.student_name_en}`);
-        } else {
-          setResult("No students available in the selected class.", true);
-        }
-      }
-    } else {
-      setResult("Please select a class first.", true);
-    }
+    console.log("🚀 ~ handleSelectItem ~ detailedResult:", detailedResult);
+    setRandomResult(detailedResult);
   };
 
   if (isLoading)
@@ -126,37 +108,36 @@ const RandomizerClient = () => {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="mt-5 flex w-full flex-col items-center justify-center gap-4">
-      <p className="max-w-xl">
-        Looking for a way to omit students/groups/classes that have already been
-        picked? Use{" "}
-        <Link className="underline" href={"/shuffler"}>
-          Shuffler
-        </Link>
-        .
-      </p>
+    <div className="mt-5 flex w-full flex-col items-center gap-10 2xl:flex-row">
       <div className="flex w-full max-w-md flex-col gap-4">
-        <Select onValueChange={(value) => setSelectedClass(value)}>
+        <p className="max-w-lg">
+          Looking for a way to quickly order students/groups/classes? Use{" "}
+          <Link className="underline" href={"/tools/shuffler"}>
+            Shuffler
+          </Link>
+          .
+        </p>
+        <Select onValueChange={(value) => setSelectedCourse(value)}>
           <SelectTrigger>
             <SelectValue placeholder="Select a class" />
           </SelectTrigger>
           <SelectContent>
-            {classes?.map((classItem) => (
-              <SelectItem key={classItem.class_id} value={classItem.class_id}>
-                {classItem.class_name}
+            {courses?.map((course) => (
+              <SelectItem key={course.class_id} value={course.class_id ?? ""}>
+                {course.class_name ?? "Unnamed Course"}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        {selectedClass && (
+        {selectedCourse && (
           <Select onValueChange={(value) => setSelectedGroup(value)}>
             <SelectTrigger>
               <SelectValue placeholder="Select a group" />
             </SelectTrigger>
             <SelectContent>
-              {classes
-                ?.find((c) => c.class_id === selectedClass)
-                ?.groups.map((group) => (
+              {courses
+                ?.find((c) => c.class_id === selectedCourse)
+                ?.groups?.map((group) => (
                   <SelectItem key={group.group_id} value={group.group_id}>
                     {group.group_name}
                   </SelectItem>
@@ -164,23 +145,44 @@ const RandomizerClient = () => {
             </SelectContent>
           </Select>
         )}
-        <div className="flex flex-wrap gap-2">
-          <Button onClick={randomizeClass}>Random Class</Button>
-          <Button onClick={randomizeGroup}>Random Group</Button>
-          <Button onClick={randomizeStudentInGroup}>
-            Random Student in Group
-          </Button>
-          <Button onClick={randomizeStudentInClass}>
-            Random Student in Class
-          </Button>
-        </div>
-        {randomResult && (
-          <div
-            className={`mt-4 rounded-md bg-foreground/5 p-4 ${isError ? "text-destructive" : "text-foreground"}`}
-          >
+        <Select
+          onValueChange={(
+            value: "course" | "group" | "studentInCourse" | "studentInGroup",
+          ) => setRandomizationType(value)}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select what to randomize" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="course">Random class</SelectItem>
+            <SelectItem value="group">Random group</SelectItem>
+            <SelectItem value="studentInCourse">
+              Random student in class
+            </SelectItem>
+            <SelectItem value="studentInGroup">
+              Random student in group
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        {wheelItems.length > 0 ? (
+          <></>
+        ) : (
+          <p className="text-destructive">
+            Please select the appropriate options to spin the wheel.
+          </p>
+        )}
+      </div>
+      <div>
+        {wheelItems.length > 0 ? (
+          <SpinningWheel items={wheelItems} onSelectItem={handleSelectItem} />
+        ) : (
+          <></>
+        )}
+        {/* {randomResult && (
+          <div className="mt-4 whitespace-pre-line rounded-md bg-foreground/5 p-4 text-foreground">
             <p>{randomResult}</p>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
