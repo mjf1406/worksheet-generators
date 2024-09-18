@@ -68,6 +68,11 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ## Change Log
 
+2024/09/18
+
+- UI: added wheel spinner to Randomizer
+- UI: added fun shuffled animation to Shuffler
+
 2024/09/15
 
 - fixed: new sidebar now no longer has a scroll bar on mobile
