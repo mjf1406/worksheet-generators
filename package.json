@@ -9,7 +9,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "dev": "next dev",
+    "dev": "node server.mjs",
     "lint": "next lint",
     "start": "next start"
   },
@@ -30,6 +30,7 @@
     "@radix-ui/react-scroll-area": "^1.1.0",
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-separator": "^1.1.0",
+    "@radix-ui/react-slider": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@radix-ui/react-tooltip": "^1.1.2",
@@ -56,6 +57,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.2",
+    "recharts": "^2.12.7",
     "svix": "^1.28.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
@@ -67,7 +69,7 @@
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.52.0",
     "@types/eslint": "^8.56.10",
-    "@types/node": "^20.14.10",
+    "@types/node": "^20.16.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@types/react-pdf": "^7.0.0",
@@ -81,7 +83,8 @@
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "tailwindcss": "^3.4.3",
-    "typescript": "^5.5.3"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.2"
   },
   "ct3aMetadata": {
     "initVersion": "7.36.1"

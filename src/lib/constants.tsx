@@ -16,6 +16,7 @@ import {
   RotateCw,
   RockingChair,
   Text,
+  AudioLines,
 } from "lucide-react";
 import { AIBadge } from "~/components/AIBadge";
 import type { ItemGridData } from "~/components/ItemGrid";
@@ -137,6 +138,13 @@ export const toolsData: ItemGridData[] = [
     icon: ZoomIn,
     href: "/tools/magni-text",
     under_construction: true,
+  },
+  {
+    name: "Noise Monitor",
+    description:
+      "See how loud your students are being while in class and and alert everyone if it gets too loud.",
+    icon: AudioLines,
+    href: "/tools/noise-monitor",
   },
   {
     name: "Random Event",

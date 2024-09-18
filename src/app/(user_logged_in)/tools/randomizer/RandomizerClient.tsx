@@ -30,9 +30,6 @@ const RandomizerClient = () => {
     "course" | "group" | "studentInCourse" | "studentInGroup"
   >();
   const [randomResult, setRandomResult] = useState("");
-  console.log("🚀 ~ RandomizerClient ~ selectedGroup:", selectedGroup);
-  console.log("🚀 ~ RandomizerClient ~ selectedCourse:", selectedCourse);
-  console.log("🚀 ~ RandomizerClient ~ randomizationType:", randomizationType);
 
   const wheelItems = useMemo(() => {
     if (!courses) return [];
@@ -69,7 +66,6 @@ const RandomizerClient = () => {
         return [];
     }
   }, [courses, selectedCourse, selectedGroup, randomizationType]);
-  console.log("🚀 ~ wheelItems ~ wheelItems:", wheelItems);
 
   const handleSelectItem = (item: WheelItem) => {
     let detailedResult = "";
@@ -89,12 +85,11 @@ const RandomizerClient = () => {
         const studentData = courses
           ?.find((c) => c.class_id === selectedCourse)
           ?.students.find(
-            (s) => s.student_name_en === item ?? s.student_name_alt === item,
+            (s) => s.student_name_en === item || s.student_name_alt === item,
           );
         detailedResult = `Student: ${item}\nGrade: ${studentData?.student_grade}\nReading Level: ${studentData?.student_reading_level}`;
         break;
     }
-    console.log("🚀 ~ handleSelectItem ~ detailedResult:", detailedResult);
     setRandomResult(detailedResult);
   };
 

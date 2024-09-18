@@ -24,6 +24,7 @@ html {
     --accent-foreground: 147 43% 9%;
     --destructive: 0 85% 60%;
     --destructive-foreground: 147 43% 9%;
+    --warning: 48, 77%, 42%;
     --border: 144 51% 20%;
     --input: 144 51% 20%;
     --ring: 148 67% 40%;
@@ -52,6 +53,7 @@ html {
     --accent-foreground: 147 47% 4%;
     --destructive: 0 62% 55%;
     --destructive-foreground: 146 41% 10%;
+    --warning: 62, 86%, 55%;
     --border: 147 47% 60%;
     --input: 147 47% 80%;
     --ring: 148 67% 60%;
