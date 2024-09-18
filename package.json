@@ -9,7 +9,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "dev": "node server.mjs",
+    "dev": "next dev",
+    "dev-https": "node server.mjs",
     "lint": "next lint",
     "start": "next start"
   },
