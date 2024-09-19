@@ -88,7 +88,15 @@ export default function HomePage() {
           <p className="text-center text-xl">
             {APP_NAME} is currently in alpha and free for authorized users.{" "}
             <br />
-            Stay tuned for our public beta and pricing information.
+            Stay tuned for pricing information and sign up to be notified about
+            the public beta{" "}
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSeE-DqpOUqjmKFm-W4QodtpgO3m0BV7LWdxYF-QgTZ6ntPlrQ/viewform?usp=sf_link"
+              className="underline"
+            >
+              here
+            </a>
+            .
           </p>
         </section>
 
@@ -112,25 +120,28 @@ export default function HomePage() {
                 </a>{" "}
                 and I&apos;m from Chicago, IL, but I reside and teach the 5th
                 grade in Seoul, South Korea. I&apos;m making {APP_NAME} because
-                Classcraft was{" "}
-                <a
-                  href="https://www.classcraft.com/blog/important-announcement-the-future-of-classcraft/"
-                  className="underline"
-                >
-                  acquired by HMH
-                </a>{" "}
-                and we don&apos;t know when, if ever, they&apos;ll implement all
-                of the Classcraft features into HMH Classcraft.
+                I have scoured the Internet (and perhaps my Google-fu has failed
+                me) to find these tools. Alas, I have found nothing like these
+                on the Internet, so I&apos;m making them! Yes, there are other
+                sites that do have some of the{" "}
+                <a className="underline" href="#features">
+                  features
+                </a>
+                , but they are all missing just that extra little thing that I
+                want for my classes.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-2">
               <AccordionTrigger>Why is it free right now?</AccordionTrigger>
               <AccordionContent>
                 {APP_NAME} is currently free for authorized users because we are
-                in alpha. Use at your own risk. We make no guarantees about the
-                integrity of your data. At some point, we will have a public
-                beta. Sign up to be notified{" "}
-                <a href="#" className="underline">
+                in alpha. Alpha means that not all of the core features are
+                implemented. At some point, we will have a public beta. Sign up
+                to be notified{" "}
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSeE-DqpOUqjmKFm-W4QodtpgO3m0BV7LWdxYF-QgTZ6ntPlrQ/viewform?usp=sf_link"
+                  className="underline"
+                >
                   here
                 </a>
                 .
@@ -150,54 +161,43 @@ export default function HomePage() {
             </AccordionItem>
             <AccordionItem value="item-4">
               <AccordionTrigger>
-                What is currently being worked on at {APP_NAME}?
+                Where do I submit feature requests and offer suggestions?
               </AccordionTrigger>
               <AccordionContent>
-                Since {APP_NAME} is in alpha, that means not all of the core
-                features have been implemented, so we&apos;re working to
-                implement all of the core features. You can view the public
-                roadmap{" "}
-                <a
-                  href="https://github.com/users/mjf1406/projects/1/views/1"
-                  className="underline"
-                >
-                  here
+                Feature requests and suggestions can be submitted{" "}
+                <a href="#" className="underline">
+                  COMING SOON
                 </a>
                 .
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-5">
-              <AccordionTrigger>
-                Where do I submit feature requests?
-              </AccordionTrigger>
-              <AccordionContent>
-                Feature requests can be submitted{" "}
-                <a href="#" className="underline">
-                  here
-                </a>
-                .
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-6">
               <AccordionTrigger>Where do I submit feedback?</AccordionTrigger>
               <AccordionContent>
-                When submitting bad feedback, please provide a detailed
-                description of your issue so I can replicate the issue on my end
-                in order to fix it. Feedback, both good and bad, can be
-                submitted{" "}
+                High-quality feedback provides context, is detailed, specific,
+                criticizes constructively, and DOES NOT suggest improvements.
+                Why do I not want your suggestions to fix your problem? It is
+                because you are (likely) not an expert in web design,
+                programming, or systems design. But you do have, and what I care
+                about, is <b>how you feel</b> about what caused you to have a
+                bad experience. The developers for{" "}
+                <a
+                  className="underline"
+                  href="https://playruneterra.com/en-sg/news/dev/giving-feedback-like-a-game-dev/"
+                >
+                  Legends of Runeterra put it best
+                </a>{" "}
+                when they said,{" "}
+                <i>
+                  “Describe your experience the way you might explain how
+                  you&apos;re feeling to a doctor (without all the personal
+                  information).”
+                </i>{" "}
+                Feedback, both positive and negative, can be submitted{" "}
                 <a href="#" className="underline">
-                  here
+                  COMING SOON
                 </a>
                 .
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-7">
-              <AccordionTrigger>
-                Would you ever consider being acquired?
-              </AccordionTrigger>
-              <AccordionContent>
-                Yes, I would, but the amount of money offered would have to be
-                more than enough to set me up for life.
               </AccordionContent>
             </AccordionItem>
           </Accordion>

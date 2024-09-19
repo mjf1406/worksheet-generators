@@ -69,6 +69,13 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ## Change Log
 
+2024/09/19
+
+- UI: small layout updates to SpinningWheel, removed the Spin button and made the wheel clickable
+- UX: selected items are now removed when clicking Auto-remove selected items and then placed back when unchecking in SpinningWheel
+- UI: small layout update to AnimatedShuffle2
+- some changes to the homepage
+
 2024/09/18
 
 - UI: added wheel spinner to Randomizer

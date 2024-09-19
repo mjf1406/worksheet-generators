@@ -103,7 +103,8 @@ const RandomizerClient = () => {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <div className="mt-5 flex w-full flex-col items-center gap-10 2xl:flex-row">
+    <div className="mt-5 flex w-full flex-col items-center gap-4">
+      <div id="collapsible"></div>
       <div className="flex w-full max-w-md flex-col gap-4">
         <p className="max-w-lg text-muted opacity-90">
           Looking for a way to quickly order students/groups/classes while

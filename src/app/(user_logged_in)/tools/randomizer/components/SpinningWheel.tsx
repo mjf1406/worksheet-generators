@@ -2,10 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { LoaderPinwheel } from "lucide-react";
 import { Checkbox } from "~/components/ui/checkbox";
+import { useTheme } from "next-themes";
 
 export type WheelItem = string | number;
 
-const WHEEL_SIZE = 600;
+const WHEEL_SIZE = 400;
 const DELETE_DELAY = 500;
 
 interface SpinningWheelProps {
@@ -24,11 +25,28 @@ const SpinningWheel: React.FC<SpinningWheelProps> = ({
   const [autoRemove, setAutoRemove] = useState(false);
   const [items, setItems] = useState(initialItems);
   const [selectedItems, setSelectedItems] = useState<WheelItem[]>([]);
+  const { theme } = useTheme();
 
   useEffect(() => {
     setItems(initialItems);
     setSelectedItems([]);
   }, [initialItems]);
+
+  useEffect(() => {
+    if (autoRemove) {
+      // Remove duplicates from selectedItems
+      const uniqueSelectedItems = Array.from(new Set(selectedItems));
+      setSelectedItems(uniqueSelectedItems);
+
+      // Filter out selected items from the wheel
+      setItems((prevItems) =>
+        prevItems.filter((item) => !uniqueSelectedItems.includes(item)),
+      );
+    } else {
+      setItems(initialItems);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoRemove, initialItems]);
 
   const spin = () => {
     if (isSpinning) return;
@@ -74,7 +92,7 @@ const SpinningWheel: React.FC<SpinningWheelProps> = ({
   };
 
   return (
-    <div className="grid w-full grid-cols-3 items-center justify-center space-y-4 lg:ml-10">
+    <div className="flex w-full flex-col items-center justify-center gap-8">
       <style jsx>{`
         @keyframes grow-shrink {
           0%,
@@ -89,8 +107,53 @@ const SpinningWheel: React.FC<SpinningWheelProps> = ({
           animation: grow-shrink 0.7s ease-in-out infinite;
         }
       `}</style>
+      <div className="flex flex-col items-center justify-center gap-8">
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="auto-remove"
+            checked={autoRemove}
+            className="h-8 w-8"
+            onCheckedChange={(checked) => setAutoRemove(checked as boolean)}
+            disabled={isSpinning}
+          />
+          <label
+            htmlFor="auto-remove"
+            className="text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Auto-remove selected items
+          </label>
+        </div>
+        {/* <Button
+          className="text-xl"
+          onClick={spin}
+          size={"lg"}
+          disabled={isSpinning || items.length === 0}
+        >
+          {isSpinning ? (
+            <>
+              <LoaderPinwheel className="mr-2 h-8 w-8 animate-spin" />
+              Spin
+            </>
+          ) : (
+            <>
+              <LoaderPinwheel className="mr-2 h-8 w-8" />
+              Spin
+            </>
+          )}
+        </Button> */}
+        {!autoRemove && (
+          <div className="-mt-6 text-center text-2xl">
+            <h3 className="font-semibold">Selected Item:</h3>
+            {selectedItem !== null ? (
+              <p>{selectedItem}</p>
+            ) : (
+              <p className="text-background">I caught dysentery</p>
+            )}
+          </div>
+        )}
+      </div>
       <div className="col-span-2 space-y-5">
-        <div className="relative flex items-center">
+        <div className="relative flex items-start">
           {/* Arrow on the left */}
           <svg
             width="60"
@@ -109,14 +172,16 @@ const SpinningWheel: React.FC<SpinningWheelProps> = ({
             <polyline points="12 5 19 12 12 19"></polyline>
           </svg>
 
-          <div className="flex gap-5">
+          {/* Wheel */}
+          <div className="-mt-5 flex gap-5">
             <div className="col-span-1 flex gap-5">
-              {/* Wheel */}
               <svg
                 width={WHEEL_SIZE}
                 height={WHEEL_SIZE}
                 viewBox="0 0 100 100"
                 className="-rotate-90 transform"
+                onClick={spin}
+                style={{ cursor: "pointer" }}
               >
                 <g
                   ref={wheelRef}
@@ -160,64 +225,32 @@ const SpinningWheel: React.FC<SpinningWheelProps> = ({
                     );
                   })}
                 </g>
-                <circle cx="50" cy="50" r="3" fill="black" />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="3"
+                  fill={theme === "dark" ? "black" : "white"}
+                />
               </svg>
             </div>
           </div>
-        </div>
-        <div className="flex flex-col items-center justify-center space-y-2">
-          <div className="ml-10 flex items-center space-x-2">
-            <Checkbox
-              id="auto-remove"
-              checked={autoRemove}
-              className="h-8 w-8"
-              onCheckedChange={(checked) => setAutoRemove(checked as boolean)}
-            />
-            <label
-              htmlFor="auto-remove"
-              className="text-lg font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Auto-remove selected items
-            </label>
-          </div>
-          <Button
-            className="ml-10"
-            onClick={spin}
-            disabled={isSpinning || items.length === 0}
+          <div
+            className={`col-span-1 ml-16 flex h-full flex-col justify-start ${autoRemove ? "" : "hidden"}`}
           >
-            {isSpinning ? (
-              <>
-                <LoaderPinwheel className="mr-2 h-6 w-6 animate-spin" />
-                Spin
-              </>
-            ) : (
-              <>
-                <LoaderPinwheel className="mr-2 h-6 w-6" />
-                Spin
-              </>
+            {autoRemove && (
+              <div className="col-span-1 flex flex-col gap-2">
+                <div className="text-2xl font-semibold">Selected Order</div>
+                <ol className="list-inside list-decimal text-lg">
+                  {selectedItems.map((item, index) => (
+                    <li key={index} className="text-md">
+                      {item.toString()}
+                    </li>
+                  ))}
+                </ol>
+              </div>
             )}
-          </Button>
-          {selectedItem !== null && (
-            <div className="ml-10 mt-4 text-center">
-              <h3 className="text-lg font-semibold">Selected Item:</h3>
-              <p>{selectedItem}</p>
-            </div>
-          )}
-        </div>
-      </div>
-      <div className="col-span-1 ml-16 flex h-full flex-col justify-start">
-        {autoRemove && (
-          <div className="col-span-1 flex flex-col gap-2">
-            <div className="text-2xl font-semibold">Selected Order</div>
-            <ol className="list-inside list-decimal text-lg">
-              {selectedItems.map((item, index) => (
-                <li key={index} className="text-md">
-                  {item.toString()}
-                </li>
-              ))}
-            </ol>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
