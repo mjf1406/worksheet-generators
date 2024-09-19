@@ -208,7 +208,7 @@ export default function HomePage() {
                 would mean you could not use the website.
               </AccordionContent>
             </AccordionItem>
-            <AccordionItem value="item-6">
+            <AccordionItem value="item-7">
               <AccordionTrigger>
                 Wait... That means that you do not track me?
               </AccordionTrigger>
