@@ -203,9 +203,9 @@ export default function HomePage() {
             <AccordionItem value="item-6">
               <AccordionTrigger>Where is the cookie banner?</AccordionTrigger>
               <AccordionContent>
-                We only use cookies to keep you logged in. According to CPPA and
-                GDPR, these are necessary and cannot be refused because doing so
-                would mean you could not use the website.
+                We only use cookies to keep you logged in. These are necessary
+                and cannot be refused because doing so would mean you could not
+                use the site.
               </AccordionContent>
             </AccordionItem>
             <AccordionItem value="item-7">
