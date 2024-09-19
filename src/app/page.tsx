@@ -200,6 +200,26 @@ export default function HomePage() {
                 .
               </AccordionContent>
             </AccordionItem>
+            <AccordionItem value="item-6">
+              <AccordionTrigger>Where is the cookie banner?</AccordionTrigger>
+              <AccordionContent>
+                We only use cookies to keep you logged in. According to CPPA and
+                GDPR, these are necessary and cannot be refused because doing so
+                would mean you could not use the website.
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="item-6">
+              <AccordionTrigger>
+                Wait... That means that you do not track me?
+              </AccordionTrigger>
+              <AccordionContent>
+                That&apos;s right! There will never be ads and we will never
+                track you for the purposes of selling your data or
+                advertisements. We will never store your personal information
+                (your email and your name) for anything other than verifying you
+                are you and keeping you logged in.
+              </AccordionContent>
+            </AccordionItem>
           </Accordion>
         </section>
       </main>
