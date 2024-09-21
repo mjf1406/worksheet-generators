@@ -8,8 +8,11 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import Providers from "./providers";
 
 export const metadata = {
-  title: "ClassQuest",
-  description: "Various tools and worksheet generators for teachers",
+  title: "ClassQuest - Tools and Worksheet Generators for Teachers",
+  description:
+    "ClassQuest offers various tools and worksheet generators to help teachers create engaging and effective learning materials for their students.",
+  keywords:
+    "ClassQuest, teacher tools, worksheet generator, education, classroom resources",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
