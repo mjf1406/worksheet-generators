@@ -69,6 +69,10 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ## Change Log
 
+2024/09/21
+
+- fixed: minor bug when generating item_status for round robin and seat assigners
+
 2024/09/19
 
 - UI: small layout updates to SpinningWheel, removed the Spin button and made the wheel clickable

@@ -256,6 +256,7 @@ export async function runAssignerSeats(
       assignedData: {} as Record<string, AssignmentItem[]>,
     };
 
+    if (!itemStatus[classId]) itemStatus = createStudentItemStatusClassStructure(classId, assignerId, items, students, itemStatus)
     const assignersItemStatus = itemStatus[classId];
     if (!assignersItemStatus)
       return {
@@ -354,4 +355,32 @@ function createStudentItemStatusWithSeating(
     };
 
     return result;
+}
+
+export function createStudentItemStatusClassStructure(
+  classId: string,
+  assignerId: string,
+  items: string[],
+  studentData: StudentData[],
+  studentItemStatus: AssignerItemStatusesSeats
+): AssignerItemStatusesSeats {
+  if (!studentItemStatus[classId]) {
+      studentItemStatus[classId] = {};
+  }
+
+  if (!studentItemStatus[classId][assignerId]) {
+      studentItemStatus[classId][assignerId] = {};
+  }
+
+  for (const student of studentData) {
+      const studentId = student.student_id;
+      if (!studentItemStatus[classId][assignerId][studentId]) {
+          studentItemStatus[classId][assignerId][studentId] = {
+              neighbors: [],
+              seats: []
+          };
+      }
+  }
+
+  return studentItemStatus;
 }

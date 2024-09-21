@@ -27,9 +27,10 @@ export async function roundRobinAssigner(
             assignedData: {} as Record<string, AssignmentItem[]>
         };
         
+        if (!itemStatus[classId]) itemStatus = createStudentItemStatusClassStructure(classId, assignerId, uniqueItems, students, itemStatus)
         const assignersItemStatus = itemStatus[classId];
         if (!assignersItemStatus) return { success: false, message: "No student item statuses for this class in the assigner data"};
-        
+
         const studentItemStatus: AssignerItemStatusesAssigner | undefined = assignersItemStatus[assignerId] as unknown as AssignerItemStatusesAssigner;
         if (!studentItemStatus) return { success: false, message: "No student item statuses in this class for this assigner"};
 
@@ -261,6 +262,37 @@ export function createStudentItemStatusStructure(
     }
 
     return result;
+}
+
+export function createStudentItemStatusClassStructure(
+    classId: string,
+    assignerId: string,
+    items: string[],
+    studentData: StudentData[],
+    studentItemStatus: AssignerItemStatuses
+): AssignerItemStatuses {
+    if (!studentItemStatus[classId]) {
+        studentItemStatus[classId] = {};
+    }
+
+    if (!studentItemStatus[classId][assignerId]) {
+        studentItemStatus[classId][assignerId] = {};
+    }
+
+    for (const item of items) {
+        if (!studentItemStatus[classId][assignerId][item]) {
+            studentItemStatus[classId][assignerId][item] = {};
+        }
+
+        for (const student of studentData) {
+            const studentId = student.student_id;
+            if (studentItemStatus[classId]?.[assignerId]?.[item]) {
+                studentItemStatus[classId][assignerId][item][studentId] = 0;
+            }
+        }
+    }
+
+    return studentItemStatus;
 }
 
 function countElementsInArray(arr: string[]): Record<string, number> {
