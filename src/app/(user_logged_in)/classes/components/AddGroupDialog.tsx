@@ -13,35 +13,76 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { addGroup } from "../[classId]/createGroup";
-import { useRouter } from "next/navigation";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "~/components/ui/use-toast";
 
 interface AddGroupDialogProps {
   students: StudentData[] | undefined;
+  onGroupAdded: () => void;
 }
 
-const AddGroupDialog: React.FC<AddGroupDialogProps> = ({ students }) => {
-  const router = useRouter();
+const AddGroupDialog: React.FC<AddGroupDialogProps> = ({
+  students,
+  onGroupAdded,
+}) => {
   const params = useParams();
   const classId = params.classId as string;
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const [isOpen, setIsOpen] = useState(false);
   const [groupName, setGroupName] = useState("");
   const [selectedStudents, setSelectedStudents] = useState<
     Record<string, boolean>
   >({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const selectedCount = useMemo(() => {
     return Object.values(selectedStudents).filter(Boolean).length;
   }, [selectedStudents]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
+  const addGroupMutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      const result = await addGroup(formData);
+      if (result.error) {
+        throw new Error(result.error);
+      }
+      return result;
+    },
+    onSuccess: async (result) => {
+      toast({
+        title: "Success",
+        description: "Group created successfully",
+      });
 
+      // Invalidate and refetch the groups query
+      await queryClient.invalidateQueries({ queryKey: ["groups", classId] });
+      await queryClient.refetchQueries({ queryKey: ["groups", classId] });
+
+      // Invalidate the classes query
+      await queryClient.invalidateQueries({ queryKey: ["classes"] });
+
+      // Call the callback to notify parent component
+      onGroupAdded();
+
+      setIsOpen(false);
+      resetForm();
+    },
+    onError: (error) => {
+      console.error("Failed to create group:", error);
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to create group. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     const formData = new FormData();
     formData.append("groupName", groupName);
     formData.append("classId", classId);
@@ -50,25 +91,7 @@ const AddGroupDialog: React.FC<AddGroupDialogProps> = ({ students }) => {
         formData.append("studentIds", id);
       }
     });
-
-    try {
-      const result = await addGroup(formData);
-      if (result.error) {
-        setError(result.error);
-      } else {
-        // Handle success
-        console.log(result.message);
-        setIsOpen(false);
-        router.prefetch(`/classes/${classId}`);
-        router.push(`/classes/${classId}`);
-        router.refresh();
-      }
-    } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
-      console.error(err);
-    } finally {
-      setIsSubmitting(false);
-    }
+    addGroupMutation.mutate(formData);
   };
 
   const handleStudentCheck = (studentId: string | undefined) => {
@@ -77,6 +100,11 @@ const AddGroupDialog: React.FC<AddGroupDialogProps> = ({ students }) => {
       ...prev,
       [studentId]: !prev[studentId],
     }));
+  };
+
+  const resetForm = () => {
+    setGroupName("");
+    setSelectedStudents({});
   };
 
   return (
@@ -123,9 +151,8 @@ const AddGroupDialog: React.FC<AddGroupDialogProps> = ({ students }) => {
             </div>
             <div>Selected: {selectedCount}</div>
           </div>
-          {error && <p className="rounded-lg bg-destructive p-2">{error}</p>}
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Creating..." : "Create Group"}
+          <Button type="submit" disabled={addGroupMutation.isPending}>
+            {addGroupMutation.isPending ? "Creating..." : "Create Group"}
           </Button>
         </form>
       </DialogContent>

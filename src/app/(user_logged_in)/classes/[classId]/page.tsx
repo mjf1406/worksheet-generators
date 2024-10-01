@@ -9,7 +9,7 @@ import { columns } from "./columns";
 import AddGroupDialog from "../components/AddGroupDialog";
 import ClassGroupsComponent from "../components/ClassGroups";
 import { AddStudentsDialog } from "../components/AddStudents";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { classesOptions } from "~/app/api/queryOptions";
 
 interface Params {
@@ -19,6 +19,7 @@ interface Params {
 export default function ClassDetails({ params }: { params: Params }) {
   const classId = params.classId;
   const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   const { data: coursesData = [] } = useSuspenseQuery(classesOptions);
 
@@ -36,6 +37,11 @@ export default function ClassDetails({ params }: { params: Params }) {
     },
     [toast],
   );
+
+  const handleGroupAdded = async () => {
+    await queryClient.refetchQueries({ queryKey: ["classes"] });
+    await queryClient.refetchQueries({ queryKey: ["groups", classId] });
+  };
 
   if (!courseData) {
     return (
@@ -69,7 +75,10 @@ export default function ClassDetails({ params }: { params: Params }) {
           <div className="flex w-full items-center gap-5">
             <h2 className="self-start text-2xl">Groups</h2>
             <div className="flex flex-row items-center justify-center gap-2 self-end">
-              <AddGroupDialog students={courseData.students} />
+              <AddGroupDialog
+                students={courseData.students}
+                onGroupAdded={handleGroupAdded}
+              />
             </div>
           </div>
           <div className="flex w-full flex-wrap items-center gap-4 text-sm">

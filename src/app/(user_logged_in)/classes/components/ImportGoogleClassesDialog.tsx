@@ -13,6 +13,7 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
+import { APP_NAME } from "~/lib/constants";
 
 const GoogleClassList = React.lazy(() => import("./GoogleClassList"));
 
@@ -29,7 +30,7 @@ export default function ImportGoogleClassesDialog() {
           <DialogHeader>
             <DialogTitle>Import classes from Google Classroom</DialogTitle>
             <DialogDescription>
-              Add any of the below classes to ClassQuest.
+              Add any of the below classes to {APP_NAME}.
             </DialogDescription>
           </DialogHeader>
           <div className="flex items-center space-x-2">

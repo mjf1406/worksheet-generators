@@ -11,8 +11,8 @@ const getClasses = async (userId: string) => {
             .where(sql`${teacherClassesTable.user_id} = ${userId}`);
         return allClasses;
     } catch (error) {
-        console.error('Error fetching ClassQuest classes:', error);
-        throw new Error('Failed to fetch ClassQuest classes.');
+        console.error('Error fetching classes:', error);
+        throw new Error('Failed to fetch classes.');
     }
 };
 

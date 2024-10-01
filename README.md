@@ -2,6 +2,10 @@
 
 This is the collection of worksheet generators that I have created as I needed them in my teaching career.
 
+## Name Ideas
+
+- Class Commander
+
 ## To-do List
 
 ### p4
@@ -58,20 +62,19 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ### p0
 
-- fixed: groups are now in the UI upon creation, no longer requiring a refresh
-  - ⚠️ this will probably require a complete rewrite... having a lot of issues with it
 - tool: Points -- track points on a per student, group, and class basis
   - add redemption items
   - implement streaks for doing things, like material check every day, etc.
   - the teacher can upload an image to represent each student.
 - tool: Attendance based on user's local time zone and loads already input data every time it's clicked on the same day.
-- UI: user can now delete groups from the db
 - fixed: the DB migration issue... kill me
 
 ## Change Log
 
 2024/10/01
 
+- fixed: groups are now in the UI upon creation, no longer requiring a refresh
+- UI: user can now delete groups from the db
 - fixed: student gender is now displayed in the students table
 - fixed: Seats Assigner now correctly places students by sex and the output is ordered by seat number
 - fixed: when opening a class, the class name now appears in the navbar instead of the class ID

@@ -13,8 +13,16 @@ const UpdateGroupSchema = z.object({
   classId: z.string(),
 });
 
+const DeleteGroupSchema = z.object({
+  groupId: z.string(),
+  classId: z.string(),
+});
+
+type DeleteGroupResult = 
+  | { success: true; message: string }
+  | { success: false; error: string };
+
 export async function updateGroup(formData: FormData) {
-  console.log("🚀 ~ updateGroup ~ formData:", formData)
   const validatedFields = UpdateGroupSchema.safeParse({
     groupId: formData.get('groupId'),
     groupName: formData.get('groupName'),
@@ -60,5 +68,45 @@ export async function updateGroup(formData: FormData) {
   } catch (error) {
     console.error('Failed to update group:', error);
     return { error: 'Failed to update group. Please try again.' };
+  }
+}
+
+export async function deleteGroup(formData: FormData): Promise<DeleteGroupResult> {
+  const validatedFields = DeleteGroupSchema.safeParse({
+    groupId: formData.get('groupId'),
+    classId: formData.get('classId'),
+  });
+
+  if (!validatedFields.success) {
+    console.error('Validation error:', validatedFields.error);
+    return { success: false, error: 'Invalid input. Please check your data.' };
+  }
+
+  const { groupId, classId } = validatedFields.data;
+
+  try {
+    await db.transaction(async (tx) => {
+      const deletedStudentGroups = await tx
+        .delete(student_groups)
+        .where(eq(student_groups.group_id, groupId))
+        .returning();
+      const deletedGroup = await tx
+        .delete(groups)
+        .where(eq(groups.group_id, groupId))
+        .returning();
+      
+      if (deletedGroup.length === 0) {
+        throw new Error('Group not found');
+      }
+    });
+
+    revalidatePath(`/classes/${classId}`);
+    return { success: true, message: 'Group deleted successfully' };
+  } catch (error) {
+    console.error("Failed to delete group:", error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : "Failed to delete group" 
+    };
   }
 }
