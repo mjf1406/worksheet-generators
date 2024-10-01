@@ -17,6 +17,7 @@ export type AssignmentItem = {
   item: string;
   studentNumber: number | null;
   studentName: string;
+  studentSex: "male" | "female" | null;
 };
 
 export type AssignedData = {
@@ -80,6 +81,14 @@ const styles = StyleSheet.create({
   },
 });
 
+const sortRowsBySeatNumber = (rows: AssignmentItem[]): AssignmentItem[] => {
+  return [...rows].sort((a, b) => {
+    const seatA = parseInt(a.item.replace(/\D/g, ""), 10);
+    const seatB = parseInt(b.item.replace(/\D/g, ""), 10);
+    return seatA - seatB;
+  });
+};
+
 // AssignerPDF component
 const AssignerPDF = ({ data }: { data: AssignedData }) => {
   const groups: string[] = Object.keys(data.assignedData);
@@ -89,9 +98,12 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
   const groupColWidth = numberColWidth + nameColWidth;
 
   const firstGroupKey = groups[0];
-  const rows: AssignmentItem[] = firstGroupKey
+  const unsortedRows: AssignmentItem[] = firstGroupKey
     ? (data.assignedData[firstGroupKey] ?? [])
     : [];
+
+  // Sort the rows by seat number
+  const rows = sortRowsBySeatNumber(unsortedRows);
 
   return (
     <Document>
@@ -164,7 +176,9 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
               </View>
               {groups.flatMap((group) => {
                 const groupData = data.assignedData[group];
-                const assignment = groupData?.[index];
+                const assignment = groupData?.find(
+                  (item) => item.item === row.item,
+                );
                 return [
                   <View
                     key={`${group}-${index}-number`}
@@ -179,7 +193,8 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
                     style={[styles.tableCol, { width: `${nameColWidth}%` }]}
                   >
                     <Text style={styles.tableCell}>
-                      {assignment?.studentName ?? ""}
+                      {assignment?.studentName ?? ""} (
+                      {assignment?.studentSex?.charAt(0)})
                     </Text>
                   </View>,
                 ];

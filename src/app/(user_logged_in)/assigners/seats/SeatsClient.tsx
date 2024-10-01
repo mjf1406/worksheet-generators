@@ -41,7 +41,7 @@ type AssignerResult = {
   message?: string;
 };
 
-export default function RoundRobinClient() {
+export default function SeatsClient() {
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [assignedData, setAssignedData] = useState<
@@ -97,7 +97,6 @@ export default function RoundRobinClient() {
         assignerData,
         data.selectedGroups,
       );
-      console.log("🚀 ~ onSubmit ~ result:", result);
       if (result?.success) {
         setAssignedData(result?.data);
       } else {

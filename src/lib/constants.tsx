@@ -17,6 +17,7 @@ import {
   RockingChair,
   Text,
   AudioLines,
+  Image,
 } from "lucide-react";
 import { AIBadge } from "~/components/AIBadge";
 import type { ItemGridData } from "~/components/ItemGrid";
@@ -129,6 +130,14 @@ export const toolsData: ItemGridData[] = [
       "Show a full-screen clock with easy-access timers and rotation schedules for classroom centers.",
     icon: Clock,
     href: "/tools/classroom-clock",
+    under_construction: true,
+  },
+  {
+    name: "Image Background Remover",
+    description:
+      "Upload webp, jpg, or png and remove its background, then export as png.",
+    icon: Image,
+    href: "/tools/image-bg-remover",
     under_construction: true,
   },
   {

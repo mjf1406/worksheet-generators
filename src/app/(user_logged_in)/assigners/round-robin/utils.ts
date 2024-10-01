@@ -105,7 +105,8 @@ function assignItems(
         const studentsToAdd = randomStudents.map(chosenStudent => ({
             item: item,
             studentNumber: chosenStudent.student_number,
-            studentName: chosenStudent.student_name_en
+            studentName: chosenStudent.student_name_en,
+            studentSex: chosenStudent.student_sex,
         }));
           
         assignedData.push(...studentsToAdd);

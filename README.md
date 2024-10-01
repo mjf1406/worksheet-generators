@@ -31,11 +31,11 @@ This is the collection of worksheet generators that I have created as I needed t
 ### p3
 
 - screen: Classroom Screen -- a screen that displays the clock and displays shuffler.
-  - Shuffler can be run from another user session, like a phone, thene the results will apear on the screen.
+  - Shuffler can be run from another user session, like a phone, then the results will appear on the screen.
   - A timer can be set from another user session and will appear on the screen.
 - screen: Teacher screen, in-class
   - quick access to randomizer, shuffler, create a timer -- all get pushed to the Classroom Screen
-  - quick access to attendance, local chat, magnitext
+  - quick access to attendance, local chat, MagniText
   - quick access to each student to award/subtract points
     - can filter the students by group
   - can easily select multiple students
@@ -66,8 +66,15 @@ This is the collection of worksheet generators that I have created as I needed t
   - the teacher can upload an image to represent each student.
 - tool: Attendance based on user's local time zone and loads already input data every time it's clicked on the same day.
 - UI: user can now delete groups from the db
+- fixed: the DB migration issue... kill me
 
 ## Change Log
+
+2024/10/01
+
+- fixed: student gender is now displayed in the students table
+- fixed: Seats Assigner now correctly places students by sex and the output is ordered by seat number
+- fixed: when opening a class, the class name now appears in the navbar instead of the class ID
 
 2024/09/21
 

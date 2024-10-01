@@ -103,68 +103,159 @@ function updateSeatingHistory(
 }
 
 // Main function to assign seats to students
+// function assignSeats(
+//   students: StudentData[],
+//   seatingHistory: SeatingHistory,
+//   items: string[],
+//   seatGroups: SeatGroup[],
+//   evenGender: "male" | "female",
+// ): Map<string, number> {
+//     if (!seatGroups) throw new Error("seat groups is undefined.")
+//   const seats: Seat[] = generateSeats(items, seatGroups);
+//   const assignments = new Map<string, number>();
+//   const shuffledStudents = shuffleArray(students);
+//   const difficultToPlace: StudentData[] = [];
+
+//   for (const student of shuffledStudents) {
+//     const seatScores = calculateSeatScores(
+//       student,
+//       seats,
+//       assignments,
+//       seatingHistory,
+//       evenGender
+//     );
+//     const bestSeat = seatScores.reduce(
+//       (a, b) => (a.score > b.score ? a : b),
+//       { seat: null as Seat | null, score: -Infinity }
+//     );
+
+//     if (bestSeat.score > 0 && bestSeat.seat) {
+//       assignments.set(student.student_id, bestSeat.seat.number);
+//     } else {
+//       difficultToPlace.push(student);
+//     }
+//   }
+
+//   // Place difficult students with relaxed constraints
+//   for (const student of difficultToPlace) {
+//     const availableSeats = seats.filter(
+//       (seat) => !Array.from(assignments.values()).includes(seat.number)
+//     );
+//     const seatScores = calculateSeatScores(
+//       student,
+//       availableSeats,
+//       assignments,
+//       seatingHistory,
+//       evenGender,
+//       true
+//     );
+//     const bestSeat = seatScores.reduce(
+//       (a, b) => (a.score > b.score ? a : b),
+//       { seat: null as Seat | null, score: -Infinity }
+//     );
+
+//     if (bestSeat.seat) {
+//       assignments.set(student.student_id, bestSeat.seat.number);
+//     } else {
+//       console.error(`Could not place student ${student.student_id}`);
+//     }
+//   }
+
+//   return assignments;
+// }
+
 function assignSeats(
   students: StudentData[],
   seatingHistory: SeatingHistory,
   items: string[],
   seatGroups: SeatGroup[],
+  evenGender: "male" | "female",
 ): Map<string, number> {
-    if (!seatGroups) throw new Error("seat groups is undefined.")
+  if (!seatGroups) throw new Error("seat groups is undefined.")
   const seats: Seat[] = generateSeats(items, seatGroups);
   const assignments = new Map<string, number>();
   const shuffledStudents = shuffleArray(students);
-  const evenGender = Math.random() < 0.5 ? "male" : "female";
   const difficultToPlace: StudentData[] = [];
 
-  for (const student of shuffledStudents) {
-    const seatScores = calculateSeatScores(
-      student,
-      seats,
-      assignments,
-      seatingHistory,
-      evenGender
-    );
-    const bestSeat = seatScores.reduce(
-      (a, b) => (a.score > b.score ? a : b),
-      { seat: null as Seat | null, score: -Infinity }
-    );
+  // Separate students by gender
+  const evenGenderStudents = shuffledStudents.filter(student => student.student_sex === evenGender);
+  const oddGenderStudents = shuffledStudents.filter(student => student.student_sex !== evenGender);
 
-    if (bestSeat.score > 0 && bestSeat.seat) {
-      assignments.set(student.student_id, bestSeat.seat.number);
-    } else {
-      difficultToPlace.push(student);
-    }
-  }
+  // Assign even seats to evenGender students
+  const evenSeats = seats.filter(seat => seat.number % 2 === 0);
+  assignStudentsToSeats(evenGenderStudents, evenSeats, assignments, seatingHistory, evenGender);
 
-  // Place difficult students with relaxed constraints
-  for (const student of difficultToPlace) {
-    const availableSeats = seats.filter(
-      (seat) => !Array.from(assignments.values()).includes(seat.number)
-    );
-    const seatScores = calculateSeatScores(
-      student,
-      availableSeats,
-      assignments,
-      seatingHistory,
-      evenGender,
-      true
-    );
-    const bestSeat = seatScores.reduce(
-      (a, b) => (a.score > b.score ? a : b),
-      { seat: null as Seat | null, score: -Infinity }
-    );
+  // Assign odd seats to oddGender students
+  const oddSeats = seats.filter(seat => seat.number % 2 !== 0);
+  assignStudentsToSeats(oddGenderStudents, oddSeats, assignments, seatingHistory, evenGender);
 
-    if (bestSeat.seat) {
-      assignments.set(student.student_id, bestSeat.seat.number);
-    } else {
-      console.log(`Could not place student ${student.student_id}`);
-    }
-  }
+  // Handle any remaining students (if there's an imbalance)
+  const remainingStudents = [...evenGenderStudents, ...oddGenderStudents].filter(
+    student => !assignments.has(student.student_id)
+  );
+  const remainingSeats = seats.filter(seat => !Array.from(assignments.values()).includes(seat.number));
+  assignStudentsToSeats(remainingStudents, remainingSeats, assignments, seatingHistory, evenGender, true);
 
   return assignments;
 }
 
 // Function to calculate seat scores for a student
+// function calculateSeatScores(
+//   student: StudentData,
+//   seats: Seat[],
+//   assignments: Map<string, number>,
+//   seatingHistory: SeatingHistory,
+//   evenGender: "male" | "female",
+//   relaxed = false
+// ): { seat: Seat; score: number }[] {
+//   return seats.map((seat) => {
+//     // Skip if the seat is already assigned
+//     if (Array.from(assignments.values()).includes(seat.number)) {
+//       return { seat, score: -Infinity };
+//     }
+
+//     let score = 0;
+
+//     // Gender matching
+//     if (
+//       (seat.number % 2 === 0 && student.student_sex === evenGender) ||
+//       (seat.number % 2 !== 0 && student.student_sex !== evenGender)
+//     ) {
+//       score += 3;
+//     }
+
+//     // Avoid seating next to previous neighbors
+//     const adjacentSeats = getAdjacentSeats(seat.number);
+//     const adjacentStudents = adjacentSeats
+//       .map((s) => {
+//         const studentId = Array.from(assignments.entries()).find(
+//           ([_, seatNum]) => seatNum === s
+//         )?.[0];
+//         return studentId;
+//       })
+//       .filter((id): id is string => id !== undefined);
+
+//     const previousNeighbors = new Set(
+//       seatingHistory[student.student_id]?.neighbors ?? []
+//     );
+//     const hasPreviousNeighbor = adjacentStudents.some((id) =>
+//       previousNeighbors.has(id)
+//     );
+
+//     if (!hasPreviousNeighbor) {
+//       score += 2;
+//     }
+
+//     // Avoid assigning the same seat as before
+//     const previousSeats = seatingHistory[student.student_id]?.seats ?? [];
+//     if (!previousSeats.includes(seat.number)) {
+//       score += 1;
+//     }
+
+//     return { seat, score: relaxed ? Math.max(score, 0) : score };
+//   });
+// }
+
 function calculateSeatScores(
   student: StudentData,
   seats: Seat[],
@@ -179,15 +270,14 @@ function calculateSeatScores(
       return { seat, score: -Infinity };
     }
 
-    let score = 0;
-
-    // Gender matching
-    if (
-      (seat.number % 2 === 0 && student.student_sex === evenGender) ||
-      (seat.number % 2 !== 0 && student.student_sex !== evenGender)
-    ) {
-      score += 3;
+    // Strict gender matching
+    const isEvenSeat = seat.number % 2 === 0;
+    const isEvenGenderStudent = student.student_sex === evenGender;
+    if ((isEvenSeat && !isEvenGenderStudent) || (!isEvenSeat && isEvenGenderStudent)) {
+      return { seat, score: -Infinity }; // Disallow mismatched gender-seat combinations
     }
+
+    let score = 3; // Start with a base score for correct gender placement
 
     // Avoid seating next to previous neighbors
     const adjacentSeats = getAdjacentSeats(seat.number);
@@ -227,8 +317,9 @@ export async function runAssignerSeats(
   assignerData: Assigner,
   selectedGroups: string[]
 ): Promise<AssignerResult> {
-  console.log("🚀 ~ assignerData:", assignerData)
   try {
+    const evenGender = Math.random() < 0.5 ? "male" : "female";
+    console.log("🚀 ~ evenGender:", evenGender)
     const classId = classData.class_id;
     const className = classData.class_name;
     const assignerId = assignerData.assigner_id;
@@ -288,7 +379,7 @@ export async function runAssignerSeats(
           );
 
           if (!seatGroups) throw new Error("seat groups is undefined.")
-        const seatingAssignments = assignSeats(groupStudents, seatingHistory, items, seatGroups);
+        const seatingAssignments = assignSeats(groupStudents, seatingHistory, items, seatGroups, evenGender);
 
         if (groupName && assignedStudents.assignedData[groupName]) {
             const groupAssignedData = groupStudents.map((student) => {
@@ -297,6 +388,7 @@ export async function runAssignerSeats(
               return {
                 studentName: student.student_name_en,
                 studentNumber: student.student_number,
+                studentSex: student.student_sex,
                 item: `${group} ${seatNumber}`,
               };
             });
@@ -310,7 +402,7 @@ export async function runAssignerSeats(
       if (className) assignedStudents.assignedData[className] = [];
 
       if (!seatGroups) throw new Error("seat groups is undefined.")
-      const seatingAssignments = assignSeats(students, seatingHistory, items, seatGroups);
+      const seatingAssignments = assignSeats(students, seatingHistory, items, seatGroups, evenGender);
 
       if (className && assignedStudents.assignedData[className]) {
         const classAssignedData = students.map((student) => {
@@ -319,6 +411,7 @@ export async function runAssignerSeats(
             return {
             studentName: student.student_name_en,
             studentNumber: student.student_number,
+            studentSex: student.student_sex,
             item: `${group} ${seatNumber}`,
             };
         });
@@ -328,12 +421,10 @@ export async function runAssignerSeats(
       updateSeatingHistory(seatingHistory, students, seatingAssignments);
     }
 
-    if (itemStatus?.[classId]){
-        itemStatus[classId][assignerId] = seatingHistory;
-        console.log("🚀 ~ itemStatus:", itemStatus)
-        await updateAssigner(assignerId, itemStatus as unknown as AssignerItemStatuses);
-        console.log("🚀 ~ assignedStudents:", assignedStudents)
-    }
+    // if (itemStatus?.[classId]){
+    //     itemStatus[classId][assignerId] = seatingHistory;
+    //     await updateAssigner(assignerId, itemStatus as unknown as AssignerItemStatuses);
+    // }
     
     return { success: true, data: assignedStudents };
 } catch (err) {
@@ -383,4 +474,38 @@ export function createStudentItemStatusClassStructure(
   }
 
   return studentItemStatus;
+}
+
+function assignStudentsToSeats(
+  students: StudentData[],
+  availableSeats: Seat[],
+  assignments: Map<string, number>,
+  seatingHistory: SeatingHistory,
+  evenGender: "male" | "female",
+  relaxed = false
+) {
+  for (const student of students) {
+    if (assignments.has(student.student_id)) continue;
+
+    const seatScores = calculateSeatScores(
+      student,
+      availableSeats,
+      assignments,
+      seatingHistory,
+      evenGender,
+      relaxed
+    );
+
+    const bestSeat = seatScores.reduce(
+      (a, b) => (a.score > b.score ? a : b),
+      { seat: null as Seat | null, score: -Infinity }
+    );
+
+    if (bestSeat.seat) {
+      assignments.set(student.student_id, bestSeat.seat.number);
+      availableSeats = availableSeats.filter(seat => seat.number !== bestSeat.seat?.number);
+    } else {
+      console.error(`Could not place student ${student.student_id}`);
+    }
+  }
 }

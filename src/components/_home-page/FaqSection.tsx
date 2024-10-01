@@ -84,13 +84,8 @@ export default function FAQ() {
         <AccordionItem value="item-5">
           <AccordionTrigger>Where do I submit feedback?</AccordionTrigger>
           <AccordionContent>
-            High-quality feedback provides context, is detailed, specific,
-            criticizes constructively, and DOES NOT suggest improvements. Why do
-            I not want your suggestions to fix your problem? It is because you
-            are (likely) not an expert in web design, programming, or systems
-            design. But you do have, and what I care about, is{" "}
-            <b>how you feel</b> about what caused you to have a bad experience.
-            The developers for{" "}
+            High-quality feedback discusses the issue like you are speaking with
+            your doctor. The developers for{" "}
             <a
               className="underline"
               href="https://playruneterra.com/en-sg/news/dev/giving-feedback-like-a-game-dev/"

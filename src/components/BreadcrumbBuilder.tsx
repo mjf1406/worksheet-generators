@@ -1,7 +1,7 @@
 // components/BreadcrumbBuilder.tsx
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import React from "react";
 import {
@@ -32,17 +32,24 @@ import {
 
 export function BreadcrumbBuilder() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const pathSegments = pathname.split("/").filter(Boolean);
 
-  // Map over the path segments to create breadcrumb items
   const breadcrumbItems = pathSegments.map((segment, index) => {
     const href = "/" + pathSegments.slice(0, index + 1).join("/");
     const isLast = index === pathSegments.length - 1;
-    const displayName = segment
+    let displayName = segment
       .replace(/-/g, " ")
       .replace(/\b\w/g, (char) => char.toUpperCase());
 
-    // Determine if the segment should have a dropdown
+    // Check if this is a class segment and if we have a class_name in the URL params
+    if (segment.startsWith("class_") && isLast) {
+      const className = searchParams.get("class_name");
+      if (className) {
+        displayName = className;
+      }
+    }
+
     const shouldHaveDropdown =
       !isLast && hasDataForSegment(segment) && pathSegments.length > index + 1;
 
