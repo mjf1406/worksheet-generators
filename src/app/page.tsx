@@ -5,6 +5,8 @@ import PricingSection from "~/components/_home-page/PricingSection";
 import FeaturesSection from "~/components/_home-page/FeaturesSection";
 import HeroSection from "~/components/_home-page/HeroSection";
 
+export const dynamic = "force-static";
+
 export default function HomePage() {
   return (
     <>

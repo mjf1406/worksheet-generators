@@ -10,7 +10,6 @@ import {
 import { Button } from "~/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import { ArrowRight, Menu } from "lucide-react";
-import UserAndTheme from "./UserAndTheme";
 import NavLogo from "./NavLogo";
 
 const MainNav = () => {
@@ -40,7 +39,6 @@ const MainNav = () => {
               </NavigationMenuLink>
             </NavigationMenuItem>
           ))}
-          <UserAndTheme />
         </NavigationMenuList>
       </NavigationMenu>
     </>
@@ -66,9 +64,6 @@ const MainNav = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right">
-                <div className="mb-3 flex items-start">
-                  <UserAndTheme />
-                </div>
                 <nav className="flex flex-col space-y-4">
                   {menuItems.map((item) => (
                     <a
