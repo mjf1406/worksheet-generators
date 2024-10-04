@@ -23,13 +23,10 @@ export default function HeroSection() {
         </p>
       </div>
       <div className="flex items-center justify-center gap-2">
-        <Button
-          variant="secondary"
-          className="text-text/70 bg-secondary/30 px-8 hover:bg-secondary/40"
-          asChild
-        >
-          <Link href="/classes">Get started</Link>{" "}
-          <ArrowRight className="ml-2 h-5 w-5" />
+        <Button className="px-8" asChild>
+          <Link href="/classes">
+            Get started <ArrowRight className="ml-2 h-5 w-5" />
+          </Link>
         </Button>
         <Button
           variant="secondary"
