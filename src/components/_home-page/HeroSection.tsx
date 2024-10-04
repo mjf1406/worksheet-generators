@@ -1,8 +1,8 @@
 import { FLIP_WORDS } from "~/lib/constants";
 import { FlipWords } from "../ui/flip-words";
-import AuthButton from "../brand/AuthButton";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export default function HeroSection() {
   return (
@@ -23,7 +23,14 @@ export default function HeroSection() {
         </p>
       </div>
       <div className="flex items-center justify-center gap-2">
-        <AuthButton />
+        <Button
+          variant="secondary"
+          className="text-text/70 bg-secondary/30 px-8 hover:bg-secondary/40"
+          asChild
+        >
+          <Link href="/classes">Get started</Link>{" "}
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
         <Button
           variant="secondary"
           className="text-text/70 bg-secondary/30 px-8 hover:bg-secondary/40"
