@@ -25,7 +25,7 @@ export default function FAQ() {
           <AccordionContent>
             My name is{" "}
             <a
-              href="https://mjf1406-portfolio.netlify.app/"
+              href="https://mr-monkey-portfolio.vercel.app"
               className="underline"
             >
               Michael Fitzgerald
