@@ -81,29 +81,57 @@ const styles = StyleSheet.create({
   },
 });
 
-const sortRowsBySeatNumber = (rows: AssignmentItem[]): AssignmentItem[] => {
-  return [...rows].sort((a, b) => {
-    const seatA = parseInt(a.item.replace(/\D/g, ""), 10);
-    const seatB = parseInt(b.item.replace(/\D/g, ""), 10);
-    return seatA - seatB;
-  });
-};
-
 // AssignerPDF component
 const AssignerPDF = ({ data }: { data: AssignedData }) => {
+  console.log("🚀 ~ AssignerPDF ~ data:", data);
   const groups: string[] = Object.keys(data.assignedData);
   const jobColWidth = 20;
   const numberColWidth = 10;
   const nameColWidth = 30;
   const groupColWidth = numberColWidth + nameColWidth;
 
-  const firstGroupKey = groups[0];
-  const unsortedRows: AssignmentItem[] = firstGroupKey
-    ? (data.assignedData[firstGroupKey] ?? [])
-    : [];
+  // Step 1: Calculate the maximum number of occurrences for each item
+  const itemCounts: Record<string, number> = {};
 
-  // Sort the rows by seat number
-  const rows = sortRowsBySeatNumber(unsortedRows);
+  for (const group of groups) {
+    const assignments = data.assignedData[group] ?? [];
+    const counts = assignments.reduce(
+      (acc: Record<string, number>, assignment) => {
+        acc[assignment.item] = (acc[assignment.item] ?? 0) + 1;
+        return acc;
+      },
+      {},
+    );
+    for (const item in counts) {
+      itemCounts[item] = Math.max(itemCounts[item] ?? 0, counts[item] ?? 0);
+    }
+  }
+
+  // Step 2: Generate rows based on items and their occurrence index
+  const rows: { item: string; index: number }[] = [];
+  for (const item in itemCounts) {
+    const count = itemCounts[item] ?? 0;
+    for (let i = 0; i < count; i++) {
+      rows.push({ item, index: i });
+    }
+  }
+
+  // Step 3: Build a map for assignments per group, item, and index
+  const groupItemsMap: Record<string, Record<string, AssignmentItem[]>> = {};
+
+  for (const group of groups) {
+    const assignments = data.assignedData[group] ?? [];
+    const itemMap: Record<string, AssignmentItem[]> = {};
+
+    for (const assignment of assignments) {
+      if (!itemMap[assignment.item]) {
+        itemMap[assignment.item] = [];
+      }
+      itemMap[assignment.item]!.push(assignment);
+    }
+
+    groupItemsMap[group] = itemMap;
+  }
 
   return (
     <Document>
@@ -169,19 +197,18 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
             ])}
           </View>
           {/* Table Body */}
-          {rows.map((row: AssignmentItem, index: number) => (
-            <View key={index} style={styles.tableRow}>
+          {rows.map((row, rowIndex) => (
+            <View key={rowIndex} style={styles.tableRow}>
               <View style={[styles.tableCol, { width: `${jobColWidth}%` }]}>
                 <Text style={styles.tableCell}>{row.item}</Text>
               </View>
               {groups.flatMap((group) => {
-                const groupData = data.assignedData[group];
-                const assignment = groupData?.find(
-                  (item) => item.item === row.item,
-                );
+                const itemMap = groupItemsMap[group]!; // Non-null assertion
+                const assignmentsForItem = itemMap[row.item] ?? [];
+                const assignment = assignmentsForItem[row.index];
                 return [
                   <View
-                    key={`${group}-${index}-number`}
+                    key={`${group}-${rowIndex}-number`}
                     style={[styles.tableCol, { width: `${numberColWidth}%` }]}
                   >
                     <Text style={styles.tableCell}>
@@ -189,12 +216,15 @@ const AssignerPDF = ({ data }: { data: AssignedData }) => {
                     </Text>
                   </View>,
                   <View
-                    key={`${group}-${index}-name`}
+                    key={`${group}-${rowIndex}-name`}
                     style={[styles.tableCol, { width: `${nameColWidth}%` }]}
                   >
                     <Text style={styles.tableCell}>
-                      {assignment?.studentName ?? ""} (
-                      {assignment?.studentSex?.charAt(0)})
+                      {assignment
+                        ? `${assignment.studentName} (${assignment.studentSex?.charAt(
+                            0,
+                          )})`
+                        : ""}
                     </Text>
                   </View>,
                 ];

@@ -68,8 +68,13 @@ This is the collection of worksheet generators that I have created as I needed t
   - the teacher can upload an image to represent each student.
 - tool: Attendance based on user's local time zone and loads already input data every time it's clicked on the same day.
 - fixed: the DB migration issue... kill me
+- when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. if I want Group B to be all the students not in Group A
 
 ## Change Log
+
+2024/10/08
+
+- fixed: The output PDF now ensures that jobs with duplicate items gets printed correctly
 
 2024/10/01
 
@@ -127,7 +132,7 @@ This is the collection of worksheet generators that I have created as I needed t
 
 2024/08/23
 
-- added: Assigner, Random now allows for one boy and one girl to be selected if there are two jobs with the same name
+- added: Assigner, Round-Robin now allows for one boy and one girl to be selected if there are two jobs with the same name
 
 2024/08/22
 
