@@ -81,6 +81,12 @@ export type TeacherCourse = {
     students: StudentData[] | undefined
   }
 
+export type PointRecord = {
+    point_id: string;
+    quantity: number;
+    date: string;
+}
+
 export type Student = {
     student_id?: string | undefined;
     student_name_en: string | undefined;
@@ -95,6 +101,9 @@ export type Student = {
     enrollment_date?: string | undefined;
     enrollment_id?: string | undefined;
     isEditing?: boolean | undefined;
+    // points?: number;
+    // point_history?: PointRecord[];
+    // absent_dates?: string[];
 }
 
 export type StudentField = {
@@ -147,3 +156,30 @@ export type RandomEvent = {
     name: string,
     description: string,
 }
+  
+  // New Behavior type
+export  type Behavior = {
+    behavior_id: string;
+    name: string;
+    point_value: number;
+    description?: string;
+    icon?: string;
+    class_id?: string;
+    user_id: string;
+    created_date: string;
+    updated_date: string;
+  };
+  
+  // New RewardItem type
+export type RewardItem = {
+    item_id: string;
+    price: number;
+    name: string;
+    description?: string;
+    icon?: string;
+    class_id?: string;
+    user_id: string;
+    type: "solo" | "group" | "class";
+    created_date: string;
+    updated_date: string;
+  };

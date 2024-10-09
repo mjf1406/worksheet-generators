@@ -18,6 +18,8 @@ import {
   Text,
   AudioLines,
   Image,
+  CheckSquare,
+  CirclePlus,
 } from "lucide-react";
 import { AIBadge } from "~/components/AIBadge";
 import type { ItemGridData } from "~/components/ItemGrid";
@@ -125,6 +127,14 @@ export const screensData: ItemGridData[] = [
 ];
 export const toolsData: ItemGridData[] = [
   {
+    name: "Attendance",
+    description:
+      "Take attendance for any class, effecting which students can earn points for the day.",
+    icon: CheckSquare,
+    href: "/tools/attendance",
+    under_construction: true,
+  },
+  {
     name: "Classroom Clock",
     description:
       "Show a full-screen clock with easy-access timers and rotation schedules for classroom centers.",
@@ -154,6 +164,14 @@ export const toolsData: ItemGridData[] = [
       "See how loud your students are being while in class and and alert everyone if it gets too loud.",
     icon: AudioLines,
     href: "/tools/noise-monitor",
+  },
+  {
+    name: "Points",
+    description:
+      "Award student points for good behaviors, and remove points for negative behaviors.",
+    icon: CirclePlus,
+    href: "/tools/points",
+    under_construction: true,
   },
   {
     name: "Random Event",

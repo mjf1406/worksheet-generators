@@ -1,6 +1,6 @@
-import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, index, foreignKey } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
-import type { AssignerItemStatuses } from "./types";
+import type { AssignerItemStatuses, PointRecord } from "./types";
 
 // Core Tables
 
@@ -48,41 +48,62 @@ export const groups = sqliteTable('groups',
         group_id: text('group_id').notNull().primaryKey(),
         group_name: text('group_name').notNull(),
         class_id: text('class_id').notNull().references(() => classes.class_id),
+        linked_group: text('linked_group'),
         created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
         updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
     }, 
     (table) => {
         return {
-            groups_by_class_id_idx: index("groups_by_class_id_idx").on(table.class_id)
+            groups_by_class_id_idx: index("groups_by_class_id_idx").on(table.class_id),
+            parentReference: foreignKey({
+                columns: [table.linked_group],
+                foreignColumns: [table.group_id],
+                name: "group_linked_group_id",
+            })
         }
     }
 )
 
-// export const reward_items = sqliteTable('reward_items',
-//     {
-//         item_id: text('item_id').notNull().primaryKey(),
-//         price: integer('cost', { mode: 'number' }).notNull(),
-//         name: text('name').notNull(),
-//         description: text('description'),
-//         class_id: text('class_id').references(() => classes.class_id),
-//         type: text('type', { enum: ["solo", "group", "class"] }).notNull(),
-//         created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
-//         updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
-//     }
-// )
+export const reward_items = sqliteTable('reward_items',
+    {
+        item_id: text('item_id').notNull().primaryKey(),
+        price: integer('cost', { mode: 'number' }).notNull(),
+        name: text('name').notNull(),
+        description: text('description'),
+        icon: text('icon'),
+        class_id: text('class_id').references(() => classes.class_id),
+        user_id: text('user_id').notNull().references(() => users.user_id),
+        type: text('type', { enum: ["solo", "group", "class"] }).notNull(),
+        created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+        updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+    },
+    (table) => {
+      return {
+        reward_items_by_class_id_idx: index("reward_items_by_class_id_idx").on( table.class_id),
+        reward_items_by_user_id_idx: index("reward_items_by_user_id_idx").on( table.user_id),
+      };
+    }
+)
 
-// export const behaviors = sqliteTable('behaviors', 
-//     {
-//         behavior_id: text('behavior_id').notNull().primaryKey(),
-//         name: text('name').notNull(),
-//         point_value: integer('point_value', { mode: 'number' }).notNull(),
-//         description: text('description'),
-//         icon: text('icon'),
-//         class_id: text('class_id').references(() => classes.class_id),
-//         created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
-//         updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
-//     }
-// )
+export const behaviors = sqliteTable('behaviors', 
+    {
+        behavior_id: text('behavior_id').notNull().primaryKey(),
+        name: text('name').notNull(),
+        point_value: integer('point_value', { mode: 'number' }).notNull(),
+        description: text('description'),
+        icon: text('icon'),
+        class_id: text('class_id').references(() => classes.class_id),
+        user_id: text('user_id').notNull().references(() => users.user_id),
+        created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+        updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+    },
+    (table) => {
+      return {
+        behaviors_by_class_id_idx: index("behaviors_by_class_id_idx").on( table.class_id),
+        behaviors_by_user_id_idx: index("behaviors_by_user_id_idx").on( table.user_id),
+      };
+    }
+)
 // Junction Tables
 
 export const student_classes = sqliteTable('student_classes',
@@ -91,9 +112,9 @@ export const student_classes = sqliteTable('student_classes',
         student_id: text('student_id').notNull().references(() => students.student_id),
         class_id: text('class_id').notNull().references(() => classes.class_id),
         enrollment_date: text('enrollment_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
-        // points: integer('points', { mode: 'number' }),
-        // point_history: text('point_history', { mode: 'json' }).$type<string[]>(),
-        // attendance_record: text('attendance_record', { mode: 'json' }).$type<string[]>(),
+        points: integer('points', { mode: 'number' }),
+        point_history: text('point_history', { mode: 'json' }).$type<PointRecord[]>(),
+        absent_dates: text('absent_dates', { mode: 'json' }).$type<string[]>(),
     }, 
     (table) => {
         return {

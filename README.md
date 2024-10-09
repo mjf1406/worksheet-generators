@@ -59,14 +59,38 @@ This is the collection of worksheet generators that I have created as I needed t
 - tool: Shuffler -- shuffle history is now stored in the DB to persist across user sessions
 - tool: Shuffler -- UI now indicates who has been first/last and how many times and on what date
 - tool: Assigner, Round-Robin -- a history of items is now stored with a datetime object and is displayed in the UI as a table
+- ⚠️ local-first: use [TinyBase](https://tinybase.org/) to implement a local-first architecture
+- ⚠️ i18n: use [next-international](https://next-international.vercel.app/docs/app-setup) for localization
 
 ### p0
 
 - tool: Points -- track points on a per student, group, and class basis
-  - add redemption items
-  - implement streaks for doing things, like material check every day, etc.
-  - the teacher can upload an image to represent each student.
-- tool: Attendance based on user's local time zone and loads already input data every time it's clicked on the same day.
+  - features
+    - [ ] award points
+      - [ ] to a single student
+        - clicking on the student opens a dialog with a grid list of all behaviors, with positive and needs work as tabs
+        - also need a quantity that defaults to 1
+      - [ ] to selected students
+        - there is a select button at the top of the page that allows the grid list of students to be selected
+      - [ ] to a group of students
+        - clicking on a group opens a new page that only shows students from that page
+      - [ ] the the whole class
+      - [ ] streaks are tracked for each student, and the teacher is alerted
+        - [ ] off days should be declared in the settings, so they are excluded from breaking streaks
+    - [ ] positive and negative behavior
+      - [ ] user can create them, setting an icon, name, and point value
+      - [ ] user can edit
+      - [ ] user can delete
+    - [ ] redemption items
+      - [ ] user can create, setting cost, name, and icon
+      - [ ] user can delete
+      - [ ] user can edit
+    - [ ] redeeming items
+      - [ ] user can select multiple students to redeem the same thing simultaneously
+      - [ ] user can select quantity of redemption item to apply to selected students
+- tool: Attendance
+  - [ ] stores presence and absence based on user's local time zone
+  - [ ] prevents absent students from receiving points
 - fixed: the DB migration issue... kill me
 - when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. if I want Group B to be all the students not in Group A
 
