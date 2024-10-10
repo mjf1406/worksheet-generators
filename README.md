@@ -92,9 +92,21 @@ This is the collection of worksheet generators that I have created as I needed t
   - [ ] stores presence and absence based on user's local time zone
   - [ ] prevents absent students from receiving points
 - fixed: the DB migration issue... kill me
-- when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. if I want Group B to be all the students not in Group A
+- when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
+- attendance and points grid
+  - turn the current open class button to be the edit button
+  - set open to be the grid of students, with groups below the students
+    - initials in big characters, with full name just below (placeholder)
+    - have a multi-select mode
+    - attendance mode
 
 ## Change Log
+
+2024/10/10
+
+- switched the old view to edit class
+- opening a class now displays a grid of students with non-functioning buttons and radio groups
+- can now click into a group on the main class page
 
 2024/10/08
 

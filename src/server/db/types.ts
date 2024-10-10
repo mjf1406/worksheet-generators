@@ -101,9 +101,6 @@ export type Student = {
     enrollment_date?: string | undefined;
     enrollment_id?: string | undefined;
     isEditing?: boolean | undefined;
-    // points?: number;
-    // point_history?: PointRecord[];
-    // absent_dates?: string[];
 }
 
 export type StudentField = {

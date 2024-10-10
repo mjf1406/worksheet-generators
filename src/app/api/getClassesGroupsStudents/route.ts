@@ -3,6 +3,7 @@ import { db } from '~/server/db'; // Adjust this path to where your database ins
 import { auth } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
 import { classes, teacher_classes, groups, students, student_groups, student_classes } from '~/server/db/schema'; // Adjust this path to where your schema is defined
+import { PointRecord } from '~/server/db/types';
 
 export const dynamic = 'force-dynamic'
 
@@ -38,6 +39,9 @@ export type StudentData = {
     student_number: number | null;
     student_email: string | null;
     enrollment_date: string | null;
+    points?: number;
+    point_history?: PointRecord[];
+    absent_dates?: string[];
 };
 
 async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
@@ -105,6 +109,9 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
             student_number: students.student_number,
             student_email: students.student_email,
             enrollment_date: student_classes.enrollment_date,
+            points: student_classes.points,
+            point_history: student_classes.point_history,
+            absent_dates: student_classes.absent_dates
           })
           .from(student_classes)
           .innerJoin(students, eq(student_classes.student_id, students.student_id))

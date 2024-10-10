@@ -29,11 +29,14 @@ import {
   generatorsData,
   screensData,
 } from "~/lib/constants";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { classesOptions } from "~/app/api/queryOptions";
 
 export function BreadcrumbBuilder() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const pathSegments = pathname.split("/").filter(Boolean);
+  const { data: coursesData = [] } = useSuspenseQuery(classesOptions);
 
   const breadcrumbItems = pathSegments.map((segment, index) => {
     const href = "/" + pathSegments.slice(0, index + 1).join("/");
@@ -42,11 +45,30 @@ export function BreadcrumbBuilder() {
       .replace(/-/g, " ")
       .replace(/\b\w/g, (char) => char.toUpperCase());
 
-    // Check if this is a class segment and if we have a class_name in the URL params
-    if (segment.startsWith("class_") && isLast) {
-      const className = searchParams.get("class_name");
-      if (className) {
-        displayName = className;
+    // Check if this is a class segment
+    if (segment.startsWith("class_")) {
+      const classId = segment;
+      const matchedCourse = coursesData.find(
+        (course) => course.class_id === classId,
+      );
+      if (matchedCourse) {
+        displayName = matchedCourse.class_name;
+      }
+    }
+
+    // Check if this is a group segment
+    if (segment.startsWith("group_")) {
+      const groupId = segment;
+      const matchedCourse = coursesData.find((course) =>
+        course.groups?.some((group) => group.group_id === groupId),
+      );
+      if (matchedCourse) {
+        const matchedGroup = matchedCourse.groups?.find(
+          (group) => group.group_id === groupId,
+        );
+        if (matchedGroup) {
+          displayName = matchedGroup.group_name;
+        }
       }
     }
 

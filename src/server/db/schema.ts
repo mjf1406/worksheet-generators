@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, index, foreignKey } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 import type { AssignerItemStatuses, PointRecord } from "./types";
 
@@ -48,18 +48,12 @@ export const groups = sqliteTable('groups',
         group_id: text('group_id').notNull().primaryKey(),
         group_name: text('group_name').notNull(),
         class_id: text('class_id').notNull().references(() => classes.class_id),
-        linked_group: text('linked_group'),
         created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
         updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
     }, 
     (table) => {
         return {
             groups_by_class_id_idx: index("groups_by_class_id_idx").on(table.class_id),
-            parentReference: foreignKey({
-                columns: [table.linked_group],
-                foreignColumns: [table.group_id],
-                name: "group_linked_group_id",
-            })
         }
     }
 )

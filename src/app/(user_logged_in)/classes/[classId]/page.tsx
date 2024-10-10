@@ -1,16 +1,19 @@
 "use client";
 
-import { useCallback } from "react";
+import React from "react";
 import { ContentLayout } from "~/components/admin-panel/content-layout";
-import { useToast } from "~/components/ui/use-toast";
-import type { Student } from "~/server/db/types";
-import { DataTable } from "~/components/ui/data-table";
-import { columns } from "./columns";
-import AddGroupDialog from "../components/AddGroupDialog";
-import ClassGroupsComponent from "../components/ClassGroups";
-import { AddStudentsDialog } from "../components/AddStudents";
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { classesOptions } from "~/app/api/queryOptions";
+import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import StudentGrid from "./components/StudentGrid";
 
 interface Params {
   classId: string;
@@ -18,30 +21,10 @@ interface Params {
 
 export default function ClassDetails({ params }: { params: Params }) {
   const classId = params.classId;
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
 
   const { data: coursesData = [] } = useSuspenseQuery(classesOptions);
 
-  // Find the specific course data based on classId
   const courseData = coursesData.find((course) => course.class_id === classId);
-
-  const handleStudentsAdded = useCallback(
-    (newStudents: Student[]) => {
-      // Note: You might need to update this logic depending on how you want to handle state updates
-      // This example assumes you'll refetch the data after adding students
-      toast({
-        title: "Success",
-        description: `Added ${newStudents.length} new student(s)`,
-      });
-    },
-    [toast],
-  );
-
-  const handleGroupAdded = async () => {
-    await queryClient.refetchQueries({ queryKey: ["classes"] });
-    await queryClient.refetchQueries({ queryKey: ["groups", classId] });
-  };
 
   if (!courseData) {
     return (
@@ -54,36 +37,38 @@ export default function ClassDetails({ params }: { params: Params }) {
   }
 
   return (
-    <ContentLayout title={courseData.class_name ? courseData.class_name : ""}>
+    <ContentLayout title={courseData.class_name ?? ""}>
       <div className="container flex flex-col items-center gap-4 px-4 py-16">
         <div className="flex w-full flex-col gap-4">
-          <div className="flex w-full gap-5">
-            <h2 className="text-2xl">Students</h2>
-            <div className="flex flex-row items-center justify-center gap-2">
-              <AddStudentsDialog
-                classId={classId}
-                existingStudents={courseData.students as unknown as Student[]}
-                onStudentsAdded={handleStudentsAdded}
-              />
-            </div>
+          <div className="text-3xl">Groups</div>
+          <div className="grid grid-cols-3 gap-5 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8">
+            {courseData.groups?.map((group) => (
+              <Link
+                key={group.group_id}
+                href={{
+                  pathname: `/classes/${classId}/${group.group_id}`,
+                }}
+              >
+                <Card className="relative col-span-1 cursor-pointer">
+                  <CardHeader className="pt-8">
+                    <CardTitle className="text-center text-xl">
+                      {group.group_name}
+                    </CardTitle>
+                    <CardDescription></CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-sm">
+                    <p>
+                      <b>Students:</b> {group.students.length ?? 0}
+                    </p>
+                  </CardContent>
+                  <CardFooter></CardFooter>
+                </Card>
+              </Link>
+            ))}
           </div>
-          <DataTable
-            columns={columns}
-            data={courseData.students}
-            key={courseData?.students?.length}
-          />
-          <div className="flex w-full items-center gap-5">
-            <h2 className="self-start text-2xl">Groups</h2>
-            <div className="flex flex-row items-center justify-center gap-2 self-end">
-              <AddGroupDialog
-                students={courseData.students}
-                onGroupAdded={handleGroupAdded}
-              />
-            </div>
-          </div>
-          <div className="flex w-full flex-wrap items-center gap-4 text-sm">
-            <ClassGroupsComponent class={courseData} />
-          </div>
+          {courseData.students && (
+            <StudentGrid students={courseData.students} classId={classId} />
+          )}
         </div>
       </div>
     </ContentLayout>
