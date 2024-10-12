@@ -66,8 +66,12 @@ export default function ClassDetails({ params }: { params: Params }) {
               </Link>
             ))}
           </div>
-          {courseData.students && (
-            <StudentGrid students={courseData.students} classId={classId} />
+          {courseData.students && courseData.groups && (
+            <StudentGrid
+              students={courseData.students}
+              groups={courseData.groups}
+              classId={classId}
+            />
           )}
         </div>
       </div>

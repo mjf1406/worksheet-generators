@@ -102,6 +102,10 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ## Change Log
 
+2024/10/12
+
+- finished the client-side UI for the new classes view, setting everything up for adjusting points and tracking attendance
+
 2024/10/10
 
 - switched the old view to edit class

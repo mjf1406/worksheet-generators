@@ -16,18 +16,22 @@ export type Option = {
 
 interface FancyRadioGroupProps {
   options: Option[];
-  defaultValue?: string;
+  value: string; // Changed from defaultValue to value
+  onChange: (value: string) => void;
 }
 
 export const FancyRadioGroup: React.FC<FancyRadioGroupProps> = ({
   options,
-  defaultValue,
+  value,
+  onChange,
 }) => {
+  console.log("🚀 ~ options:", options);
   return (
-    <div className="flex flex-row items-center justify-center gap-2">
+    <div className="flex w-fit flex-row items-center justify-center gap-2">
       <div className="grid place-items-center">
         <RadioGroup
-          defaultValue={defaultValue ?? options[0]?.value}
+          value={value} // Use value prop to control the component
+          onValueChange={onChange}
           className="grid w-[20rem] grid-cols-5 gap-1 rounded-xl bg-background p-2"
         >
           {options.map((option) => (
