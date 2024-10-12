@@ -3,32 +3,21 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import fetchClassesGroupsStudents from "~/app/api/fetches";
 import { ContentLayout } from "~/components/admin-panel/content-layout";
 import RandomEventClient from "./RandomEventClient";
-import LoadingPage from "~/components/Loading";
-import { Suspense } from "react";
 
-async function getClasses() {
-  const res = await fetch("/api/getClasses");
-  if (!res.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return res.json();
-}
-
-export default async function ShufflerPage() {
+export default async function RandomEventPage() {
   const queryClient = new QueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["classes"],
-    queryFn: getClasses,
+    queryFn: fetchClassesGroupsStudents,
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ContentLayout title="Random Event">
-        <Suspense fallback={<LoadingPage />}>
-          <RandomEventClient />
-        </Suspense>
+      <ContentLayout title="Randomizer">
+        <RandomEventClient />
       </ContentLayout>
     </HydrationBoundary>
   );

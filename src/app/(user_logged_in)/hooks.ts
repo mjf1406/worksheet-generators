@@ -48,3 +48,21 @@ export const useTeacherCourses = createHook<TeacherCourse>('teacher-courses');
 export const useStudents = createHook<Student>('students');
 export const useStudentFields = createHook<StudentField>('student-fields');
 export const useAssigners = createHook<Assigner>('assigners');
+
+import { useEffect, useState } from "react";
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+
+    handleResize(); // Set initial value
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return isMobile;
+}
+
+export default useIsMobile;

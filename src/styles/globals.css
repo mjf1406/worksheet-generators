@@ -104,6 +104,12 @@ html {
   @apply bg-secondary text-foreground;
 }
 
+@media (max-width: 767px) {
+  .disappear-on-mobile {
+    display: none;
+  }
+}
+
 .text-2xs {
   font-size: 0.6rem; /* 10px */
   line-height: 0.9rem; /* 14px */

@@ -25,7 +25,6 @@ export const FancyRadioGroup: React.FC<FancyRadioGroupProps> = ({
   value,
   onChange,
 }) => {
-  console.log("🚀 ~ options:", options);
   return (
     <div className="flex w-fit flex-row items-center justify-center gap-2">
       <div className="grid place-items-center">

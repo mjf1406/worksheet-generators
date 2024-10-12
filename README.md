@@ -68,17 +68,13 @@ This is the collection of worksheet generators that I have created as I needed t
   - features
     - [ ] award points
       - [ ] to a single student
-        - clicking on the student opens a dialog with a grid list of all behaviors, with positive and needs work as tabs
-        - also need a quantity that defaults to 1
-      - [ ] to selected students
-        - there is a select button at the top of the page that allows the grid list of students to be selected
-      - [ ] to a group of students
-        - clicking on a group opens a new page that only shows students from that page
-      - [ ] the the whole class
+        - [x] clicking on the student opens a dialog with a grid list of all behaviors, with positive and needs work as tabs
+        - [ ] need a quantity that defaults to 1
+      - [x] to selected students
       - [ ] streaks are tracked for each student, and the teacher is alerted
         - [ ] off days should be declared in the settings, so they are excluded from breaking streaks
     - [ ] positive and negative behavior
-      - [ ] user can create them, setting an icon, name, and point value
+      - [x] user can create them, setting an icon, name, and point value
       - [ ] user can edit
       - [ ] user can delete
     - [ ] redemption items
@@ -93,18 +89,17 @@ This is the collection of worksheet generators that I have created as I needed t
   - [ ] prevents absent students from receiving points
 - fixed: the DB migration issue... kill me
 - when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
-- attendance and points grid
-  - turn the current open class button to be the edit button
-  - set open to be the grid of students, with groups below the students
-    - initials in big characters, with full name just below (placeholder)
-    - have a multi-select mode
-    - attendance mode
 
 ## Change Log
 
 2024/10/12
 
+- can apply behaviors to selected students
+- fixed up drawer and dialog sizes on mobile
+- behaviors can now be created
+- user can now apply behaviors, awarding or removing points
 - finished the client-side UI for the new classes view, setting everything up for adjusting points and tracking attendance
+- attendance UI is done
 
 2024/10/10
 

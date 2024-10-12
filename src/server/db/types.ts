@@ -1,5 +1,5 @@
 import type { SeatGroup, SeatingHistory } from "~/app/(user_logged_in)/assigners/seats/utils";
-import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
+import type { BehaviorData, RewardItemData, StudentData } from "~/app/api/getClassesGroupsStudents/route";
 
 // Server Types
 export type UserDb = {
@@ -79,6 +79,8 @@ export type TeacherCourse = {
     };
     groups?: Group[]
     students: StudentData[] | undefined
+    reward_items: RewardItemData[];
+    behaviors: BehaviorData[];
   }
 
 export type PointRecord = {

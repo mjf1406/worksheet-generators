@@ -38,7 +38,7 @@ export default function ClassDetails({ params }: { params: Params }) {
 
   return (
     <ContentLayout title={courseData.class_name ?? ""}>
-      <div className="container flex flex-col items-center gap-4 px-4 py-16">
+      <div className="container flex flex-col items-center gap-4 px-4 py-4 lg:py-16">
         <div className="flex w-full flex-col gap-4">
           <div className="text-3xl">Groups</div>
           <div className="grid grid-cols-3 gap-5 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8">
@@ -51,12 +51,12 @@ export default function ClassDetails({ params }: { params: Params }) {
               >
                 <Card className="relative col-span-1 cursor-pointer">
                   <CardHeader className="pt-8">
-                    <CardTitle className="text-center text-xl">
+                    <CardTitle className="text-center text-base md:text-xl">
                       {group.group_name}
                     </CardTitle>
                     <CardDescription></CardDescription>
                   </CardHeader>
-                  <CardContent className="text-sm">
+                  <CardContent className="text-xs md:text-sm">
                     <p>
                       <b>Students:</b> {group.students.length ?? 0}
                     </p>
