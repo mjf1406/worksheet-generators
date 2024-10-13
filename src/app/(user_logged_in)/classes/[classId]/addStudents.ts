@@ -6,7 +6,7 @@ import { db } from '~/server/db'
 import { students, student_classes } from '~/server/db/schema'
 import { randomUUID } from "crypto";
 
-export const studentSchema = z.object({
+const studentSchema = z.object({
     student_name_en: z.string().min(1, "English name is required"),
     student_name_alt: z.string().optional().nullable(),
     student_reading_level: z.string().min(1, "Reading level is required"),
@@ -64,6 +64,9 @@ export async function addStudents(input: z.infer<typeof addStudentsSchema>) {
           enrollment_id: generateUuidWithPrefix("enrollment_"),
           student_id: studentId,
           class_id: classId,
+          points: null,
+          absent_dates: null,
+          point_history: null,
           enrollment_date: new Date().toISOString(),
         })
       }

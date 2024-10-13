@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from "react";
+// components/StudentGrid.tsx
+
+"use client";
+
+import React, { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
@@ -23,13 +27,36 @@ import {
   Check,
   X,
   Save,
+  EllipsisVertical,
+  Trash2,
+  Plus,
 } from "lucide-react";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 import { FancyRadioGroup, type Option } from "./SelectRadioGroup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { cn } from "~/lib/utils";
-import StudentDialog from "./StudentDialog";
 import ApplyBehaviorDialog from "./ApplyBehaviorsDialog";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "~/components/ui/dropdown-menu";
+import EditStudentDialog from "./EditStudentDialog"; // Import the new dialog
+import StudentDialog from "./StudentDialog"; // Import the student details dialog
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "~/components/ui/alert-dialog"; // Import AlertDialog components
+import { deleteStudent } from "../actions";
+import { AddStudentsDialog } from "../../components/AddStudents";
+import type { Student } from "~/server/db/types";
 
 type SortingState = "student_number" | "last_name" | "first_name" | "points";
 
@@ -78,15 +105,43 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
   const [isBehaviorDialogOpen, setIsBehaviorDialogOpen] =
     useState<boolean>(false);
 
-  // State for individual student dialog
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [selectedStudentId, setSelectedStudentId] = useState<string | null>(
-    null,
-  );
+  // State for EditStudentDialog
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
+  const [selectedStudentToEdit, setSelectedStudentToEdit] =
+    useState<StudentData | null>(null);
+
+  // State for StudentDialog
+  const [isStudentDialogOpen, setIsStudentDialogOpen] =
+    useState<boolean>(false);
+  const [selectedStudentToView, setSelectedStudentToView] =
+    useState<StudentData | null>(null);
 
   // State for ApplyBehaviorDialog
   const [isApplyBehaviorDialogOpen, setIsApplyBehaviorDialogOpen] =
     useState<boolean>(false);
+
+  // State for deletion confirmation
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+  const [studentToDelete, setStudentToDelete] = useState<StudentData | null>(
+    null,
+  );
+
+  // State for handling transitions
+  const [isPending, startTransition] = useTransition();
+
+  // Handler to update the students state when new students are added
+  const handleStudentsAdded = (newStudents: Student[]) => {
+    // Map the new students to match the StudentData type if necessary
+    const mappedNewStudents: StudentData[] = newStudents.map((student) => ({
+      ...student,
+    })) as unknown as StudentData[];
+    setStudents((prevStudents) => [...prevStudents, ...mappedNewStudents]);
+  };
+
+  // Function to generate UUID with prefix
+  const generateUuidWithPrefix = (prefix: string) => {
+    return `${prefix}${crypto.randomUUID()}`;
+  };
 
   // Function to open the ApplyBehaviorDialog
   const openApplyBehaviorDialog = () => {
@@ -203,7 +258,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
       setAttendanceStatus({});
     } else {
       // Entering attendance mode
-      const initialAttendance: Record<string, "present"> = {};
+      const initialAttendance: Record<string, "present" | "absent"> = {};
       students.forEach((student) => {
         initialAttendance[student.student_id] = "present";
       });
@@ -233,9 +288,9 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
         }
       });
     } else {
-      // Open the individual student dialog
-      setSelectedStudentId(studentId);
-      setIsDialogOpen(true);
+      // Open the StudentDialog for viewing details
+      setSelectedStudentToView(student);
+      setIsStudentDialogOpen(true);
     }
   };
 
@@ -301,6 +356,72 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
     groupStudentIds,
   ]);
 
+  // Function to handle student updates from the edit dialog
+  const handleStudentUpdate = (updatedStudent: StudentData) => {
+    setStudents((prevStudents) =>
+      prevStudents.map((student) =>
+        student.student_id === updatedStudent.student_id
+          ? updatedStudent
+          : student,
+      ),
+    );
+  };
+
+  // Function to close StudentDialog
+  const closeStudentDialog = () => {
+    setIsStudentDialogOpen(false);
+    setSelectedStudentToView(null);
+  };
+
+  // Function to close EditStudentDialog
+  const closeEditDialog = () => {
+    setIsEditDialogOpen(false);
+    setSelectedStudentToEdit(null);
+  };
+
+  // Function to open the delete confirmation dialog
+  const openDeleteDialog = (student: StudentData) => {
+    setStudentToDelete(student);
+    setIsDeleteDialogOpen(true);
+  };
+
+  // Function to close the delete confirmation dialog
+  const closeDeleteDialog = () => {
+    setIsDeleteDialogOpen(false);
+    setStudentToDelete(null);
+  };
+
+  // Function to handle the deletion of a student
+  const handleDeleteStudent = async () => {
+    if (!studentToDelete) return;
+
+    try {
+      // Start the transition to indicate pending state
+      startTransition(async () => {
+        const result = await deleteStudent(studentToDelete.student_id, classId);
+
+        if (result.success) {
+          // Remove the deleted student from the local state
+          setStudents((prevStudents) =>
+            prevStudents.filter(
+              (student) => student.student_id !== studentToDelete.student_id,
+            ),
+          );
+          closeDeleteDialog();
+          // Optionally, show a success toast or notification
+          // e.g., toast.success(result.message);
+        } else {
+          // Handle error (e.g., show a toast notification)
+          console.error(result.message);
+          // e.g., toast.error(result.message);
+        }
+      });
+    } catch (error) {
+      console.error("Failed to delete student:", error);
+      // e.g., toast.error("An unexpected error occurred.");
+    }
+  };
+
   return (
     <div className="flex flex-col justify-center gap-4">
       <div className="text-3xl">Students</div>
@@ -326,7 +447,6 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
             <FontAwesomeIcon icon={["fas", "plus-minus"]} className="sm:mr-2" />
             <span className="hidden sm:inline">Apply Behavior</span>
           </Button>
-
           <Button
             variant={isMultiSelectMode ? "secondary" : "default"}
             onClick={handleMultiSelectToggle}
@@ -336,20 +456,13 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
               {isMultiSelectMode ? "Exit Multi-select" : "Multi-select"}
             </span>
           </Button>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <Button asChild variant="secondary" size="icon">
-                  <Link href={`/classes/${classId}/edit`}>
-                    <Edit size={16} />
-                  </Link>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Edit class</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+
+          {/* Integrated AddStudentsDialog */}
+          <AddStudentsDialog
+            classId={classId}
+            existingStudents={students as unknown as Student[]}
+            onStudentsAdded={handleStudentsAdded}
+          />
         </div>
         <div className="flex flex-row items-center gap-2">
           <Select onValueChange={handleSort} defaultValue="first_name">
@@ -404,7 +517,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
           return (
             <Card
               key={student.student_id}
-              className={`relative col-span-1 h-fit md:h-full ${
+              className={`relative col-span-1 h-fit transform transition-transform hover:scale-105 md:h-full ${
                 isSelected && "bg-accent/25"
               } ${
                 !isSelected && selectedStudents.length >= 1 && "opacity-50"
@@ -435,6 +548,42 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+              </div>
+              <div className="absolute bottom-1 right-1">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button
+                      variant={"ghost"}
+                      size={"icon"}
+                      className="h-fit w-fit p-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      <EllipsisVertical size={16} />{" "}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedStudentToEdit(student);
+                        setIsEditDialogOpen(true);
+                      }}
+                    >
+                      <Edit size={16} className="mr-2" /> Edit student
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDeleteDialog(student);
+                      }}
+                    >
+                      <Trash2 size={16} className="mr-2" /> Delete student
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               <div className="absolute right-2 top-2 flex flex-row items-center justify-center">
                 <TooltipProvider>
@@ -485,13 +634,24 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
           </Button>
         )}
       </div>
-      {isDialogOpen && selectedStudentId && (
+      {/* Render StudentDialog */}
+      {isStudentDialogOpen && selectedStudentToView && (
         <StudentDialog
-          studentId={selectedStudentId}
+          studentId={selectedStudentToView.student_id}
           classId={classId}
-          onClose={() => setIsDialogOpen(false)}
+          onClose={closeStudentDialog}
         />
       )}
+      {/* Render EditStudentDialog */}
+      {isEditDialogOpen && selectedStudentToEdit && (
+        <EditStudentDialog
+          isOpen={isEditDialogOpen}
+          onClose={closeEditDialog}
+          student={selectedStudentToEdit}
+          onUpdate={handleStudentUpdate}
+        />
+      )}
+      {/* Render ApplyBehaviorDialog */}
       {isApplyBehaviorDialogOpen && (
         <ApplyBehaviorDialog
           selectedStudents={selectedStudents}
@@ -499,6 +659,35 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
           onClose={closeApplyBehaviorDialog}
         />
       )}
+
+      {/* Alert Dialog for Deletion Confirmation */}
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete{" "}
+              <strong>{studentToDelete?.student_name_en}</strong>? This action
+              CANNOT be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={closeDeleteDialog}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteStudent}
+              disabled={isPending}
+              className="bg-destructive"
+            >
+              {isPending ? "Deleting..." : "Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

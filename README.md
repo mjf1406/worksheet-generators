@@ -67,9 +67,9 @@ This is the collection of worksheet generators that I have created as I needed t
 - tool: Points -- track points on a per student, group, and class basis
   - features
     - [ ] award points
-      - [ ] to a single student
+      - [x] to a single student
         - [x] clicking on the student opens a dialog with a grid list of all behaviors, with positive and needs work as tabs
-        - [ ] need a quantity that defaults to 1
+        - [x] need a quantity that defaults to 1
       - [x] to selected students
       - [ ] streaks are tracked for each student, and the teacher is alerted
         - [ ] off days should be declared in the settings, so they are excluded from breaking streaks
@@ -91,6 +91,12 @@ This is the collection of worksheet generators that I have created as I needed t
 - when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
 
 ## Change Log
+
+2024/10/13
+
+- UX: users can now edit students
+- UX: users can now delete students
+- added quantity to apply behavior dialogs
 
 2024/10/12
 

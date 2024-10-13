@@ -1,3 +1,5 @@
+// components/StudentDialog.tsx
+
 import React, { useState } from "react";
 import {
   Dialog,
@@ -27,6 +29,7 @@ import { z } from "zod";
 import type { IconName, IconPrefix } from "@fortawesome/fontawesome-svg-core";
 import { useToast } from "~/components/ui/use-toast";
 import useIsMobile from "~/app/(user_logged_in)/hooks";
+import NumberInput from "~/components/ui/NumberInput";
 
 interface StudentDialogProps {
   studentId: string;
@@ -87,6 +90,8 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
       ?.filter((record) => record.quantity >= 1)
       .reduce((sum, record) => sum + record.quantity, 0) ?? 0;
 
+  const [inputQuantity, setInputQuantity] = useState<number>(1); // State for custom point value
+
   const handleCreateBehavior = async (
     newBehavior: BehaviorData,
   ): Promise<void> => {
@@ -117,7 +122,12 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
     const classId = courseData?.class_id;
     try {
       console.log("🚀 ~ handleBehaviorSelect ~ behavior_id:", behavior_id);
-      const result = await applyBehavior(behavior_id, [studentData!], classId!);
+      const result = await applyBehavior(
+        behavior_id,
+        [studentData!],
+        classId!,
+        inputQuantity,
+      );
       if (result.success) {
         await queryClient.invalidateQueries(classesOptions);
         onClose();
@@ -189,6 +199,19 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                 >
                   Create Behavior
                 </Button>
+                {/* Optional: Add NumberInput to specify custom point value */}
+                <div className="flex items-center gap-2">
+                  <span>Quantity</span>
+                  <NumberInput
+                    value={inputQuantity}
+                    onChange={setInputQuantity}
+                    min={1}
+                    max={10}
+                    step={1}
+                    name="inputQuantity"
+                    id="inputQuantity"
+                  />
+                </div>
                 <BehaviorsGrid
                   behaviors={positiveBehaviors}
                   onBehaviorSelect={handleBehaviorSelect}
@@ -218,6 +241,19 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                 >
                   Create Behavior
                 </Button>
+                {/* Optional: Add NumberInput to specify custom point value */}
+                <div className="flex items-center gap-2">
+                  <span>Quantity</span>
+                  <NumberInput
+                    value={inputQuantity}
+                    onChange={setInputQuantity}
+                    min={1}
+                    max={10}
+                    step={1}
+                    name="inputQuantity"
+                    id="inputQuantity"
+                  />
+                </div>
                 <BehaviorsGrid
                   behaviors={negativeBehaviors}
                   onBehaviorSelect={handleBehaviorSelect}
@@ -245,7 +281,12 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
   return (
     <>
       {isMobile ? (
-        <Drawer open={true} onOpenChange={(open) => !open && onClose()}>
+        <Drawer
+          open={true} // Always open when rendered
+          onOpenChange={(open) => {
+            if (!open) onClose();
+          }}
+        >
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle className="mt-5 text-center text-2xl">
@@ -262,7 +303,12 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
           </DrawerContent>
         </Drawer>
       ) : (
-        <Dialog open onOpenChange={onClose}>
+        <Dialog
+          open={true} // Always open when rendered
+          onOpenChange={(open) => {
+            if (!open) onClose();
+          }}
+        >
           <DialogContent>
             <DialogHeader>
               <DialogTitle className="mt-5 text-center text-2xl">

@@ -1,6 +1,5 @@
 "use client";
 
-import { studentSchema } from "../[classId]/addStudents";
 import React, { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -31,6 +30,21 @@ import type { Student } from "~/server/db/types";
 import { addStudents } from "../[classId]/addStudents";
 import { useToast } from "~/components/ui/use-toast";
 import { GRADES } from "~/lib/constants";
+import { z } from "zod";
+
+const studentSchema = z.object({
+  student_name_en: z.string().min(1, "English name is required"),
+  student_name_alt: z.string().optional().nullable(),
+  student_reading_level: z.string().min(1, "Reading level is required"),
+  student_grade: z.string().min(1, "Grade is required"),
+  student_sex: z.enum(["male", "female"], {
+    required_error: "Sex is required",
+  }),
+  student_number: z.number().int().positive("Student number must be positive"),
+  student_email: z.string().optional().nullable(),
+  joined_date: z.string().optional(),
+  updated_date: z.string().optional(),
+});
 
 interface AddStudentsDialogProps {
   classId: string;
@@ -141,142 +155,158 @@ export function AddStudentsDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <Plus className="mr-2 h-6 w-6" /> Add student(s)
+        <Button variant={"secondary"}>
+          <Plus className="h-6 w-6 sm:mr-0 md:mr-2" />{" "}
+          <span className="hidden sm:inline">Add student(s)</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="max-h-[90vh] w-full sm:max-w-[800px]">
         <DialogHeader>
           <DialogTitle>Add New Students</DialogTitle>
         </DialogHeader>
         <div className="max-h-[60vh] overflow-y-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name (EN)*</TableHead>
-                <TableHead>Name (Alt)</TableHead>
-                <TableHead>Sex*</TableHead>
-                <TableHead>Grade*</TableHead>
-                <TableHead>Reading Level*</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {newStudents.map((student, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Input
-                      required
-                      value={student.student_name_en}
-                      onChange={(e) =>
-                        handleInputChange(
-                          index,
-                          "student_name_en",
-                          e.target.value,
-                        )
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      value={student.student_name_alt}
-                      onChange={(e) =>
-                        handleInputChange(
-                          index,
-                          "student_name_alt",
-                          e.target.value,
-                        )
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Select
-                      required
-                      value={student.student_sex}
-                      onValueChange={(value) =>
-                        handleInputChange(index, "student_sex", value)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sex" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <Select
-                      required
-                      value={student.student_grade}
-                      onValueChange={(value) =>
-                        handleInputChange(index, "student_grade", value)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Grade" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {GRADES.map((grade) => (
-                          <SelectItem key={grade} value={grade}>
-                            {grade}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <Select
-                      required
-                      value={student.student_reading_level}
-                      onValueChange={(value) =>
-                        handleInputChange(index, "student_reading_level", value)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Reading Level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {GRADES.map((level) => (
-                          <SelectItem key={level} value={level}>
-                            {level}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    <Input
-                      type="email"
-                      value={student.student_email!}
-                      onChange={(e) =>
-                        handleInputChange(
-                          index,
-                          "student_email",
-                          e.target.value,
-                        )
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {index > 0 && (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => handleRemoveStudent(index)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </TableCell>
+          <div className="overflow-x-auto">
+            <Table className="min-w-full">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="whitespace-nowrap">
+                    Name (EN)*
+                  </TableHead>
+                  <TableHead className="whitespace-nowrap">
+                    Name (Alt)
+                  </TableHead>
+                  <TableHead className="whitespace-nowrap">Sex*</TableHead>
+                  <TableHead className="whitespace-nowrap">Grade*</TableHead>
+                  <TableHead className="whitespace-nowrap">
+                    Reading Level*
+                  </TableHead>
+                  <TableHead className="whitespace-nowrap">Email</TableHead>
+                  <TableHead className="whitespace-nowrap"></TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {newStudents.map((student, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="px-2 py-1">
+                      <Input
+                        required
+                        className="w-full"
+                        value={student.student_name_en}
+                        onChange={(e) =>
+                          handleInputChange(
+                            index,
+                            "student_name_en",
+                            e.target.value,
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="px-2 py-1">
+                      <Input
+                        className="w-full"
+                        value={student.student_name_alt}
+                        onChange={(e) =>
+                          handleInputChange(
+                            index,
+                            "student_name_alt",
+                            e.target.value,
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="px-2 py-1">
+                      <Select
+                        required
+                        value={student.student_sex}
+                        onValueChange={(value) =>
+                          handleInputChange(index, "student_sex", value)
+                        }
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Sex" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="male">Male</SelectItem>
+                          <SelectItem value="female">Female</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="px-2 py-1">
+                      <Select
+                        required
+                        value={student.student_grade}
+                        onValueChange={(value) =>
+                          handleInputChange(index, "student_grade", value)
+                        }
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Grade" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {GRADES.map((grade) => (
+                            <SelectItem key={grade} value={grade}>
+                              {grade}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="px-2 py-1">
+                      <Select
+                        required
+                        value={student.student_reading_level}
+                        onValueChange={(value) =>
+                          handleInputChange(
+                            index,
+                            "student_reading_level",
+                            value,
+                          )
+                        }
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Reading Level" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {GRADES.map((level) => (
+                            <SelectItem key={level} value={level}>
+                              {level}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell className="px-2 py-1">
+                      <Input
+                        type="email"
+                        className="w-full"
+                        value={student.student_email!}
+                        onChange={(e) =>
+                          handleInputChange(
+                            index,
+                            "student_email",
+                            e.target.value,
+                          )
+                        }
+                      />
+                    </TableCell>
+                    <TableCell className="px-2 py-1">
+                      {index > 0 && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleRemoveStudent(index)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
-        <div className="mt-4 flex justify-between">
+        <div className="mt-4 flex flex-col justify-between space-y-2 md:flex-row md:space-y-0">
           <Button variant={"secondary"} onClick={handleAddStudent}>
             Add Another Student
           </Button>

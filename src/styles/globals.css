@@ -104,9 +104,9 @@ html {
   @apply bg-secondary text-foreground;
 }
 
-@media (max-width: 767px) {
-  .disappear-on-mobile {
-    display: none;
+@layer base {
+  * {
+    @apply pointer-events-auto;
   }
 }
 

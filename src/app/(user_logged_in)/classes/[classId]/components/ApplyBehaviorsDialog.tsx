@@ -1,3 +1,4 @@
+// components/ApplyBehaviorDialog.tsx
 import React, { useState } from "react";
 import {
   Dialog,
@@ -18,7 +19,6 @@ import {
 import { Button } from "~/components/ui/button";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { classesOptions } from "~/app/api/queryOptions";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import BehaviorsGrid from "./BehaviorsGrid";
 import CreateBehaviorDialog from "./CreateBehaviorDialog";
@@ -28,6 +28,7 @@ import type { IconName, IconPrefix } from "@fortawesome/fontawesome-svg-core";
 import { useToast } from "~/components/ui/use-toast";
 import useIsMobile from "~/app/(user_logged_in)/hooks";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
+import NumberInput from "~/components/ui/NumberInput";
 
 interface ApplyBehaviorDialogProps {
   selectedStudents: StudentData[];
@@ -100,6 +101,8 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
     }
   };
 
+  const [inputQuantity, setInputQuantity] = useState<number>(1); // State for custom point value
+
   const handleBehaviorSelect = async (behavior_id: string): Promise<void> => {
     setLoadingBehaviorId(behavior_id);
     try {
@@ -107,6 +110,7 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
         behavior_id,
         selectedStudents,
         classId,
+        inputQuantity,
       );
 
       if (result.success) {
@@ -173,6 +177,19 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
                 >
                   Create Behavior
                 </Button>
+                {/* Add NumberInput to specify custom point value */}
+                <div className="flex items-center gap-2">
+                  <span>Quantity</span>
+                  <NumberInput
+                    value={inputQuantity}
+                    onChange={setInputQuantity}
+                    min={1}
+                    max={10}
+                    step={1}
+                    name="inputQuantity"
+                    id="inputQuantity"
+                  />
+                </div>
                 <BehaviorsGrid
                   behaviors={positiveBehaviors}
                   onBehaviorSelect={handleBehaviorSelect}
@@ -202,6 +219,19 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
                 >
                   Create Behavior
                 </Button>
+                {/* Add NumberInput to specify custom point value */}
+                <div className="flex items-center gap-2">
+                  <span>Quantity</span>
+                  <NumberInput
+                    value={inputQuantity}
+                    onChange={setInputQuantity}
+                    min={1}
+                    max={10}
+                    step={1}
+                    name="inputQuantity"
+                    id="inputQuantity"
+                  />
+                </div>
                 <BehaviorsGrid
                   behaviors={negativeBehaviors}
                   onBehaviorSelect={handleBehaviorSelect}
