@@ -3,7 +3,6 @@
 "use client";
 
 import React, { useState, useEffect, useTransition } from "react";
-import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -29,7 +28,6 @@ import {
   Save,
   EllipsisVertical,
   Trash2,
-  Plus,
 } from "lucide-react";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 import { FancyRadioGroup, type Option } from "./SelectRadioGroup";
@@ -136,11 +134,6 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
       ...student,
     })) as unknown as StudentData[];
     setStudents((prevStudents) => [...prevStudents, ...mappedNewStudents]);
-  };
-
-  // Function to generate UUID with prefix
-  const generateUuidWithPrefix = (prefix: string) => {
-    return `${prefix}${crypto.randomUUID()}`;
   };
 
   // Function to open the ApplyBehaviorDialog
@@ -681,8 +674,9 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
             <AlertDialogAction
               onClick={handleDeleteStudent}
               disabled={isPending}
-              className="bg-destructive"
+              className="bg-destructive hover:bg-destructive/90"
             >
+              <Trash2 size={16} className="mr-2" />{" "}
               {isPending ? "Deleting..." : "Delete"}
             </AlertDialogAction>
           </AlertDialogFooter>

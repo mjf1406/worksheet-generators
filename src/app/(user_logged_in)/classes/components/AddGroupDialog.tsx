@@ -16,18 +16,19 @@ import { addGroup } from "../[classId]/createGroup";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "~/components/ui/use-toast";
+import type { Group } from "~/server/db/types";
 
 interface AddGroupDialogProps {
   students: StudentData[] | undefined;
-  onGroupAdded: () => void;
+  onGroupAdded: (newGroup: Group) => void;
+  classId: string;
 }
 
 const AddGroupDialog: React.FC<AddGroupDialogProps> = ({
   students,
   onGroupAdded,
+  classId,
 }) => {
-  const params = useParams();
-  const classId = params.classId as string;
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -44,8 +45,8 @@ const AddGroupDialog: React.FC<AddGroupDialogProps> = ({
   const addGroupMutation = useMutation({
     mutationFn: async (formData: FormData) => {
       const result = await addGroup(formData);
-      if (result.error) {
-        throw new Error(result.error);
+      if (!result.success) {
+        throw new Error(result.message);
       }
       return result;
     },
@@ -55,15 +56,11 @@ const AddGroupDialog: React.FC<AddGroupDialogProps> = ({
         description: "Group created successfully",
       });
 
-      // Invalidate and refetch the groups query
+      onGroupAdded(result.newGroup!);
+
       await queryClient.invalidateQueries({ queryKey: ["groups", classId] });
       await queryClient.refetchQueries({ queryKey: ["groups", classId] });
-
-      // Invalidate the classes query
       await queryClient.invalidateQueries({ queryKey: ["classes"] });
-
-      // Call the callback to notify parent component
-      onGroupAdded();
 
       setIsOpen(false);
       resetForm();

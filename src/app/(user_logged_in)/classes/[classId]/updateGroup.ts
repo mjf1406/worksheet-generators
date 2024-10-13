@@ -18,10 +18,6 @@ const DeleteGroupSchema = z.object({
   classId: z.string(),
 });
 
-type DeleteGroupResult = 
-  | { success: true; message: string }
-  | { success: false; error: string };
-
 export async function updateGroup(formData: FormData) {
   const validatedFields = UpdateGroupSchema.safeParse({
     groupId: formData.get('groupId'),
@@ -67,11 +63,11 @@ export async function updateGroup(formData: FormData) {
     return { success: true, message: 'Group updated successfully' };
   } catch (error) {
     console.error('Failed to update group:', error);
-    return { error: 'Failed to update group. Please try again.' };
+    return { message: 'Failed to update group. Please try again.' };
   }
 }
 
-export async function deleteGroup(formData: FormData): Promise<DeleteGroupResult> {
+export async function deleteGroup(formData: FormData): Promise<{ success: boolean; message: string }> {
   const validatedFields = DeleteGroupSchema.safeParse({
     groupId: formData.get('groupId'),
     classId: formData.get('classId'),
@@ -79,7 +75,7 @@ export async function deleteGroup(formData: FormData): Promise<DeleteGroupResult
 
   if (!validatedFields.success) {
     console.error('Validation error:', validatedFields.error);
-    return { success: false, error: 'Invalid input. Please check your data.' };
+    return { success: false, message: 'Invalid input. Please check your data.' };
   }
 
   const { groupId, classId } = validatedFields.data;
@@ -106,7 +102,7 @@ export async function deleteGroup(formData: FormData): Promise<DeleteGroupResult
     console.error("Failed to delete group:", error);
     return { 
       success: false, 
-      error: error instanceof Error ? error.message : "Failed to delete group" 
+      message: "Failed to delete group. Please try again."
     };
   }
 }

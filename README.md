@@ -94,8 +94,8 @@ This is the collection of worksheet generators that I have created as I needed t
 
 2024/10/13
 
-- UX: users can now edit students
-- UX: users can now delete students
+- UX: users can now edit and delete students
+- UX: users can now edit and delete groups
 - added quantity to apply behavior dialogs
 
 2024/10/12
