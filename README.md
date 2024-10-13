@@ -73,10 +73,10 @@ This is the collection of worksheet generators that I have created as I needed t
       - [x] to selected students
       - [ ] streaks are tracked for each student, and the teacher is alerted
         - [ ] off days should be declared in the settings, so they are excluded from breaking streaks
-    - [ ] positive and negative behavior
+    - [x] positive and negative behavior
       - [x] user can create them, setting an icon, name, and point value
-      - [ ] user can edit
-      - [ ] user can delete
+      - [x] user can edit
+      - [x] user can delete
     - [ ] redemption items
       - [ ] user can create, setting cost, name, and icon
       - [ ] user can delete
@@ -94,6 +94,8 @@ This is the collection of worksheet generators that I have created as I needed t
 
 2024/10/13
 
+- backend: erroneously omitted color from behaviors, and is now included
+- UX: user can now edit and delete behaviors
 - UX: users can now edit and delete students
 - UX: users can now edit and delete groups
 - added quantity to apply behavior dialogs

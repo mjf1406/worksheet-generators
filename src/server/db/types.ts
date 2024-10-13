@@ -163,6 +163,7 @@ export  type Behavior = {
     point_value: number;
     description?: string;
     icon?: string;
+    color?: string;
     class_id?: string;
     user_id: string;
     created_date: string;

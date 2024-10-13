@@ -24,12 +24,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import BehaviorsGrid from "./BehaviorsGrid";
 import CreateBehaviorDialog from "./CreateBehaviorDialog";
-import { applyBehavior, createBehavior } from "../actions";
+import { applyBehavior, createBehavior } from "../behaviorActions";
 import { z } from "zod";
 import type { IconName, IconPrefix } from "@fortawesome/fontawesome-svg-core";
 import { useToast } from "~/components/ui/use-toast";
 import useIsMobile from "~/app/(user_logged_in)/hooks";
 import NumberInput from "~/components/ui/NumberInput";
+import type { Behavior } from "~/server/db/types";
 
 interface StudentDialogProps {
   studentId: string;
@@ -75,10 +76,10 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
 
   const positiveBehaviors = courseData?.behaviors?.filter(
     (behavior) => behavior.point_value >= 1,
-  );
+  ) as Behavior[];
   const negativeBehaviors = courseData?.behaviors?.filter(
     (behavior) => behavior.point_value <= -1,
-  );
+  ) as Behavior[];
 
   const negativePoints =
     studentData?.point_history
@@ -151,6 +152,10 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
 
   const isMobile = useIsMobile(); // Use the hook here
 
+  const refreshBehaviors = () => {
+    void queryClient.invalidateQueries(classesOptions);
+  };
+
   const mainContent = (
     <>
       <div className="absolute left-1 top-1 text-xl">
@@ -216,6 +221,7 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                   behaviors={positiveBehaviors}
                   onBehaviorSelect={handleBehaviorSelect}
                   loadingBehaviorId={loadingBehaviorId}
+                  refreshBehaviors={refreshBehaviors}
                 />
               </div>
             ) : (
@@ -258,6 +264,7 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                   behaviors={negativeBehaviors}
                   onBehaviorSelect={handleBehaviorSelect}
                   loadingBehaviorId={loadingBehaviorId}
+                  refreshBehaviors={refreshBehaviors}
                 />
               </div>
             ) : (

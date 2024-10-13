@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ContentLayout } from "~/components/admin-panel/content-layout";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { classesOptions } from "~/app/api/queryOptions";
 import StudentGrid from "./components/StudentGrid";
 import ClassGroupsComponent from "../components/ClassGroups";
-import { TeacherCourse } from "~/server/db/types";
 
 interface Params {
   classId: string;

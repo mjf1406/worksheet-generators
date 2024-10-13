@@ -22,13 +22,14 @@ import { classesOptions } from "~/app/api/queryOptions";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import BehaviorsGrid from "./BehaviorsGrid";
 import CreateBehaviorDialog from "./CreateBehaviorDialog";
-import { applyBehavior, createBehavior } from "../actions";
+import { applyBehavior, createBehavior } from "../behaviorActions";
 import { z } from "zod";
 import type { IconName, IconPrefix } from "@fortawesome/fontawesome-svg-core";
 import { useToast } from "~/components/ui/use-toast";
 import useIsMobile from "~/app/(user_logged_in)/hooks";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 import NumberInput from "~/components/ui/NumberInput";
+import type { Behavior } from "~/server/db/types";
 
 interface ApplyBehaviorDialogProps {
   selectedStudents: StudentData[];
@@ -71,10 +72,10 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
 
   const positiveBehaviors = courseData?.behaviors?.filter(
     (behavior) => behavior.point_value >= 1,
-  );
+  ) as Behavior[];
   const negativeBehaviors = courseData?.behaviors?.filter(
     (behavior) => behavior.point_value <= -1,
-  );
+  ) as Behavior[];
 
   const handleCreateBehavior = async (
     newBehavior: BehaviorData,
@@ -141,6 +142,10 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
 
   const isMobile = useIsMobile(); // Use the hook here
 
+  const refreshBehaviors = () => {
+    void queryClient.invalidateQueries(classesOptions);
+  };
+
   // Sort selected students alphabetically by name
   const sortedSelectedStudents = [...selectedStudents].sort((a, b) =>
     a.student_name_en.localeCompare(b.student_name_en),
@@ -194,6 +199,7 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
                   behaviors={positiveBehaviors}
                   onBehaviorSelect={handleBehaviorSelect}
                   loadingBehaviorId={loadingBehaviorId}
+                  refreshBehaviors={refreshBehaviors}
                 />
               </div>
             ) : (
@@ -236,6 +242,7 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
                   behaviors={negativeBehaviors}
                   onBehaviorSelect={handleBehaviorSelect}
                   loadingBehaviorId={loadingBehaviorId}
+                  refreshBehaviors={refreshBehaviors}
                 />
               </div>
             ) : (

@@ -185,6 +185,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
           point_value: behaviors.point_value,
           description: behaviors.description,
           icon: behaviors.icon,
+          color: behaviors.color,
           class_id: behaviors.class_id,
           user_id: behaviors.user_id,
           created_date: behaviors.created_date,

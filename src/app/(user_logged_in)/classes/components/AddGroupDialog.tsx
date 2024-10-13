@@ -2,7 +2,6 @@ import { Plus } from "lucide-react";
 import React, { useState, useMemo } from "react";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
-import { useParams } from "next/navigation";
 import {
   Dialog,
   DialogContent,
