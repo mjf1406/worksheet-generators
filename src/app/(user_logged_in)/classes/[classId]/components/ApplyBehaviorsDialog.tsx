@@ -1,4 +1,5 @@
-// components/ApplyBehaviorDialog.tsx
+// ApplyBehaviorDialog.tsx
+
 import React, { useState } from "react";
 import {
   Dialog,
@@ -22,14 +23,29 @@ import { classesOptions } from "~/app/api/queryOptions";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import BehaviorsGrid from "./BehaviorsGrid";
 import CreateBehaviorDialog from "./CreateBehaviorDialog";
-import { applyBehavior, createBehavior } from "../behaviorActions";
+import {
+  addDefaultBehaviors,
+  applyBehavior,
+  createBehavior,
+} from "../behaviorActions";
 import { z } from "zod";
 import type { IconName, IconPrefix } from "@fortawesome/fontawesome-svg-core";
 import { useToast } from "~/components/ui/use-toast";
 import useIsMobile from "~/app/(user_logged_in)/hooks";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 import NumberInput from "~/components/ui/NumberInput";
-import type { Behavior } from "~/server/db/types";
+import type { Behavior, RewardItem } from "~/server/db/types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CreateRewardItemDialog, {
+  RewardItemData,
+} from "~/app/(user_logged_in)/tools/points/components/CreateRewardItemDialog";
+import {
+  addDefaultRewardItems,
+  applyRewardItem,
+  createRewardItem,
+} from "../rewardItemActions";
+import RewardItemsGrid from "./RewardItemsGrid";
+import CustomDialogContent from "~/components/CustomDialogContent";
 
 interface ApplyBehaviorDialogProps {
   selectedStudents: StudentData[];
@@ -63,7 +79,12 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
   const queryClient = useQueryClient();
   const [isCreateBehaviorDialogOpen, setIsCreateBehaviorDialogOpen] =
     useState(false);
+  const [isCreateRewardItemDialogOpen, setIsCreateRewardItemDialogOpen] =
+    useState(false);
   const [loadingBehaviorId, setLoadingBehaviorId] = useState<string | null>(
+    null,
+  );
+  const [loadingRewardItemId, setLoadingRewardItemId] = useState<string | null>(
     null,
   );
   const { toast } = useToast();
@@ -76,6 +97,71 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
   const negativeBehaviors = courseData?.behaviors?.filter(
     (behavior) => behavior.point_value <= -1,
   ) as Behavior[];
+  const rewardItems = courseData?.reward_items as RewardItem[];
+
+  const [inputQuantity, setInputQuantity] = useState<number>(1); // State for custom point value
+
+  const handleCreateRewardItem = async (
+    rewardItem: RewardItemData,
+  ): Promise<void> => {
+    try {
+      const result = await createRewardItem(rewardItem);
+
+      if (result.success) {
+        await queryClient.invalidateQueries(classesOptions);
+        setIsCreateRewardItemDialogOpen(false);
+      } else {
+        console.error("Error creating reward item:", result.message);
+        toast({
+          title: "Error",
+          description: `Failed to create reward item: ${result.message}! Please try again.`,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error creating reward item:", error);
+      toast({
+        title: "Error",
+        description: `An unexpected error occurred while creating the reward item. Please try again.`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleRewardItemSelect = async (item_id: string): Promise<void> => {
+    setLoadingRewardItemId(item_id);
+    try {
+      const result = await applyRewardItem(
+        item_id,
+        selectedStudents,
+        classId,
+        inputQuantity,
+      );
+      if (result.success) {
+        await queryClient.invalidateQueries(classesOptions);
+        onClose();
+        toast({
+          title: "Success",
+          description:
+            "Reward item redeemed successfully for all selected students.",
+        });
+      } else {
+        console.error("Error applying reward item:", result.message);
+        toast({
+          title: "Error",
+          description: `Failed to redeem reward item: ${result.message}! Please try again.`,
+        });
+      }
+    } catch (error) {
+      console.error("Error applying reward item:", error);
+      toast({
+        title: "Error",
+        description: `An unexpected error occurred while redeeming the reward item. Please try again.`,
+      });
+    } finally {
+      setLoadingRewardItemId(null);
+    }
+  };
 
   const handleCreateBehavior = async (
     newBehavior: BehaviorData,
@@ -101,8 +187,6 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
       });
     }
   };
-
-  const [inputQuantity, setInputQuantity] = useState<number>(1); // State for custom point value
 
   const handleBehaviorSelect = async (behavior_id: string): Promise<void> => {
     setLoadingBehaviorId(behavior_id);
@@ -146,6 +230,10 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
     void queryClient.invalidateQueries(classesOptions);
   };
 
+  const refreshRewardItems = () => {
+    void queryClient.invalidateQueries(classesOptions);
+  };
+
   // Sort selected students alphabetically by name
   const sortedSelectedStudents = [...selectedStudents].sort((a, b) =>
     a.student_name_en.localeCompare(b.student_name_en),
@@ -169,19 +257,39 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
           className="m-auto flex w-full flex-col items-center justify-center"
         >
           <TabsList className="bg-foreground/20">
-            <TabsTrigger value="award">Award Points</TabsTrigger>
-            <TabsTrigger value="remove">Remove Points</TabsTrigger>
+            <TabsTrigger value="award">
+              <FontAwesomeIcon icon={["fas", "award"]} className="mr-2" />
+              Award Points
+            </TabsTrigger>
+            <TabsTrigger value="remove">
+              <FontAwesomeIcon icon={["fas", "flag"]} className="mr-2" /> Remove
+              Points
+            </TabsTrigger>
+            <TabsTrigger value="redeem">
+              <FontAwesomeIcon icon={["fas", "gift"]} className="mr-2" /> Redeem
+              Points
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="award">
             {positiveBehaviors && positiveBehaviors.length > 0 ? (
               <div className="flex flex-col items-center justify-center gap-5">
-                <Button
-                  onClick={() => {
-                    setIsCreateBehaviorDialogOpen(true);
-                  }}
-                >
-                  Create Behavior
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => {
+                      setIsCreateBehaviorDialogOpen(true);
+                    }}
+                  >
+                    Create Behavior
+                  </Button>
+                  <Button
+                    variant={"outline"}
+                    onClick={() => {
+                      void addDefaultBehaviors(classId);
+                    }}
+                  >
+                    Add Defaults
+                  </Button>
+                </div>
                 {/* Add NumberInput to specify custom point value */}
                 <div className="flex items-center gap-2">
                   <span>Quantity</span>
@@ -204,13 +312,23 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center gap-5">
-                <Button
-                  onClick={() => {
-                    setIsCreateBehaviorDialogOpen(true);
-                  }}
-                >
-                  Create Behavior
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => {
+                      setIsCreateBehaviorDialogOpen(true);
+                    }}
+                  >
+                    Create Behavior
+                  </Button>
+                  <Button
+                    variant={"outline"}
+                    onClick={() => {
+                      void addDefaultBehaviors(classId);
+                    }}
+                  >
+                    Add Defaults
+                  </Button>
+                </div>
                 <p>No positive behaviors created yet.</p>
               </div>
             )}
@@ -218,13 +336,23 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
           <TabsContent value="remove">
             {negativeBehaviors && negativeBehaviors.length > 0 ? (
               <div className="flex flex-col items-center justify-center gap-5">
-                <Button
-                  onClick={() => {
-                    setIsCreateBehaviorDialogOpen(true);
-                  }}
-                >
-                  Create Behavior
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => {
+                      setIsCreateBehaviorDialogOpen(true);
+                    }}
+                  >
+                    Create Behavior
+                  </Button>
+                  <Button
+                    variant={"outline"}
+                    onClick={() => {
+                      void addDefaultBehaviors(classId);
+                    }}
+                  >
+                    Add Defaults
+                  </Button>
+                </div>
                 {/* Add NumberInput to specify custom point value */}
                 <div className="flex items-center gap-2">
                   <span>Quantity</span>
@@ -247,14 +375,87 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center gap-5">
-                <Button
-                  onClick={() => {
-                    setIsCreateBehaviorDialogOpen(true);
-                  }}
-                >
-                  Create Behavior
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => {
+                      setIsCreateBehaviorDialogOpen(true);
+                    }}
+                  >
+                    Create Behavior
+                  </Button>
+                  <Button
+                    variant={"outline"}
+                    onClick={() => {
+                      void addDefaultBehaviors(classId);
+                    }}
+                  >
+                    Add Defaults
+                  </Button>
+                </div>
                 <p>No negative behaviors created yet.</p>
+              </div>
+            )}
+          </TabsContent>
+          <TabsContent value="redeem">
+            {rewardItems && rewardItems.length > 0 ? (
+              <div className="flex flex-col items-center justify-center gap-5">
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => {
+                      setIsCreateRewardItemDialogOpen(true);
+                    }}
+                  >
+                    Create Reward Item
+                  </Button>
+                  <Button
+                    variant={"outline"}
+                    onClick={() => {
+                      void addDefaultRewardItems(classId);
+                    }}
+                  >
+                    Add Defaults
+                  </Button>
+                </div>
+                {/* Add NumberInput to specify quantity */}
+                <div className="flex items-center gap-2">
+                  <span>Quantity</span>
+                  <NumberInput
+                    value={inputQuantity}
+                    onChange={setInputQuantity}
+                    min={1}
+                    max={10}
+                    step={1}
+                    name="inputQuantity"
+                    id="inputQuantity"
+                  />
+                </div>
+                <RewardItemsGrid
+                  rewardItems={rewardItems}
+                  onRewardItemSelect={handleRewardItemSelect}
+                  loadingItemId={loadingRewardItemId}
+                  refreshRewardItems={refreshRewardItems}
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center gap-5">
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => {
+                      setIsCreateRewardItemDialogOpen(true);
+                    }}
+                  >
+                    Create Reward Item
+                  </Button>
+                  <Button
+                    variant={"outline"}
+                    onClick={() => {
+                      void addDefaultRewardItems(classId);
+                    }}
+                  >
+                    Add Defaults
+                  </Button>
+                </div>
+                <p>No reward items created yet.</p>
               </div>
             )}
           </TabsContent>
@@ -270,10 +471,10 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle className="mt-5 text-center text-2xl">
-                Apply Behavior to {sortedSelectedStudents.length} Student(s)
+                Apply Action to {sortedSelectedStudents.length} Student(s)
               </DrawerTitle>
               <DrawerDescription className="text-center">
-                Award and remove points based on student behaviors.
+                Award, remove, or redeem points based on student behaviors.
               </DrawerDescription>
             </DrawerHeader>
             {mainContent}
@@ -284,20 +485,20 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
         </Drawer>
       ) : (
         <Dialog open onOpenChange={() => onClose()}>
-          <DialogContent>
+          <CustomDialogContent className="w-full rounded-xl sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-5xl 2xl:max-w-6xl">
             <DialogHeader>
               <DialogTitle className="mt-5 text-center text-2xl">
-                Apply Behavior to {sortedSelectedStudents.length} Student(s)
+                Apply Action to {sortedSelectedStudents.length} Student(s)
               </DialogTitle>
               <DialogDescription className="text-center">
-                Award and remove points based on student behaviors.
+                Award, remove, or redeem points based on student behaviors.
               </DialogDescription>
             </DialogHeader>
             {mainContent}
             <DialogFooter>
               <Button onClick={onClose}>Close</Button>
             </DialogFooter>
-          </DialogContent>
+          </CustomDialogContent>
         </Dialog>
       )}
       {isCreateBehaviorDialogOpen && (
@@ -305,6 +506,14 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
           open={isCreateBehaviorDialogOpen}
           onClose={() => setIsCreateBehaviorDialogOpen(false)}
           onCreateBehavior={handleCreateBehavior}
+          classId={classId}
+        />
+      )}
+      {isCreateRewardItemDialogOpen && (
+        <CreateRewardItemDialog
+          open={isCreateRewardItemDialogOpen}
+          onClose={() => setIsCreateRewardItemDialogOpen(false)}
+          onCreateRewardItem={handleCreateRewardItem}
           classId={classId}
         />
       )}

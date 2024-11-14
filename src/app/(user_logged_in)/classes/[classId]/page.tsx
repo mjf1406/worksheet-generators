@@ -30,9 +30,10 @@ export default function ClassDetails({ params }: { params: Params }) {
 
   return (
     <ContentLayout title={courseData.class_name ?? ""}>
-      <div className="container flex flex-col items-center gap-4 px-4 py-4 lg:py-16">
+      <div className="container flex flex-col items-center gap-4 px-4 py-4">
         <div className="flex w-full flex-col gap-4">
           <ClassGroupsComponent class={courseData} />
+          <div className="text-3xl">Students</div>
           {courseData.students && courseData.groups && (
             <StudentGrid
               students={courseData.students}

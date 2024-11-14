@@ -12,7 +12,7 @@ import {
   reward_items,
   behaviors,
 } from '~/server/db/schema';
-import type { PointRecord } from '~/server/db/types';
+import type { PointRecord, RedemptionRecord } from '~/server/db/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,6 +53,7 @@ export type StudentData = {
   points?: number;
   point_history?: PointRecord[];
   absent_dates?: string[];
+  redemption_history: RedemptionRecord[],
 };
 
 export type RewardItemData = {
@@ -120,9 +121,14 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
               student_number: students.student_number,
               student_email: students.student_email,
               enrollment_date: student_groups.enrollment_date,
+              points: student_classes.points,
+              point_history: student_classes.point_history,
+              absent_dates: student_classes.absent_dates,
+              redemption_history: student_classes.redemption_history,
             })
             .from(student_groups)
             .innerJoin(students, eq(student_groups.student_id, students.student_id))
+            .innerJoin(student_classes, eq(student_classes.student_id, students.student_id))
             .where(eq(student_groups.group_id, group.group_id))
             .all();
 
@@ -148,6 +154,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
           points: student_classes.points,
           point_history: student_classes.point_history,
           absent_dates: student_classes.absent_dates,
+          redemption_history: student_classes.redemption_history,
         })
         .from(student_classes)
         .innerJoin(students, eq(student_classes.student_id, students.student_id))

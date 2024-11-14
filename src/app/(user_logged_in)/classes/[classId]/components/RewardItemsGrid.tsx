@@ -1,4 +1,4 @@
-// BehaviorsGrid.tsx
+// RewardItemsGrid.tsx
 
 "use client";
 
@@ -15,8 +15,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/components/ui/use-toast";
-import { deleteBehavior } from "../behaviorActions";
-import EditBehaviorDialog from "./EditBehaviorDialog";
+import { deleteRewardItem } from "../rewardItemActions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,61 +26,60 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
-import type { Behavior } from "~/server/db/types";
+import type { RewardItem } from "~/server/db/types";
+import EditRewardItemDialog from "./EditRewardItemDialog";
 
-interface BehaviorsGridProps {
-  behaviors: Behavior[];
-  onBehaviorSelect: (behavior_id: string) => void;
-  loadingBehaviorId: string | null;
-  refreshBehaviors: () => void; // Function to refresh behaviors after update/delete
+interface RewardItemsGridProps {
+  rewardItems: RewardItem[];
+  onRewardItemSelect: (item_id: string) => void;
+  loadingItemId: string | null;
+  refreshRewardItems: () => void; // Function to refresh reward items after update/delete
 }
 
-const BehaviorsGrid: React.FC<BehaviorsGridProps> = ({
-  behaviors,
-  onBehaviorSelect,
-  loadingBehaviorId,
-  refreshBehaviors,
+const RewardItemsGrid: React.FC<RewardItemsGridProps> = ({
+  rewardItems,
+  onRewardItemSelect,
+  loadingItemId,
+  refreshRewardItems,
 }) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [selectedBehavior, setSelectedBehavior] = useState<Behavior | null>(
-    null,
-  );
+  const [selectedRewardItem, setSelectedRewardItem] =
+    useState<RewardItem | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [behaviorToDelete, setBehaviorToDelete] = useState<Behavior | null>(
-    null,
-  );
+  const [rewardItemToDelete, setRewardItemToDelete] =
+    useState<RewardItem | null>(null);
   const { toast } = useToast();
 
   // Handler for clicking the Edit button
-  const handleEditClick = (behavior: Behavior) => {
-    setSelectedBehavior(behavior);
+  const handleEditClick = (rewardItem: RewardItem) => {
+    setSelectedRewardItem(rewardItem);
     setIsEditDialogOpen(true);
   };
 
   // Handler for clicking the Delete button
-  const handleDeleteClick = (behavior: Behavior) => {
-    setBehaviorToDelete(behavior);
+  const handleDeleteClick = (rewardItem: RewardItem) => {
+    setRewardItemToDelete(rewardItem);
     setIsDeleteDialogOpen(true);
   };
 
   // Confirm deletion
   const confirmDelete = async () => {
-    if (!behaviorToDelete) return;
+    if (!rewardItemToDelete) return;
 
     try {
       // Create a FormData object to send to the server action
       const formData = new FormData();
-      formData.append("behavior_id", behaviorToDelete.behavior_id);
+      formData.append("item_id", rewardItemToDelete.item_id);
 
       // Invoke the server action
-      const result = await deleteBehavior(formData);
+      const result = await deleteRewardItem(formData);
 
       if (result.success) {
         toast({
           title: "Success!",
           description: result.message,
         });
-        refreshBehaviors();
+        refreshRewardItems();
       } else {
         toast({
           title: "Error!",
@@ -93,40 +91,36 @@ const BehaviorsGrid: React.FC<BehaviorsGridProps> = ({
       console.error("Delete Error:", error);
       toast({
         title: "Error!",
-        description: "Failed to delete behavior. Please try again.",
+        description: "Failed to delete reward item. Please try again.",
         variant: "destructive",
       });
     } finally {
       // Reset the deletion state
       setIsDeleteDialogOpen(false);
-      setBehaviorToDelete(null);
+      setRewardItemToDelete(null);
     }
   };
 
   // Cancel deletion
   const cancelDelete = () => {
     setIsDeleteDialogOpen(false);
-    setBehaviorToDelete(null);
+    setRewardItemToDelete(null);
   };
 
   return (
     <>
       <div className="m-auto grid max-h-64 w-full grid-cols-3 gap-4 overflow-y-auto p-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
-        {behaviors.map((behavior) => {
-          const isLoading = behavior.behavior_id === loadingBehaviorId;
-          const iconParts = behavior.icon ? behavior.icon.split(" ") : null;
+        {rewardItems.map((rewardItem) => {
+          const isLoading = rewardItem.item_id === loadingItemId;
+          const iconParts = rewardItem.icon ? rewardItem.icon.split(" ") : null;
 
           return (
             <Card
-              key={behavior.behavior_id}
+              key={rewardItem.item_id}
               onClick={() => {
                 if (!isLoading) {
-                  onBehaviorSelect(behavior.behavior_id);
+                  onRewardItemSelect(rewardItem.item_id);
                 }
-              }}
-              style={{
-                borderColor: behavior.color ?? "",
-                borderWidth: "0.5rem",
               }}
               className={`relative col-span-1 flex h-full w-28 transform flex-col items-center justify-center rounded-lg border p-4 shadow-sm transition-transform hover:scale-105 ${
                 isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
@@ -151,19 +145,19 @@ const BehaviorsGrid: React.FC<BehaviorsGridProps> = ({
                     <DropdownMenuItem
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleEditClick(behavior);
+                        handleEditClick(rewardItem);
                       }}
                     >
-                      <Edit size={16} className="mr-2" /> Edit behavior
+                      <Edit size={16} className="mr-2" /> Edit reward item
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="text-destructive"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteClick(behavior);
+                        handleDeleteClick(rewardItem);
                       }}
                     >
-                      <Trash2 size={16} className="mr-2" /> Delete behavior
+                      <Trash2 size={16} className="mr-2" /> Delete reward item
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -184,24 +178,19 @@ const BehaviorsGrid: React.FC<BehaviorsGridProps> = ({
                 <FontAwesomeIcon
                   icon={[iconParts[0] as IconPrefix, iconParts[1] as IconName]}
                   className="mb-2 h-8 w-8"
-                  style={{ color: behavior.color ?? "" }}
                 />
               ) : (
-                <FontAwesomeIcon
-                  icon="question-circle"
-                  className="mb-2 h-8 w-8"
-                />
+                <FontAwesomeIcon icon="gift" className="mb-2 h-8 w-8" />
               )}
 
-              {/* Behavior Name */}
+              {/* Reward Item Name */}
               <div className="text-2xs text-center font-semibold">
-                {behavior.name}
+                {rewardItem.name}
               </div>
 
-              {/* Point Value Badge */}
+              {/* Price Badge */}
               <div className="mt-2 flex h-7 w-fit min-w-6 items-center justify-center rounded-full bg-secondary/75 p-2 text-xs font-medium">
-                {behavior.point_value > 0 ? "+" : ""}
-                {behavior.point_value}
+                {rewardItem.price}
               </div>
             </Card>
           );
@@ -218,7 +207,7 @@ const BehaviorsGrid: React.FC<BehaviorsGridProps> = ({
             <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete{" "}
-              <strong>{behaviorToDelete?.name}</strong>? This action cannot be
+              <strong>{rewardItemToDelete?.name}</strong>? This action cannot be
               undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -234,18 +223,18 @@ const BehaviorsGrid: React.FC<BehaviorsGridProps> = ({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Edit Behavior Dialog */}
-      {selectedBehavior && (
-        <EditBehaviorDialog
+      {/* Edit Reward Item Dialog */}
+      {selectedRewardItem && (
+        <EditRewardItemDialog
           isOpen={isEditDialogOpen}
           onClose={() => setIsEditDialogOpen(false)}
-          behavior={selectedBehavior}
+          rewardItem={selectedRewardItem}
           onUpdate={() => {
             setIsEditDialogOpen(false);
-            refreshBehaviors();
+            refreshRewardItems();
             toast({
               title: "Success!",
-              description: "Behavior updated successfully.",
+              description: "Reward item updated successfully.",
             });
           }}
         />
@@ -254,4 +243,4 @@ const BehaviorsGrid: React.FC<BehaviorsGridProps> = ({
   );
 };
 
-export default BehaviorsGrid;
+export default RewardItemsGrid;

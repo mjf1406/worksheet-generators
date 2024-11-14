@@ -114,6 +114,7 @@ export async function addGroup(formData: FormData): Promise<AddGroupResponse> {
         joined_date: row.joined_date ?? "",
         updated_date: row.updated_date_student ?? "",
         enrollment_date: null,
+        redemption_history: []
       })),
     };
 

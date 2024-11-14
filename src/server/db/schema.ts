@@ -1,6 +1,6 @@
 import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
-import type { AssignerItemStatuses, PointRecord } from "./types";
+import type { AssignerItemStatuses, PointRecord, RedemptionRecord } from "./types";
 
 // Core Tables
 
@@ -61,7 +61,7 @@ export const groups = sqliteTable('groups',
 export const reward_items = sqliteTable('reward_items',
     {
         item_id: text('item_id').notNull().primaryKey(),
-        price: integer('cost', { mode: 'number' }).notNull(),
+        price: integer('price', { mode: 'number' }).notNull(),
         name: text('name').notNull(),
         description: text('description'),
         icon: text('icon'),
@@ -109,6 +109,7 @@ export const student_classes = sqliteTable('student_classes',
         enrollment_date: text('enrollment_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
         points: integer('points', { mode: 'number' }),
         point_history: text('point_history', { mode: 'json' }).$type<PointRecord[]>(),
+        redemption_history: text('redemption_history', { mode: 'json' }).$type<RedemptionRecord[]>(),
         absent_dates: text('absent_dates', { mode: 'json' }).$type<string[]>(),
     }, 
     (table) => {

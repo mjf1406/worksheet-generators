@@ -89,6 +89,12 @@ export type PointRecord = {
     date: string;
 }
 
+export type RedemptionRecord = {
+    item_id: string,
+    date: string,
+    quantity: number,
+}
+
 export type Student = {
     student_id?: string | undefined;
     student_name_en: string | undefined;
@@ -175,11 +181,11 @@ export type RewardItem = {
     item_id: string;
     price: number;
     name: string;
-    description?: string;
-    icon?: string;
+    description?: string | null;
+    icon?: string | null;
     class_id?: string;
     user_id: string;
     type: "solo" | "group" | "class";
-    created_date: string;
-    updated_date: string;
+    created_date?: string;
+    updated_date?: string;
   };

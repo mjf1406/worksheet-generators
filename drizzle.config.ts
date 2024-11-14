@@ -3,6 +3,7 @@ import { env } from "~/env";
 
 export default {
   schema: "./src/server/db/schema.ts",
+  out: './drizzle',
   dialect: "sqlite",
   driver: "turso",
   dbCredentials: {

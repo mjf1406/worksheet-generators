@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { AIBadge } from "~/components/AIBadge";
 import type { ItemGridData } from "~/components/ItemGrid";
+import { Behavior, RewardItem } from "~/server/db/types";
 
 export const APP_NAME = "ClassQuest";
 export const GRADES = [
@@ -298,5 +299,222 @@ export const assignersData: ItemGridData[] = [
       "Randomly assign students to seats, ensuring boys sit next to girls!",
     icon: RockingChair,
     href: "/assigners/seats",
+  },
+];
+
+export const DEFAULT_REDEMPTION_ITEMS: Omit<
+  RewardItem,
+  "item_id" | "class_id" | "created_date" | "updated_date" | "user_id"
+>[] = [
+  {
+    name: "Homework Haven",
+    description:
+      "A student can turn in a homework assignment up to 2 days late.",
+    price: 4,
+    icon: "fas book-medical",
+    type: "solo",
+  },
+  {
+    name: "MIndfulness Minutes",
+    description: "A student can take a 3-minute mindfulness break.",
+    price: 10,
+    icon: "fas brain",
+    type: "solo",
+  },
+  {
+    name: "Music Master",
+    description: "A student can choose a song for the class to listen to.",
+    price: 10,
+    icon: "fas music",
+    type: "solo",
+  },
+  {
+    name: "Snack Session",
+    description: "A student can eat a snack during class.",
+    price: 10,
+    icon: "fas utensils",
+    type: "solo",
+  },
+  {
+    name: "Seat Swap",
+    description: "A student can switch seats with another student for a class.",
+    price: 20,
+    icon: "fas chair",
+    type: "solo",
+  },
+  {
+    name: "Ghostly Gig",
+    description: "A student can sit at the 👻 or 🐱‍👤 station during class.",
+    price: 20,
+    icon: "fas ghost",
+    type: "solo",
+  },
+  {
+    name: "Teacher Treat",
+    description: "A student can get a piece of candy from the teacher.",
+    price: 20,
+    icon: "fas cookie-bite",
+    type: "solo",
+  },
+  {
+    name: "Super Seat",
+    description: "A student can switch chairs with the teacher for one class.",
+    price: 25,
+    icon: "fas couch",
+    type: "solo",
+  },
+  {
+    name: "Freedom Fun",
+    description:
+      "The group can use 420 combined points to get 20 minutes of quiet free time.",
+    price: 30,
+    icon: "fas champagne-glasses",
+    type: "group",
+  },
+];
+
+export const DEFAULT_BEHAVIORS: Omit<
+  Behavior,
+  "behavior_id" | "class_id" | "created_date" | "updated_date" | "user_id"
+>[] = [
+  {
+    name: "Extra Materials, x1",
+    description:
+      "The student brought extra STEAM materials for another student to use, showing generosity.",
+    point_value: 5,
+    icon: "fas newspaper",
+    color: "#007BFF",
+  },
+  {
+    name: "HW Turned in On Time",
+    description: "The student turned their homework in on time.",
+    point_value: 5,
+    icon: "fas check-circle",
+    color: "#28A745",
+  },
+  {
+    name: "Helping Others",
+    description: "The student used their free time to help another student.",
+    point_value: 3,
+    icon: "fas hands-helping",
+    color: "#20C997",
+  },
+  {
+    name: "Material Check",
+    description:
+      "The student was ready for class before the timer hit zero (0).",
+    point_value: 1,
+    icon: "fas clipboard-check",
+    color: "#FD7E14",
+  },
+  {
+    name: "Participating",
+    description:
+      "The student participated actively during class discussions and activities.",
+    point_value: 1,
+    icon: "fas comments",
+    color: "#FFC107",
+  },
+  {
+    name: "Project On Time",
+    description: "The student submitted their project by the deadline.",
+    point_value: 5,
+    icon: "fas project-diagram",
+    color: "#6F42C1",
+  },
+  {
+    name: "RAZ Level Up",
+    description: "The student achieved a new reading level on the RAZ test.",
+    point_value: 10,
+    icon: "fas level-up-alt",
+    color: "#FFD700",
+  },
+  {
+    name: "Reminded Politely",
+    description:
+      "The student reminded others politely about classroom rules or tasks.",
+    point_value: 2,
+    icon: "fas handshake",
+    color: "#17A2B8",
+  },
+  {
+    name: "Signed Work",
+    description: "The student completed and signed their work appropriately.",
+    point_value: 5,
+    icon: "fas signature",
+    color: "#E83E8C",
+  },
+  {
+    name: "Teamwork",
+    description:
+      "The student demonstrated effective teamwork skills during group activities.",
+    point_value: 3,
+    icon: "fas users",
+    color: "#17A2B8",
+  },
+  {
+    name: "Vocab. Log Word, x1",
+    description: "The student added a new word to their vocabulary log.",
+    point_value: 3,
+    icon: "fas book",
+    color: "#800000",
+  },
+  {
+    name: "Job Well Done",
+    description: "The student performed a task exceptionally well.",
+    point_value: 5,
+    icon: "fas thumbs-up",
+    color: "#32CD32",
+  },
+  {
+    name: "On Task",
+    description: "The student remained focused and on task during class.",
+    point_value: 1,
+    icon: "fas tasks",
+    color: "#6C757D",
+  },
+  {
+    name: "Chapel Disruption",
+    description: "The student disrupted chapel services.",
+    point_value: -3,
+    icon: "fas times-circle",
+    color: "#DC3545",
+  },
+  {
+    name: "Konglish",
+    description:
+      "The student used a mix of Korean and English inappropriately.",
+    point_value: -1,
+    icon: "fas language",
+    color: "#8B0000",
+  },
+  {
+    name: "Non-English",
+    description: "The student used a language other than English in class.",
+    point_value: -2,
+    icon: "fas language",
+    color: "#8B0000",
+  },
+  {
+    name: "Noisy",
+    description: "The student was noisy and disrupted the class environment.",
+    point_value: -2,
+    icon: "fas volume-mute",
+    color: "#DC3545",
+  },
+  {
+    name: "Running",
+    description: "The student was running in class, causing disruptions.",
+    point_value: -3,
+    icon: "fas running",
+    color: "#8B0000",
+  },
+  {
+    name: "Off Task",
+    description:
+      "The student was off task and not engaged in class activities.",
+    point_value: -2,
+    icon: "fas ban",
+    color: "#DC3545",
   },
 ];

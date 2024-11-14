@@ -73,24 +73,42 @@ This is the collection of worksheet generators that I have created as I needed t
       - [x] to selected students
       - [ ] streaks are tracked for each student, and the teacher is alerted
         - [ ] off days should be declared in the settings, so they are excluded from breaking streaks
-    - [x] positive and negative behavior
+    - [ ] positive and negative behavior
       - [x] user can create them, setting an icon, name, and point value
       - [x] user can edit
       - [x] user can delete
+      - [ ] teacher is notified when a student has a negative behavior streak
+      - [ ] behavior dashboards: what should be shown?
     - [ ] redemption items
-      - [ ] user can create, setting cost, name, and icon
-      - [ ] user can delete
-      - [ ] user can edit
+      - [x] user can create, setting cost, name, and icon
+      - [x] user can delete
+      - [x] user can edit
+      - [ ] redemption dashboard: what should I show?
     - [ ] redeeming items
-      - [ ] user can select multiple students to redeem the same thing simultaneously
-      - [ ] user can select quantity of redemption item to apply to selected students
+      - [x] user can select multiple students to redeem the same thing simultaneously
+      - [x] user can select quantity of redemption item to apply to selected students
 - tool: Attendance
-  - [ ] stores presence and absence based on user's local time zone
-  - [ ] prevents absent students from receiving points
-- fixed: the DB migration issue... kill me
+  - [x] stores presence and absence based on user's local time zone
+  - [ ] prevents absent students from being awarded points
+  - [ ] prevents absent students from losing points
+  - [ ] prevents absent students from redeeming points
+- Assigner: Seats -- there may be a bug where it resets the seats every time it runs...
+- Assigner: Round Robin -- need some tests for this one to ensure it's working.
+- Groups: need to optimistically update the cached data
 - when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
 
 ## Change Log
+
+2024/11/14
+
+- UX: when sorting by points, they are now sorted from highest to smallest
+- UX: the apply button now autodetect all present students if multi-select mode is inactive
+- UI: fixed up the dialogs when awarding/removing points and redeeming to be more responsive and nice looking
+- UX: added a button the user can click to add default behaviors and default redemption items
+- fixed: the DB migration issue... kill me: see `drizzle-commands.md`
+- UX: can track attendance and it properly loads when refreshing on any device! (unlike others 😉)
+- UI: added redeem points tab to all apply behavior dialogs, including student dialog
+- backend: student point data is now loaded into the group so it loads correctly on `[group_id]`
 
 2024/10/13
 

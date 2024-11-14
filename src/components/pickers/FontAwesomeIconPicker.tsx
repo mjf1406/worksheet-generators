@@ -142,6 +142,8 @@ const animalAndShapeIcons: IconLookup[] = [
   { prefix: "fas", iconName: "language" },
   { prefix: "fas", iconName: "hands-asl-interpreting" },
   { prefix: "fas", iconName: "hands" },
+  { prefix: "fas", iconName: "chair" },
+  { prefix: "fas", iconName: "candy-cane" },
 ];
 
 const FAIconPicker: React.FC<FAIconPickerProps> = ({

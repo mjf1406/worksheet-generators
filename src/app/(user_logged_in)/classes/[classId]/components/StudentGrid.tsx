@@ -28,6 +28,8 @@ import {
   Save,
   EllipsisVertical,
   Trash2,
+  Loader,
+  UserCheck,
 } from "lucide-react";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 import { FancyRadioGroup, type Option } from "./SelectRadioGroup";
@@ -55,6 +57,8 @@ import {
 import { deleteStudent } from "../actions";
 import { AddStudentsDialog } from "../../components/AddStudents";
 import type { Student } from "~/server/db/types";
+import { saveAttendance } from "../attendanceActions";
+import { useToast } from "~/components/ui/use-toast";
 
 type SortingState = "student_number" | "last_name" | "first_name" | "points";
 
@@ -100,23 +104,19 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
   const [attendanceStatus, setAttendanceStatus] = useState<
     Record<string, "present" | "absent">
   >({});
+  const [isAttendanceSaving, setIsAttendanceSaving] = useState<boolean>(false); // Loading state for attendance
   const [isBehaviorDialogOpen, setIsBehaviorDialogOpen] =
     useState<boolean>(false);
-
-  // State for EditStudentDialog
   const [isEditDialogOpen, setIsEditDialogOpen] = useState<boolean>(false);
   const [selectedStudentToEdit, setSelectedStudentToEdit] =
     useState<StudentData | null>(null);
-
-  // State for StudentDialog
   const [isStudentDialogOpen, setIsStudentDialogOpen] =
     useState<boolean>(false);
   const [selectedStudentToView, setSelectedStudentToView] =
     useState<StudentData | null>(null);
-
-  // State for ApplyBehaviorDialog
   const [isApplyBehaviorDialogOpen, setIsApplyBehaviorDialogOpen] =
     useState<boolean>(false);
+  const { toast } = useToast();
 
   // State for deletion confirmation
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
@@ -209,7 +209,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
             b.student_name_en.split(" ").pop(),
           );
         case "points":
-          return compareValues(a.points, b.points);
+          return compareValues(b.points, a.points);
         default:
           return 0;
       }
@@ -244,6 +244,29 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
     }
   };
 
+  const getCurrentDate = (): string => {
+    const now = new Date();
+
+    const formatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+
+    const parts = formatter.formatToParts(now);
+
+    const yearPart = parts.find((part) => part.type === "year");
+    const monthPart = parts.find((part) => part.type === "month");
+    const dayPart = parts.find((part) => part.type === "day");
+
+    const year = yearPart ? yearPart.value : "";
+    const month = monthPart ? monthPart.value : "";
+    const day = dayPart ? dayPart.value : "";
+
+    return `${year}-${month}-${day}`; // YYYY-MM-DD
+  };
+
   const handleAttendanceToggle = () => {
     if (isAttendanceMode) {
       // Exiting attendance mode without saving
@@ -252,8 +275,12 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
     } else {
       // Entering attendance mode
       const initialAttendance: Record<string, "present" | "absent"> = {};
+      const today = getCurrentDate();
       students.forEach((student) => {
-        initialAttendance[student.student_id] = "present";
+        const isAbsentToday = student.absent_dates?.includes(today);
+        initialAttendance[student.student_id] = isAbsentToday
+          ? "absent"
+          : "present";
       });
       setAttendanceStatus(initialAttendance);
       setIsAttendanceMode(true);
@@ -293,13 +320,100 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
     }
   };
 
-  const handleSaveAttendance = () => {
-    // Implement the logic to save the attendance data
-    // For demonstration, we'll just log the data
-    console.log("Attendance data:", attendanceStatus);
-    // After saving, exit attendance mode
-    setIsAttendanceMode(false);
-    setAttendanceStatus({});
+  const handleSelectAllPresent = () => {
+    const today = getCurrentDate(); // Get today's date
+    const presentStudents = students.filter(
+      (student) => !student.absent_dates?.includes(today),
+    );
+    setSelectedStudents(presentStudents);
+    setIsMultiSelectMode(true);
+  };
+
+  const handleApplyClick = () => {
+    if (!isMultiSelectMode) {
+      // Select all present students and enable multi-select mode
+      const today = getCurrentDate();
+      const presentStudents = students.filter(
+        (student) => !student.absent_dates?.includes(today),
+      );
+      setSelectedStudents(presentStudents);
+      setIsMultiSelectMode(true);
+      setIsApplyBehaviorDialogOpen(true);
+    }
+
+    // Open the ApplyBehaviorDialog if there are selected students
+    if (selectedStudents.length > 0) {
+      setIsApplyBehaviorDialogOpen(true);
+    }
+  };
+
+  const handleSaveAttendance = async () => {
+    setIsAttendanceSaving(true); // Start loading state
+    // Get the current date in user's timezone
+    const date = getCurrentDate();
+
+    // Prepare attendance data
+    const absentStudentIds = Object.keys(attendanceStatus).filter(
+      (studentId) => attendanceStatus[studentId] === "absent",
+    );
+
+    // Call the server action to save attendance
+    try {
+      const result = await saveAttendance(classId, date, absentStudentIds);
+      if (result.success) {
+        // Show a success message
+        toast({
+          title: "Success",
+          description: "Attendance saved successfully.",
+        });
+        console.log("Attendance saved successfully.");
+
+        // Update students' absent_dates in local state
+        setStudents((prevStudents) =>
+          prevStudents.map((student) => {
+            const isAbsent = absentStudentIds.includes(student.student_id);
+            const updatedAbsentDates = student.absent_dates ?? [];
+            const today = getCurrentDate();
+
+            if (isAbsent) {
+              // Add today's date if not already present
+              if (!updatedAbsentDates.includes(today)) {
+                updatedAbsentDates.push(today);
+              }
+            } else {
+              // Remove today's date if present
+              const index = updatedAbsentDates.indexOf(today);
+              if (index > -1) {
+                updatedAbsentDates.splice(index, 1);
+              }
+            }
+
+            return {
+              ...student,
+              absent_dates: updatedAbsentDates,
+            };
+          }),
+        );
+      } else {
+        // Handle error
+        console.error("Error saving attendance:", result.message);
+        toast({
+          title: "Error",
+          description: "Failed to save attendance.",
+        });
+      }
+    } catch (error) {
+      console.error("Error saving attendance:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred.",
+      });
+    } finally {
+      setIsAttendanceSaving(false); // End loading state
+      // After saving, exit attendance mode
+      setIsAttendanceMode(false);
+      setAttendanceStatus({});
+    }
   };
 
   // Update selectedStudents when filters change
@@ -415,9 +529,10 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
     }
   };
 
+  const today = getCurrentDate(); // Get today's date once
+
   return (
     <div className="flex flex-col justify-center gap-4">
-      <div className="text-3xl">Students</div>
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
           <Button
@@ -430,7 +545,8 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
               {isAttendanceMode ? "Cancel Attendance" : "Attendance"}
             </span>
           </Button>
-          <Button
+
+          {/* <Button
             className={cn(
               selectedStudents.length < 1 && "cursor-not-allowed opacity-50",
             )}
@@ -438,8 +554,19 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
             onClick={openApplyBehaviorDialog}
           >
             <FontAwesomeIcon icon={["fas", "plus-minus"]} className="sm:mr-2" />
-            <span className="hidden sm:inline">Apply Behavior</span>
+            <span className="hidden sm:inline">Apply</span>
+          </Button> */}
+          <Button onClick={handleApplyClick}>
+            <FontAwesomeIcon icon={["fas", "plus-minus"]} className="sm:mr-2" />
+            <span className="hidden sm:inline">Apply</span>
           </Button>
+          {/* <Button
+            variant={isMultiSelectMode ? "secondary" : "default"}
+            onClick={handleSelectAllPresent}
+          >
+            <UserCheck size={16} className="sm:mr-2" />
+            <span className="hidden sm:inline">Select All Present</span>
+          </Button> */}
           <Button
             variant={isMultiSelectMode ? "secondary" : "default"}
             onClick={handleMultiSelectToggle}
@@ -493,32 +620,33 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
             {selectedFilter !== "none" && `by ${selectedFilter}`}
           </div>
         )}
+        {isMultiSelectMode && (
+          <div className="text-sm text-gray-500">
+            {selectedStudents.length} student
+            {selectedStudents.length !== 1 && "s"} selected
+          </div>
+        )}
       </div>
-      {isMultiSelectMode && (
-        <div className="text-sm text-gray-500">
-          {selectedStudents.length} student
-          {selectedStudents.length !== 1 && "s"} selected
-        </div>
-      )}
+
       <div className="grid grid-cols-3 gap-5 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8">
         {students.map((student) => {
           const isSelected = selectedStudents.some(
             (s) => s.student_id === student.student_id,
           );
           const attendance = attendanceStatus[student.student_id]; // 'present' or 'absent'
+          const isAbsentToday = student.absent_dates?.includes(today);
 
           return (
             <Card
               key={student.student_id}
-              className={`relative col-span-1 h-fit transform transition-transform hover:scale-105 md:h-full ${
-                isSelected && "bg-accent/25"
-              } ${
-                !isSelected && selectedStudents.length >= 1 && "opacity-50"
-              } ${
-                isAttendanceMode || isMultiSelectMode
-                  ? "cursor-pointer"
-                  : "cursor-pointer"
-              } ${isAttendanceMode && attendance === "absent" && "opacity-40"}`}
+              className={cn(
+                "relative col-span-1 h-fit transform cursor-pointer transition-transform hover:scale-105 md:h-full",
+                isSelected && "bg-accent/25",
+                !isSelected && selectedStudents.length >= 1 && "opacity-50",
+                (isAttendanceMode || isMultiSelectMode) && "cursor-pointer",
+                isAttendanceMode && attendance === "absent" && "opacity-40",
+                !isAttendanceMode && isAbsentToday && "opacity-30", // Indicate absence when not in attendance mode
+              )}
               onClick={() => handleStudentClick(student.student_id)}
             >
               {isAttendanceMode && (
@@ -621,9 +749,18 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
       </div>
       <div className="flex w-full justify-end gap-2">
         {isAttendanceMode && (
-          <Button onClick={handleSaveAttendance}>
-            <Save size={16} className="mr-2" />
-            Save attendance
+          <Button onClick={handleSaveAttendance} disabled={isAttendanceSaving}>
+            {isAttendanceSaving ? (
+              <>
+                <Loader size={16} className="mr-2 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save size={16} className="mr-2" />
+                Save attendance
+              </>
+            )}
           </Button>
         )}
       </div>

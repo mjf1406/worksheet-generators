@@ -6,6 +6,13 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { classesOptions } from "~/app/api/queryOptions";
 import type { Group } from "~/server/db/types";
 import StudentGrid from "../components/StudentGrid";
+import { group } from "console";
+import {
+  BreadcrumbItem,
+  BreadcrumbSeparator,
+} from "~/components/ui/breadcrumb";
+import { ArrowBigRight, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 interface Params {
   classId: string;
@@ -35,7 +42,17 @@ export default function ClassDetails({ params }: { params: Params }) {
 
   return (
     <ContentLayout title={courseData.group_name ?? ""}>
-      <div className="container flex flex-col items-center gap-4 px-4 py-4 lg:py-16">
+      <div className="container flex flex-col items-center gap-4 px-4 py-4">
+        <div className="semi-bold flex items-center justify-center gap-2 self-start text-left text-3xl">
+          <Link
+            className="font-extrabold text-primary hover:underline"
+            href={`/classes/${Data?.class_id}`}
+          >
+            {Data?.class_name}
+          </Link>
+          <ChevronRight />
+          {courseData.group_name}
+        </div>
         <div className="flex w-full flex-col gap-4">
           {courseData.students && (
             <StudentGrid students={courseData.students} classId={classId} />
