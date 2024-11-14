@@ -297,7 +297,6 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
                     value={inputQuantity}
                     onChange={setInputQuantity}
                     min={1}
-                    max={10}
                     step={1}
                     name="inputQuantity"
                     id="inputQuantity"

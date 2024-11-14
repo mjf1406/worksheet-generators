@@ -122,6 +122,9 @@ const RewardItemsGrid: React.FC<RewardItemsGridProps> = ({
                   onRewardItemSelect(rewardItem.item_id);
                 }
               }}
+              style={{
+                borderWidth: "0.5rem",
+              }}
               className={`relative col-span-1 flex h-full w-28 transform flex-col items-center justify-center rounded-lg border p-4 shadow-sm transition-transform hover:scale-105 ${
                 isLoading ? "cursor-not-allowed opacity-50" : "cursor-pointer"
               }`}
