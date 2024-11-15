@@ -43,6 +43,7 @@ This is the collection of worksheet generators that I have created as I needed t
   - quick access to each student to award/subtract points
     - can filter the students by group
   - can easily select multiple students
+- tool: custom spinning wheels
 
 ### p2
 
@@ -61,6 +62,7 @@ This is the collection of worksheet generators that I have created as I needed t
 - tool: Assigner, Round-Robin -- a history of items is now stored with a datetime object and is displayed in the UI as a table
 - ⚠️ local-first: use [TinyBase](https://tinybase.org/) to implement a local-first architecture
 - ⚠️ i18n: use [next-international](https://next-international.vercel.app/docs/app-setup) for localization
+- Assigner: Round Robin -- need some tests for this one to ensure it's working.
 
 ### p0
 
@@ -84,7 +86,7 @@ This is the collection of worksheet generators that I have created as I needed t
       - [x] user can delete
       - [x] user can edit
       - [ ] redemption dashboard: what should I show?
-    - [ ] redeeming items
+    - [x] redeeming items
       - [x] user can select multiple students to redeem the same thing simultaneously
       - [x] user can select quantity of redemption item to apply to selected students
 - tool: Attendance
@@ -92,12 +94,17 @@ This is the collection of worksheet generators that I have created as I needed t
   - [ ] prevents absent students from being awarded points
   - [ ] prevents absent students from losing points
   - [ ] prevents absent students from redeeming points
-- Assigner: Seats -- there may be a bug where it resets the seats every time it runs...
-- Assigner: Round Robin -- need some tests for this one to ensure it's working.
 - Groups: need to optimistically update the cached data
 - when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
+- want to add a top 5 point earners somewhere, both current and all-time
+- want to add top 5 point spenders
+- BUG: fixed a bug that would cause the mouse to click through the sorting dropdown. I have spent nearly 2 hours of this POS bug and I cannot fix it. I want to die. wtf...
 
 ## Change Log
+
+2024/11/15
+
+- UX: add more icons
 
 2024/11/14
 

@@ -2,7 +2,12 @@
 
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, {
+  useState,
+  useEffect,
+  useTransition,
+  ReactEventHandler,
+} from "react";
 import { Button } from "~/components/ui/button";
 import { Card, CardHeader, CardTitle } from "~/components/ui/card";
 import {
@@ -533,40 +538,23 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
 
   return (
     <div className="flex flex-col justify-center gap-4">
+      {/* Top Controls */}
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
+          {/* Existing Buttons */}
           <Button
             onClick={handleAttendanceToggle}
             variant={isAttendanceMode ? "secondary" : "default"}
           >
             <ListChecks size={16} className="sm:mr-2" />
-
             <span className="hidden sm:inline">
               {isAttendanceMode ? "Cancel Attendance" : "Attendance"}
             </span>
           </Button>
-
-          {/* <Button
-            className={cn(
-              selectedStudents.length < 1 && "cursor-not-allowed opacity-50",
-            )}
-            disabled={selectedStudents.length < 1}
-            onClick={openApplyBehaviorDialog}
-          >
-            <FontAwesomeIcon icon={["fas", "plus-minus"]} className="sm:mr-2" />
-            <span className="hidden sm:inline">Apply</span>
-          </Button> */}
           <Button onClick={handleApplyClick}>
             <FontAwesomeIcon icon={["fas", "plus-minus"]} className="sm:mr-2" />
             <span className="hidden sm:inline">Apply</span>
           </Button>
-          {/* <Button
-            variant={isMultiSelectMode ? "secondary" : "default"}
-            onClick={handleSelectAllPresent}
-          >
-            <UserCheck size={16} className="sm:mr-2" />
-            <span className="hidden sm:inline">Select All Present</span>
-          </Button> */}
           <Button
             variant={isMultiSelectMode ? "secondary" : "default"}
             onClick={handleMultiSelectToggle}
@@ -576,8 +564,6 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
               {isMultiSelectMode ? "Exit Multi-select" : "Multi-select"}
             </span>
           </Button>
-
-          {/* Integrated AddStudentsDialog */}
           <AddStudentsDialog
             classId={classId}
             existingStudents={students as unknown as Student[]}
@@ -585,19 +571,23 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
           />
         </div>
         <div className="flex flex-row items-center gap-2">
-          <Select onValueChange={handleSort} defaultValue="first_name">
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="student_number">Sort by Number</SelectItem>
-              <SelectItem value="last_name">Sort by Last Name</SelectItem>
-              <SelectItem value="first_name">Sort by First Name</SelectItem>
-              <SelectItem value="points">Sort by Points</SelectItem>
-            </SelectContent>
-          </Select>
+          <div>
+            <Select onValueChange={handleSort} defaultValue="first_name">
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="student_number">Sort by Number</SelectItem>
+                <SelectItem value="last_name">Sort by Last Name</SelectItem>
+                <SelectItem value="first_name">Sort by First Name</SelectItem>
+                <SelectItem value="points">Sort by Points</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
+
+      {/* Filter Controls */}
       <div className="flex flex-col items-center justify-start gap-2 md:flex-row">
         {groups.length > 0 && (
           <FancyRadioGroup
@@ -628,12 +618,13 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
         )}
       </div>
 
+      {/* Student Grid */}
       <div className="grid grid-cols-3 gap-5 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8">
         {students.map((student) => {
           const isSelected = selectedStudents.some(
             (s) => s.student_id === student.student_id,
           );
-          const attendance = attendanceStatus[student.student_id]; // 'present' or 'absent'
+          const attendance = attendanceStatus[student.student_id];
           const isAbsentToday = student.absent_dates?.includes(today);
 
           return (
@@ -645,10 +636,13 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                 !isSelected && selectedStudents.length >= 1 && "opacity-50",
                 (isAttendanceMode || isMultiSelectMode) && "cursor-pointer",
                 isAttendanceMode && attendance === "absent" && "opacity-40",
-                !isAttendanceMode && isAbsentToday && "opacity-30", // Indicate absence when not in attendance mode
+                !isAttendanceMode && isAbsentToday && "opacity-30",
               )}
-              onClick={() => handleStudentClick(student.student_id)}
+              onClick={() => {
+                handleStudentClick(student.student_id);
+              }}
             >
+              {/* Attendance Indicator */}
               {isAttendanceMode && (
                 <div className="absolute bottom-0 right-0 m-1 flex items-center justify-center rounded-xl">
                   {attendance === "present" ? (
@@ -658,6 +652,8 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                   )}
                 </div>
               )}
+
+              {/* Student Number Tooltip */}
               <div className="absolute left-1 top-1 text-sm">
                 <TooltipProvider>
                   <Tooltip>
@@ -670,6 +666,8 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                   </Tooltip>
                 </TooltipProvider>
               </div>
+
+              {/* Dropdown Menu */}
               <div className="absolute bottom-1 right-1">
                 <DropdownMenu>
                   <DropdownMenuTrigger>
@@ -678,7 +676,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                       size={"icon"}
                       className="h-fit w-fit p-2"
                       onClick={(e) => {
-                        e.stopPropagation();
+                        e.stopPropagation(); // Prevent card click when opening dropdown
                       }}
                     >
                       <EllipsisVertical size={16} />{" "}
@@ -687,7 +685,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                   <DropdownMenuContent>
                     <DropdownMenuItem
                       onClick={(e) => {
-                        e.stopPropagation();
+                        e.stopPropagation(); // Prevent card click when selecting edit
                         setSelectedStudentToEdit(student);
                         setIsEditDialogOpen(true);
                       }}
@@ -697,7 +695,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                     <DropdownMenuItem
                       className="text-destructive"
                       onClick={(e) => {
-                        e.stopPropagation();
+                        e.stopPropagation(); // Prevent card click when selecting delete
                         openDeleteDialog(student);
                       }}
                     >
@@ -706,6 +704,8 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
+
+              {/* Points Tooltip */}
               <div className="absolute right-2 top-2 flex flex-row items-center justify-center">
                 <TooltipProvider>
                   <Tooltip>
@@ -720,6 +720,8 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                   </Tooltip>
                 </TooltipProvider>
               </div>
+
+              {/* Reading Level Tooltip */}
               <div className="absolute bottom-1 left-1 flex flex-row items-center justify-center">
                 <TooltipProvider>
                   <Tooltip>
@@ -735,6 +737,8 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                   </Tooltip>
                 </TooltipProvider>
               </div>
+
+              {/* Student Name */}
               <CardHeader className="pt-8">
                 <CardTitle className="text-center text-base md:text-xl">
                   {student.student_name_en.split(" ").pop()}
@@ -747,6 +751,8 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
           );
         })}
       </div>
+
+      {/* Attendance Save Button */}
       <div className="flex w-full justify-end gap-2">
         {isAttendanceMode && (
           <Button onClick={handleSaveAttendance} disabled={isAttendanceSaving}>
@@ -764,7 +770,9 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
           </Button>
         )}
       </div>
-      {/* Render StudentDialog */}
+
+      {/* Dialogs */}
+      {/* StudentDialog */}
       {isStudentDialogOpen && selectedStudentToView && (
         <StudentDialog
           studentId={selectedStudentToView.student_id}
@@ -772,7 +780,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
           onClose={closeStudentDialog}
         />
       )}
-      {/* Render EditStudentDialog */}
+      {/* EditStudentDialog */}
       {isEditDialogOpen && selectedStudentToEdit && (
         <EditStudentDialog
           isOpen={isEditDialogOpen}
@@ -781,7 +789,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
           onUpdate={handleStudentUpdate}
         />
       )}
-      {/* Render ApplyBehaviorDialog */}
+      {/* ApplyBehaviorDialog */}
       {isApplyBehaviorDialogOpen && (
         <ApplyBehaviorDialog
           selectedStudents={selectedStudents}
@@ -789,8 +797,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
           onClose={closeApplyBehaviorDialog}
         />
       )}
-
-      {/* Alert Dialog for Deletion Confirmation */}
+      {/* Delete Confirmation Dialog */}
       <AlertDialog
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
