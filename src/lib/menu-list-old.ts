@@ -44,19 +44,19 @@ function sortByLabel<T extends { label: string }>(items: T[]): T[] {
 
 export function getMenuList(pathname: string): Group[] {
   const unsortedMenuList: Group[] = [
-    {
-      groupLabel: "",
-      menus: [
-        {
-          href: "/dashboard",
-          label: "Dashboard",
-          active: pathname.includes("/dashboard"),
-          icon: LayoutGrid,
-          under_construction: true,
-          submenus: []
-        }
-      ]
-    },
+    // {
+    //   groupLabel: "",
+    //   menus: [
+    //     {
+    //       href: "/dashboard",
+    //       label: "Dashboard",
+    //       active: pathname.includes("/dashboard"),
+    //       icon: LayoutGrid,
+    //       under_construction: true,
+    //       submenus: []
+    //     }
+    //   ]
+    // },
     {
       groupLabel: "",
       menus: [

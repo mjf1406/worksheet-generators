@@ -2,7 +2,14 @@
 
 import React, { useState } from "react";
 import { Button } from "~/components/ui/button";
-import { Loader2, SquarePen, School, Trash2 } from "lucide-react";
+import {
+  Loader2,
+  SquarePen,
+  School,
+  Trash2,
+  LayoutDashboard,
+  MoreVertical,
+} from "lucide-react";
 import Link from "next/link";
 import removeClassFromTeacher from "~/server/actions/removeClassFromTeacher";
 import { useToast } from "~/components/ui/use-toast";
@@ -26,6 +33,24 @@ import {
 import addDemoClasses from "~/server/actions/addDemoClasses";
 import NewClassDialog from "./NewClassDialog";
 import { classesOptions } from "~/app/api/queryOptions";
+
+// Import Card and DropdownMenu components from shadcn
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+  CardContent,
+} from "~/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "~/components/ui/dropdown-menu";
 
 export default function ClassList() {
   const [courseToDelete, setCourseToDelete] = useState<string | null>(null);
@@ -76,59 +101,155 @@ export default function ClassList() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-5">
-        <div className="rounded-xl bg-foreground/5 p-5">
-          <div className="flex items-center gap-2">
-            <Loader2 className="h-6 w-6 animate-spin" />
-            <span>Loading classes...</span>
-          </div>
-        </div>
+      <div className="flex h-full flex-col items-center justify-center">
+        <Loader2 className="h-12 w-12 animate-spin text-[hsl(var(--primary))]" />
+        <span className="mt-4 text-lg text-[hsl(var(--foreground))]">
+          Loading classes...
+        </span>
       </div>
     );
   }
 
   return (
     <>
-      <div className="flex gap-5">
+      <div className="mb-8 flex gap-5">
         <NewClassDialog />
-        <Button variant={"secondary"} disabled={true} onClick={addDemos}>
+        <Button variant="secondary" disabled onClick={addDemos}>
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-6 w-6 animate-spin" />
               Adding classes...
             </>
           ) : (
-            // <>Add demo classes</> // don't forget to change disabled to isLoading
             <>Coming soon...</>
           )}
         </Button>
       </div>
-      <div className="m-auto flex w-full max-w-3xl flex-col gap-4">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {courses.length === 0 ? (
-          <div className="flex flex-col gap-5">
-            <div className="rounded-xl bg-foreground/5 p-5">
-              <div className="flex items-center justify-center gap-2">
-                <div>Add a class by clicking the button above.</div>
+          <div className="col-span-full flex flex-col items-center">
+            <div className="rounded-lg bg-[hsl(var(--card))] p-6 text-[hsl(var(--card-foreground))] shadow-md">
+              <div className="text-center">
+                Add a class by clicking the button above.
               </div>
             </div>
           </div>
         ) : (
           courses.map((course) => (
-            <div
+            <Card
               key={course.class_id}
-              className="m-auto flex w-full gap-10 rounded-2xl bg-card-foreground/10 p-3"
+              className="flex h-full flex-col rounded-lg bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))] shadow-lg"
             >
-              <div className="flex flex-1 flex-col justify-center self-start">
-                <div className="text-base font-bold lg:text-xl">
-                  {`${course.class_name} (${course.class_year})`}
+              <CardHeader className="relative">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="absolute right-4 top-4 h-8 w-8 p-0"
+                    >
+                      <MoreVertical className="h-5 w-5" />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                    <DropdownMenuItem asChild>
+                      <Link href={`/classes/${course.class_id}/edit`}>
+                        <SquarePen className="mr-2 h-4 w-4" />
+                        Edit
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={() => setCourseToDelete(course.class_name)}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle>Delete class</DialogTitle>
+                          <DialogDescription>
+                            Please type the class name,{" "}
+                            <span id="class-id" className="font-bold">
+                              {courseToDelete}
+                            </span>
+                            , below to confirm deletion. Deleting a class is{" "}
+                            <b>IRREVERSIBLE</b>.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="flex items-center space-x-2">
+                          <div className="grid flex-1 gap-2">
+                            <Label
+                              htmlFor="class-to-delete"
+                              className="sr-only"
+                            >
+                              Class to delete
+                            </Label>
+                            <Input
+                              id="class-to-delete"
+                              placeholder="Type class name"
+                              value={deleteCourseText}
+                              onChange={(e) =>
+                                setDeleteCourseText(e.target.value)
+                              }
+                            />
+                          </div>
+                        </div>
+                        <DialogFooter className="sm:justify-start">
+                          <DialogClose asChild>
+                            <Button type="button" variant="outline">
+                              Cancel
+                            </Button>
+                          </DialogClose>
+                          <Button
+                            onClick={() =>
+                              handleDeleteClass(
+                                course.class_id,
+                                course.class_name,
+                              )
+                            }
+                            variant="destructive"
+                            disabled={deleteMutation.isPending}
+                          >
+                            {deleteMutation.isPending ? (
+                              <>
+                                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                                Deleting...
+                              </>
+                            ) : (
+                              "Delete class"
+                            )}
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <div className="flex items-center p-6">
+                  <div className="flex-shrink-0">
+                    <School className="h-12 w-12 text-[hsl(var(--accent))]" />
+                  </div>
+                  <div className="ml-4">
+                    <CardTitle className="text-2xl font-bold">
+                      {`${course.class_name} (${course.class_year})`}
+                    </CardTitle>
+                    <CardDescription className="mt-1 text-sm">
+                      Grade {course.class_grade} - {course.role} teacher
+                    </CardDescription>
+                  </div>
                 </div>
-                <div className="text-sm italic lg:text-sm">
-                  {course.role} teacher
-                </div>
-                <div className="text-sm italic">grade {course.class_grade}</div>
-              </div>
-              <div className="m-auto flex h-full flex-1 items-end justify-end gap-2 self-end">
-                <Button asChild variant={"outline"}>
+              </CardHeader>
+              <CardContent className="flex-1 px-6 py-4">
+                {/* Additional content can be added here */}
+              </CardContent>
+              <CardFooter className="flex items-center justify-between px-6 py-4">
+                <Button asChild variant="outline">
                   <Link
                     href={{
                       pathname: `/classes/${course.class_id}`,
@@ -142,76 +263,13 @@ export default function ClassList() {
                     Open
                   </Link>
                 </Button>
-                <Button
-                  asChild
-                  variant={"ghost"}
-                  className="bg-inherit px-2 py-1"
-                >
-                  <Link href={`/classes/${course.class_id}/edit`}>
-                    <SquarePen className="h-5 w-5" />
+                <Button asChild variant="ghost">
+                  <Link href={`/classes/${course.class_id}/dashboard`}>
+                    <LayoutDashboard className="mr-2 h-5 w-5" /> Dashboard
                   </Link>
                 </Button>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant={"destructive"}
-                      className="px-2 py-1"
-                      onClick={() => setCourseToDelete(course.class_name)}
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                      <DialogTitle>Delete class</DialogTitle>
-                      <DialogDescription>
-                        Please type the class name,{" "}
-                        <span id="class-id" className="font-bold">
-                          {courseToDelete}
-                        </span>
-                        , below in order to confirm deletion. Deleting a class
-                        is <b>IRREVERSIBLE</b>.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="flex items-center space-x-2">
-                      <div className="grid flex-1 gap-2">
-                        <Label htmlFor="link" className="sr-only">
-                          Class to delete
-                        </Label>
-                        <Input
-                          id="class-to-delete"
-                          value={deleteCourseText}
-                          onChange={(e) => setDeleteCourseText(e.target.value)}
-                        />
-                      </div>
-                    </div>
-                    <DialogFooter className="sm:justify-start">
-                      <DialogClose asChild>
-                        <Button type="button" variant="outline">
-                          Cancel
-                        </Button>
-                      </DialogClose>
-                      <Button
-                        onClick={() =>
-                          handleDeleteClass(course.class_id, course.class_name)
-                        }
-                        variant={"destructive"}
-                        disabled={deleteMutation.isPending}
-                      >
-                        {deleteMutation.isPending ? (
-                          <>
-                            <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                            Deleting...
-                          </>
-                        ) : (
-                          "Delete class"
-                        )}
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
-              </div>
-            </div>
+              </CardFooter>
+            </Card>
           ))
         )}
       </div>
