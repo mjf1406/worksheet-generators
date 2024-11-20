@@ -151,6 +151,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
   // Function to close the ApplyBehaviorDialog
   const closeApplyBehaviorDialog = () => {
     setIsApplyBehaviorDialogOpen(false);
+    setIsMultiSelectMode(false);
   };
 
   // Create a memoized empty array
@@ -588,38 +589,42 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
       </div>
 
       {/* Filter Controls */}
-      <div className="flex flex-col items-center justify-start gap-2 md:flex-row">
-        {groups.length > 0 && (
+      <div>
+        <div className="flex flex-row items-center justify-start gap-2">
+          {groups.length > 0 && (
+            <FancyRadioGroup
+              options={allGroupsOptions}
+              value={selectedGroupFilter}
+              onChange={setSelectedGroupFilter}
+            />
+          )}
           <FancyRadioGroup
-            options={allGroupsOptions}
-            value={selectedGroupFilter}
-            onChange={setSelectedGroupFilter}
+            options={options}
+            value={selectedFilter}
+            onChange={setSelectedFilter}
           />
-        )}
-        <FancyRadioGroup
-          options={options}
-          value={selectedFilter}
-          onChange={setSelectedFilter}
-        />
-        {(selectedFilter !== "none" || selectedGroupFilter !== "all") && (
-          <div className="text-sm text-gray-500">
-            Selected {selectedStudents.length} student
-            {selectedStudents.length !== 1 && "s"}
-            {selectedGroupFilter !== "all" &&
-              ` in ${getGroupName(selectedGroupFilter)}`}{" "}
-            {selectedFilter !== "none" && `by ${selectedFilter}`}
-          </div>
-        )}
-        {isMultiSelectMode && (
-          <div className="text-sm text-gray-500">
-            {selectedStudents.length} student
-            {selectedStudents.length !== 1 && "s"} selected
-          </div>
-        )}
+        </div>
+        <div>
+          {(selectedFilter !== "none" || selectedGroupFilter !== "all") && (
+            <div className="text-sm text-gray-500">
+              Selected {selectedStudents.length} student
+              {selectedStudents.length !== 1 && "s"}
+              {selectedGroupFilter !== "all" &&
+                ` in ${getGroupName(selectedGroupFilter)}`}{" "}
+              {selectedFilter !== "none" && `by ${selectedFilter}`}
+            </div>
+          )}
+          {isMultiSelectMode && (
+            <div className="text-sm text-gray-500">
+              {selectedStudents.length} student
+              {selectedStudents.length !== 1 && "s"} selected
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Student Grid */}
-      <div className="grid grid-cols-3 gap-5 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8">
+      <div className="grid grid-cols-5 gap-2 md:grid-cols-4 lg:grid-cols-4 lg:gap-5 xl:grid-cols-6 2xl:grid-cols-8">
         {students.map((student) => {
           const isSelected = selectedStudents.some(
             (s) => s.student_id === student.student_id,
@@ -654,7 +659,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
               )}
 
               {/* Student Number Tooltip */}
-              <div className="absolute left-1 top-1 text-sm">
+              <div className="text-2xs absolute left-1 top-1 md:text-sm">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger className="cursor-help">
@@ -674,12 +679,12 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                     <Button
                       variant={"ghost"}
                       size={"icon"}
-                      className="h-fit w-fit p-2"
+                      className="h-fit w-fit p-1 md:p-2"
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent card click when opening dropdown
                       }}
                     >
-                      <EllipsisVertical size={16} />{" "}
+                      <EllipsisVertical className="h-2 w-2 md:h-4 md:w-4" />{" "}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
@@ -706,11 +711,11 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
               </div>
 
               {/* Points Tooltip */}
-              <div className="absolute right-2 top-2 flex flex-row items-center justify-center">
+              <div className="absolute right-1 top-1 flex flex-row items-center justify-center md:right-2 md:top-2">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger className="cursor-help">
-                      <div className="flex h-7 w-fit min-w-6 items-center justify-center rounded-full bg-primary p-2 text-base text-background">
+                      <div className="text-2xs flex h-4 w-fit min-w-6 items-center justify-center rounded-full bg-primary p-0.5 text-background md:h-7 md:p-2 md:text-base">
                         {student.points ?? 0}
                       </div>
                     </TooltipTrigger>
@@ -726,8 +731,8 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger className="cursor-help">
-                      <div className="flex flex-row items-center justify-center">
-                        <BookOpen size={16} className="mr-1" />
+                      <div className="text-2xs flex flex-row items-center justify-center md:text-base">
+                        <BookOpen className="mr-1 h-2 w-2 md:h-4 md:w-4" />
                         {student.student_reading_level}
                       </div>
                     </TooltipTrigger>
@@ -739,10 +744,10 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
               </div>
 
               {/* Student Name */}
-              <CardHeader className="pt-8">
-                <CardTitle className="text-center text-base md:text-xl">
-                  {student.student_name_en.split(" ").pop()}
-                  <div className="text-xs">
+              <CardHeader className="p-1 pt-5 md:p-6 md:pt-8">
+                <CardTitle className="flex flex-col text-center text-sm md:text-xl">
+                  <div>{student.student_name_en.split(" ").pop()}</div>
+                  <div className="text-3xs md:text-xs">
                     {student.student_sex === "male" ? "Boy" : "Girl"}
                   </div>
                 </CardTitle>

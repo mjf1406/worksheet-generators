@@ -37,7 +37,7 @@ import NumberInput from "~/components/ui/NumberInput";
 import type { Behavior, RewardItem } from "~/server/db/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CreateRewardItemDialog, {
-  RewardItemData,
+  type RewardItemData,
 } from "~/app/(user_logged_in)/tools/points/components/CreateRewardItemDialog";
 import {
   addDefaultRewardItems,
@@ -241,9 +241,9 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
 
   const mainContent = (
     <>
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold">Selected Students:</h3>
-        <div className="grid grid-cols-2">
+      <div className="mb-4 pl-4 pr-4">
+        <h3 className="text-base font-semibold">Selected Students:</h3>
+        <div className="grid grid-cols-4 overflow-x-clip text-xs md:text-sm">
           {sortedSelectedStudents.map((student) => (
             <div className="col-span-1" key={student.student_id}>
               {student.student_name_en}

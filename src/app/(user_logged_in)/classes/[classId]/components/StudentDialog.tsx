@@ -54,6 +54,7 @@ interface StudentDialogProps {
 
 const behaviorFormSchema = z.object({
   name: z.string().nonempty("Name is required"),
+  title: z.string().optional(),
   point_value: z.preprocess(
     (val) => parseInt(val as string, 10),
     z.number().int(),
@@ -66,6 +67,9 @@ const behaviorFormSchema = z.object({
     })
     .nullable(),
   color: z.string(),
+  class_id: z.string().optional(),
+  achievements: z.array(z.string()).optional(),
+  isPositive: z.boolean().optional(),
 });
 
 export type BehaviorData = z.infer<typeof behaviorFormSchema>;

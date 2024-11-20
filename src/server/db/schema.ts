@@ -166,3 +166,44 @@ export const assigners = sqliteTable('assigners',
         }
     }
 )
+
+// TODO: big refactor here for the two new tables below
+
+// export const absent_dates = sqliteTable('absent_dates',
+//     {
+//         id: text('id').notNull().primaryKey(),
+//         user_id: text('user_id').notNull().references(() => users.user_id),
+//         class_id: text('class_id').notNull().references(() => classes.class_id),
+//         student_id: text('student_id').notNull().references(() => students.student_id),
+//         date: text('date').notNull(), // YYYY-MM-DD which is handled client side to ensure it adheres to the local time zone
+//         created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+//         updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+//     },
+//     (table) => {
+//         return {
+//             absent_dates_by_class_id_idx: index("absent_dates_by_class_id_idx").on(table.class_id),
+//             absent_dates_by_student_id_idx: index("absent_dates_by_student_id_idx").on(table.student_id),
+//             absent_dates_by_user_id_idx: index("absent_dates_by_user_id_idx").on(table.user_id)
+//         }
+//     }
+// )
+
+// export const points = sqliteTable('points',
+//     {
+//         id: text('id').notNull().primaryKey(),
+//         user_id: text('user_id').notNull().references(() => users.user_id),
+//         class_id: text('class_id').notNull().references(() => classes.class_id),
+//         student_id: text('student_id').notNull().references(() => students.student_id),
+//         type: text('type', { enum: ["positive", "negative", "redemption"] }).notNull(),
+//         number_of_points: integer('number_of_points').notNull(),
+//         created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+//         updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+//     },
+//     (table) => {
+//         return {
+//             points_by_class_id_idx: index("points_by_class_id_idx").on(table.class_id),
+//             points_by_student_id_idx: index("points_by_student_id_idx").on(table.student_id),
+//             points_by_user_id_idx: index("points_by_user_id_idx").on(table.user_id)
+//         }
+//     }
+// )

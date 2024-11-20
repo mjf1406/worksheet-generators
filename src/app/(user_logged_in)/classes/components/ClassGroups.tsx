@@ -302,10 +302,9 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
           onGroupAdded={handleGroupAdded}
         />
       </div>
-      <div className="grid grid-cols-2 gap-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7">
+      <div className="grid grid-cols-3 gap-2 md:grid-cols-3 md:gap-5 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7">
         {groups.map((group) => (
           <Card key={group.group_id} className="relative col-span-1">
-            {/* DropdownMenu is outside the Link to prevent event propagation issues */}
             <div className="absolute right-0 top-1 z-10">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -327,18 +326,17 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            {/* Link only wraps the CardHeader and CardDescription */}
             <Link
               href={{
                 pathname: `/classes/${courseData.class_id}/${group.group_id}`,
               }}
-              className="block p-4"
+              className="block p-2 md:p-4"
             >
               <CardHeader className="-px-2">
-                <CardTitle className="text-center text-xl">
+                <CardTitle className="text-center text-sm md:text-xl">
                   {group.group_name}
                 </CardTitle>
-                <CardDescription className="flex w-full flex-row items-center justify-center gap-2 text-center text-xs">
+                <CardDescription className="text-2xs flex w-full flex-row items-center justify-center gap-2 text-center md:text-xs">
                   <div>{group.students.length} students</div>
                 </CardDescription>
               </CardHeader>

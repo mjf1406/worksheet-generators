@@ -80,15 +80,6 @@ This is the collection of worksheet generators that I have created as I needed t
       - [x] user can edit
       - [x] user can delete
       - [ ] teacher is notified when a student has a negative behavior streak
-      - [ ] behavior dashboards: what should be shown?
-    - [ ] redemption items
-      - [x] user can create, setting cost, name, and icon
-      - [x] user can delete
-      - [x] user can edit
-      - [ ] redemption dashboard: what should I show?
-    - [x] redeeming items
-      - [x] user can select multiple students to redeem the same thing simultaneously
-      - [x] user can select quantity of redemption item to apply to selected students
 - tool: Attendance
   - [x] stores presence and absence based on user's local time zone
   - [ ] prevents absent students from being awarded points
@@ -96,15 +87,58 @@ This is the collection of worksheet generators that I have created as I needed t
   - [ ] prevents absent students from redeeming points
 - Groups: need to optimistically update the cached data
 - when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
-- want to add a top 5 point earners somewhere, both current and all-time
-- want to add top 5 point spenders
 - BUG: fixed a bug that would cause the mouse to click through the sorting dropdown. I have spent nearly 2 hours of this POS bug and I cannot fix it. I want to die. wtf...
+- tools: Points -- move the current open class page to this page
+- my classes: Open -- make this a dashboard for the teacher to see
+  - behavior streaks
+    - positive
+    - negative
+  - titles
+    - titles are set by the user for each behavior/redemption item
+    - titles are displayed publicly somewhere, perhaps on the points screen and for the student to see on their page when they login
+    - only titles that the teacher sets are displayed
+    - negative titles are NEVER public, but positive titles are always public
+    - e.g., **the noisiest student** would be the student who has received the most Noisy negative behaviors
+    - e.g., **the most helpful** would be the student who has received the most Helping Others behaviors
+    - e.g., **the most generous** would be the student who has redeemed the most Gifted to Classmates
+  - achievements
+    - given to students once they reach certain thresholds for each behavior/redemption item
+    - if they have the achievement, a badge is displayed on their profile
+    - thresholds and achievement names can be added when creating a behavior/redemption item
+      - e.g. for Helping Others
+        - 5: Generous Giraffe
+        - 10: Generous Gerbil
+        - 15: Generous Goose
+        - 20: Generous Gorilla
+        - 25: Generous Grizzly
+      - e.g. for Gifted to Classmates
+        - 5: Caring Caterpillar
+        - 10: Supportive Sparrow
+        - 15: Helpful Honeybee
+        - 20: Benevolent Butterfly
+        - 25: Compassionate Crane
+  - point leaderboard
+    - current points
+    - earned points
+    - redeemed points
+    - negative points
+  - assigner dashboard
+    - quantity and date for Round-Robin
+    - history for random and dates
+    - just all the data for seats, like where they have sat and what dates, who they've sat next to, the teams they've been on, etc.
+  - UI: Student-facing student profile -- clicking on the student reveals their profile where all of the above is shown, but also extra info just for the teacher, however there will be a button that opens a full-screen modal of the info that's safe to show the student and displays it in a more student-friendly way
 
 ## Change Log
 
+2024/11/20
+
+- UI: fixed poor padding on apply behavior dialog
+- UX: when submitting a behavior through the apply button, it now disables multi-select mode
+- UI: reduced the size of many elements in student and group grids when on mobile
+
 2024/11/15
 
-- UX: add more icons
+- UX: added more icons
 
 2024/11/14
 
