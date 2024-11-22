@@ -20,8 +20,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import type { IconName, IconPrefix } from "@fortawesome/fontawesome-svg-core";
 import type { BehaviorData } from "./StudentDialog";
-import { Switch } from "~/components/ui/switch"; // Assuming you have a Switch component
-import { Label } from "~/components/ui/label"; // Assuming you have a Label component
+import { Label } from "~/components/ui/label";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
+import { CircleHelp } from "lucide-react";
 
 interface CreateBehaviorDialogProps {
   open: boolean;
@@ -33,11 +39,7 @@ interface CreateBehaviorDialogProps {
 const behaviorFormSchema = z.object({
   name: z.string().nonempty("Name is required"),
   title: z.string().optional(),
-  point_value: z.preprocess(
-    (val) => parseInt(val as string, 10),
-    z.number().int().positive("Point value must be a positive integer"),
-  ),
-  isPositive: z.boolean(),
+  point_value: z.number().int(),
   description: z.string().optional(),
   icon: z
     .object({
@@ -49,13 +51,10 @@ const behaviorFormSchema = z.object({
   achievements: z
     .array(
       z.object({
-        threshold: z.preprocess(
-          (val) => parseInt(val as string, 10),
-          z
-            .number()
-            .int()
-            .nonnegative("Threshold must be a non-negative integer"),
-        ),
+        threshold: z
+          .number()
+          .int()
+          .nonnegative("Threshold must be a non-negative integer"),
         name: z.string().nonempty("Achievement name is required"),
       }),
     )
@@ -84,7 +83,6 @@ const CreateBehaviorDialog: React.FC<CreateBehaviorDialogProps> = ({
       name: "",
       title: "",
       point_value: 1,
-      isPositive: true,
       description: "",
       icon: undefined,
       color: "#000000",
@@ -102,19 +100,17 @@ const CreateBehaviorDialog: React.FC<CreateBehaviorDialogProps> = ({
   });
 
   const onSubmit = async (data: BehaviorFormData) => {
-    const pointValue = data.isPositive ? data.point_value : -data.point_value;
     const newBehavior: BehaviorData = {
       name: data.name,
       title: data.title ?? undefined,
-      point_value: pointValue,
+      point_value: data.point_value, // Use point_value directly
       description: data.description ?? undefined,
       icon: data.icon
         ? { prefix: data.icon.prefix, name: data.icon.name }
         : null,
       color: data.color,
       class_id: classId,
-      // achievements: data.achievements ?? undefined,
-      isPositive: data.isPositive,
+      achievements: data.achievements ?? undefined,
     };
     try {
       await onCreateBehavior(newBehavior);
@@ -147,11 +143,24 @@ const CreateBehaviorDialog: React.FC<CreateBehaviorDialogProps> = ({
               )}
             </div>
             <div>
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title" className="mb-2 flex items-center gap-1">
+                Title{" "}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <CircleHelp size={16} className="cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p className="max-w-md">
+                        Titles are awarded to the first place student and
+                        displayed publicly if the title is for a positive
+                        behavior or reward item.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </Label>
               <Input id="title" placeholder="Title" {...register("title")} />
-              <p className="mt-1 text-sm text-gray-500">
-                Titles are displayed publicly if positive.
-              </p>
               {errors.title && (
                 <p className="mt-1 text-sm text-red-500">
                   {errors.title.message}
@@ -160,25 +169,22 @@ const CreateBehaviorDialog: React.FC<CreateBehaviorDialogProps> = ({
             </div>
           </div>
 
-          {/* Point Value and Behavior Type */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <Label htmlFor="point_value">
-                Point Value<span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="point_value"
-                placeholder="Point Value"
-                type="number"
-                min={1}
-                {...register("point_value", { valueAsNumber: true })}
-              />
-              {errors.point_value && (
-                <p className="mt-1 text-sm text-red-500">
-                  {errors.point_value.message}
-                </p>
-              )}
-            </div>
+          {/* Point Value */}
+          <div>
+            <Label htmlFor="point_value">
+              Point Value<span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="point_value"
+              placeholder="Point Value"
+              type="number"
+              {...register("point_value", { valueAsNumber: true })}
+            />
+            {errors.point_value && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.point_value.message}
+              </p>
+            )}
           </div>
 
           {/* Description */}
@@ -241,7 +247,9 @@ const CreateBehaviorDialog: React.FC<CreateBehaviorDialogProps> = ({
                   <Input
                     type="number"
                     placeholder="Threshold"
-                    {...register(`achievements.${index}.threshold` as const)}
+                    {...register(`achievements.${index}.threshold` as const, {
+                      valueAsNumber: true, // Ensure threshold is treated as number
+                    })}
                   />
                   {errors.achievements?.[index]?.threshold && (
                     <p className="mt-1 text-sm text-red-500">

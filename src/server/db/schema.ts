@@ -61,13 +61,14 @@ export const groups = sqliteTable('groups',
 export const reward_items = sqliteTable('reward_items',
     {
         item_id: text('item_id').notNull().primaryKey(),
+        class_id: text('class_id').references(() => classes.class_id),
+        user_id: text('user_id').notNull().references(() => users.user_id),
         price: integer('price', { mode: 'number' }).notNull(),
         name: text('name').notNull(),
         description: text('description'),
         icon: text('icon'),
-        class_id: text('class_id').references(() => classes.class_id),
-        user_id: text('user_id').notNull().references(() => users.user_id),
         type: text('type', { enum: ["solo", "group", "class"] }).notNull(),
+        title: text('title'),
         created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
         updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
     },
@@ -82,13 +83,14 @@ export const reward_items = sqliteTable('reward_items',
 export const behaviors = sqliteTable('behaviors', 
     {
         behavior_id: text('behavior_id').notNull().primaryKey(),
+        class_id: text('class_id').notNull().references(() => classes.class_id),
+        user_id: text('user_id').notNull().references(() => users.user_id),
         name: text('name').notNull(),
         point_value: integer('point_value', { mode: 'number' }).notNull(),
         description: text('description'),
         icon: text('icon'),
         color: text('color'),
-        class_id: text('class_id').references(() => classes.class_id),
-        user_id: text('user_id').notNull().references(() => users.user_id),
+        title: text('title'),
         created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
         updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
     },
@@ -100,6 +102,25 @@ export const behaviors = sqliteTable('behaviors',
     }
 )
 // Junction Tables
+
+export const achievements = sqliteTable('achievements',
+    {
+      id: text('id').notNull().primaryKey(),
+      behavior_id: text('behavior_id').references(() => behaviors.behavior_id),
+      reward_item_id: text('reward_item_id').references(() => reward_items.item_id),
+      class_id: text('class_id').notNull().references(() => classes.class_id),
+      user_id: text('user_id').notNull().references(() => users.user_id),
+      threshold: integer('threshold').notNull(),
+      name: text('name').notNull(),
+      created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+      updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+    },
+    (table) => ({
+      behaviorIdIdx: index('idx_achievements_behavior_id').on(table.behavior_id),
+      classIdIdx: index('idx_achievements_class_id').on(table.class_id),
+      userIdIdx: index('idx_achievements_user_id').on(table.user_id),
+    })
+  );
 
 export const student_classes = sqliteTable('student_classes',
     {

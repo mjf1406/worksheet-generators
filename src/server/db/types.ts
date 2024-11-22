@@ -163,24 +163,27 @@ export type RandomEvent = {
 }
   
   // New Behavior type
-export  type Behavior = {
+export type Behavior = {
     behavior_id: string;
     name: string;
+    title?: string | null;
     point_value: number;
-    description?: string;
-    icon?: string;
+    description?: string | null;
+    icon?: string | null;
     color?: string;
     class_id?: string;
     user_id: string;
     created_date: string;
     updated_date: string;
-  };
+    achievements?: Achievement[];
+  }
   
   // New RewardItem type
 export type RewardItem = {
     item_id: string;
     price: number;
     name: string;
+    title?: string | null;
     description?: string | null;
     icon?: string | null;
     class_id?: string;
@@ -198,11 +201,11 @@ export type RewardItem = {
     date: string; // Format: YYYY-MM-DD
     created_date: string; // ISO date string
     updated_date: string; // ISO date string
-  }
+}
   
 export type PointType = 'positive' | 'negative' | 'redemption';
 
-  export type Point = {
+export type Point = {
     id: string;
     user_id: string;
     class_id: string;
@@ -213,5 +216,21 @@ export type PointType = 'positive' | 'negative' | 'redemption';
     number_of_points: number;
     created_date: string; // ISO date string
     updated_date: string; // ISO date string
-  }
+}
+
+export type Achievement = {
+    id: string;
+    behavior_id: string | null;
+    reward_item_id: string | null;
+    class_id: string;
+    user_id: string;
+    threshold: number;
+    name: string;
+    created_date: string;
+    updated_date: string;
+};
+
+export type NewAchievement = Omit<Achievement, 'created_date' | 'updated_date'>;
+
+export type UpdateAchievement = Partial<Omit<Achievement, 'id' | 'created_date' | 'updated_date'>>;
   

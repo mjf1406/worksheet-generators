@@ -1,0 +1,1 @@
+ALTER TABLE `reward_items` ADD `title` text;

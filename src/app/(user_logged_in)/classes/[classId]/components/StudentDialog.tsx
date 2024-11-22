@@ -70,8 +70,17 @@ const behaviorFormSchema = z.object({
     .nullable(),
   color: z.string(),
   class_id: z.string().optional(),
-  achievements: z.array(z.string()).optional(),
-  isPositive: z.boolean().optional(),
+  achievements: z
+    .array(
+      z.object({
+        threshold: z
+          .number()
+          .int()
+          .nonnegative("Threshold must be a non-negative integer"),
+        name: z.string().nonempty("Achievement name is required"),
+      }),
+    )
+    .optional(),
 });
 
 export type BehaviorData = z.infer<typeof behaviorFormSchema>;
@@ -99,22 +108,23 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
     (student) => student.student_id === studentId,
   );
 
+  // Categorize behaviors based on point_value
   const positiveBehaviors = courseData?.behaviors?.filter(
-    (behavior) => behavior.point_value >= 1,
+    (behavior) => behavior.point_value > 0,
   ) as Behavior[];
   const negativeBehaviors = courseData?.behaviors?.filter(
-    (behavior) => behavior.point_value <= -1,
+    (behavior) => behavior.point_value < 0,
   ) as Behavior[];
   const rewardItems = courseData?.reward_items as RewardItem[];
 
   const negativePoints =
     studentData?.point_history
-      ?.filter((record) => record.number_of_points <= 0)
+      ?.filter((record) => record.number_of_points < 0)
       .reduce((sum, record) => sum + record.number_of_points, 0) ?? 0;
 
   const positivePoints =
     studentData?.point_history
-      ?.filter((record) => record.number_of_points >= 1)
+      ?.filter((record) => record.number_of_points > 0)
       .reduce((sum, record) => sum + record.number_of_points, 0) ?? 0;
 
   const redemptionSum =
@@ -139,11 +149,16 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
       if (result.success) {
         await queryClient.invalidateQueries(classesOptions);
         onClose();
+        toast({
+          title: "Success",
+          description: "Behavior applied successfully.",
+        });
       } else {
         console.error("Error applying behavior:", result.message);
         toast({
           title: "Error",
           description: `Failed to apply behavior: ${result.message}! Please try again.`,
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -151,11 +166,14 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
       toast({
         title: "Error",
         description: `An unexpected error occurred while applying the behavior. Please try again.`,
+        variant: "destructive",
       });
     } finally {
       setLoadingBehaviorId(null);
     }
   };
+
+  // Updated handleCreateBehavior to reflect success toast
   const handleCreateBehavior = async (
     newBehavior: BehaviorData,
   ): Promise<void> => {
@@ -165,11 +183,16 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
       if (result.success) {
         await queryClient.invalidateQueries(classesOptions);
         setIsCreateBehaviorDialogOpen(false);
+        toast({
+          title: "Success",
+          description: result.message,
+        });
       } else {
         console.error("Error creating behavior:", result.message);
         toast({
           title: "Error",
           description: `Failed to create behavior: ${result.message}! Please try again.`,
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -177,6 +200,7 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
       toast({
         title: "Error",
         description: `An unexpected error occurred while creating the behavior. Please try again.`,
+        variant: "destructive",
       });
     }
   };
@@ -190,6 +214,10 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
       if (result.success) {
         await queryClient.invalidateQueries(classesOptions);
         setIsCreateRewardItemDialogOpen(false);
+        toast({
+          title: "Success",
+          description: result.message,
+        });
       } else {
         console.error("Error creating reward item:", result.message);
         toast({
@@ -223,11 +251,16 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
       if (result.success) {
         await queryClient.invalidateQueries(classesOptions);
         onClose();
+        toast({
+          title: "Success",
+          description: "Reward item redeemed successfully.",
+        });
       } else {
         console.error("Error applying reward item:", result.message);
         toast({
           title: "Error",
           description: `Failed to redeem reward item: ${result.message}! Please try again.`,
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -235,6 +268,7 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
       toast({
         title: "Error",
         description: `An unexpected error occurred while redeeming the reward item. Please try again.`,
+        variant: "destructive",
       });
     } finally {
       setLoadingRewardItemId(null);

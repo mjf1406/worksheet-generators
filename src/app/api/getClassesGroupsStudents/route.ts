@@ -63,6 +63,7 @@ export type RewardItemData = {
   item_id: string;
   price: number;
   name: string;
+  title?: string | null;
   description: string | null;
   icon: string | null;
   class_id: string | null;
@@ -74,6 +75,7 @@ export type RewardItemData = {
 
 export type BehaviorData = {
   behavior_id: string;
+  title?: string | null;
   name: string;
   point_value: number;
   description: string | null;
@@ -222,6 +224,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
             const redemptionHistory: RedemptionRecord[] = studentPoints
               .filter((point) => point.type === 'redemption')
               .map((point) => ({
+                // TODO: update this to be in accordance with the new table
                 item_id: point.reward_item_id!,
                 date: point.created_date,
                 quantity: point.number_of_points,
@@ -298,6 +301,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
           item_id: reward_items.item_id,
           price: reward_items.price,
           name: reward_items.name,
+          title: reward_items.title,
           description: reward_items.description,
           icon: reward_items.icon,
           class_id: reward_items.class_id,
@@ -320,6 +324,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         .select({
           behavior_id: behaviors.behavior_id,
           name: behaviors.name,
+          title: behaviors.title,
           point_value: behaviors.point_value,
           description: behaviors.description,
           icon: behaviors.icon,

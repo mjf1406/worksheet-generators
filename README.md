@@ -96,7 +96,8 @@ This is the collection of worksheet generators that I have created as I needed t
     - titles are set by the user for each behavior/redemption item
     - titles are displayed publicly somewhere, perhaps on the points screen and for the student to see on their page when they login
     - only titles that the teacher sets are displayed
-    - negative titles are NEVER public, but positive titles are always public
+    - title are only displayed publically if the teacher checks the box. Reward Item and Positive Behavior titles are displayed by default.
+      - under the title input, put a checkbox that sets whether this title is public
     - e.g., **the noisiest student** would be the student who has received the most Noisy negative behaviors
     - e.g., **the most helpful** would be the student who has received the most Helping Others behaviors
     - e.g., **the most generous** would be the student who has redeemed the most Gifted to Classmates
@@ -132,11 +133,13 @@ This is the collection of worksheet generators that I have created as I needed t
     - negative points
     - awarded points
     - total points
+    - streaks
 
 ## Change Log
 
 2024/11/22
 
+- UX: title can be input for behaviors, but DO NOT currently function, i.e. they are not granted yet
 - UX: basis teacher-facing student dashboard implemented
 - DB: added points and absent_dates tables
 - UI: turned the point and redemption history into tables

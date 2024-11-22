@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { AIBadge } from "~/components/AIBadge";
 import type { ItemGridData } from "~/components/ItemGrid";
-import { Behavior, RewardItem } from "~/server/db/types";
+import type { Behavior, RewardItem } from "~/server/db/types";
 
 export const APP_NAME = "ClassQuest";
 export const GRADES = [
@@ -313,6 +313,7 @@ export const DEFAULT_REDEMPTION_ITEMS: Omit<
     price: 4,
     icon: "fas book-medical",
     type: "solo",
+    title: "Homework Handler",
   },
   {
     name: "MIndfulness Minutes",
@@ -320,6 +321,7 @@ export const DEFAULT_REDEMPTION_ITEMS: Omit<
     price: 10,
     icon: "fas brain",
     type: "solo",
+    title: "Mindfulness Mediator",
   },
   {
     name: "Music Master",
@@ -327,6 +329,7 @@ export const DEFAULT_REDEMPTION_ITEMS: Omit<
     price: 10,
     icon: "fas music",
     type: "solo",
+    title: "Music Maestro",
   },
   {
     name: "Snack Session",
@@ -334,6 +337,7 @@ export const DEFAULT_REDEMPTION_ITEMS: Omit<
     price: 10,
     icon: "fas utensils",
     type: "solo",
+    title: "Snack Satisfier",
   },
   {
     name: "Seat Swap",
@@ -341,6 +345,7 @@ export const DEFAULT_REDEMPTION_ITEMS: Omit<
     price: 20,
     icon: "fas chair",
     type: "solo",
+    title: "Seat Swapper",
   },
   {
     name: "Ghostly Gig",
@@ -348,6 +353,7 @@ export const DEFAULT_REDEMPTION_ITEMS: Omit<
     price: 20,
     icon: "fas ghost",
     type: "solo",
+    title: "Ghostly Guest",
   },
   {
     name: "Teacher Treat",
@@ -355,6 +361,7 @@ export const DEFAULT_REDEMPTION_ITEMS: Omit<
     price: 20,
     icon: "fas cookie-bite",
     type: "solo",
+    title: "Teacher Treat-er",
   },
   {
     name: "Super Seat",
@@ -362,6 +369,7 @@ export const DEFAULT_REDEMPTION_ITEMS: Omit<
     price: 25,
     icon: "fas couch",
     type: "solo",
+    title: "Super Seater",
   },
   {
     name: "Freedom Fun",
@@ -370,6 +378,7 @@ export const DEFAULT_REDEMPTION_ITEMS: Omit<
     price: 30,
     icon: "fas champagne-glasses",
     type: "group",
+    title: "Freedom Facilitator",
   },
 ];
 
@@ -384,6 +393,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 5,
     icon: "fas newspaper",
     color: "#007BFF",
+    title: "Materials Master",
   },
   {
     name: "HW Turned in On Time",
@@ -391,6 +401,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 5,
     icon: "fas check-circle",
     color: "#28A745",
+    title: "Homework Honorer",
   },
   {
     name: "Helping Others",
@@ -398,6 +409,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 3,
     icon: "fas hands-helping",
     color: "#20C997",
+    title: "Helping Handler",
   },
   {
     name: "Material Check",
@@ -406,6 +418,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 1,
     icon: "fas clipboard-check",
     color: "#FD7E14",
+    title: "Material Manager",
   },
   {
     name: "Participating",
@@ -414,6 +427,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 1,
     icon: "fas comments",
     color: "#FFC107",
+    title: "Participation Promoter",
   },
   {
     name: "Project On Time",
@@ -421,6 +435,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 5,
     icon: "fas project-diagram",
     color: "#6F42C1",
+    title: "Project Pro",
   },
   {
     name: "RAZ Level Up",
@@ -428,6 +443,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 10,
     icon: "fas level-up-alt",
     color: "#FFD700",
+    title: "Reading Riser",
   },
   {
     name: "Reminded Politely",
@@ -436,6 +452,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 2,
     icon: "fas handshake",
     color: "#17A2B8",
+    title: "Reminder Regulator",
   },
   {
     name: "Signed Work",
@@ -443,6 +460,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 5,
     icon: "fas signature",
     color: "#E83E8C",
+    title: "Signature Specialist",
   },
   {
     name: "Teamwork",
@@ -451,6 +469,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 3,
     icon: "fas users",
     color: "#17A2B8",
+    title: "Teamwork Titan",
   },
   {
     name: "Vocab. Log Word, x1",
@@ -458,6 +477,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 3,
     icon: "fas book",
     color: "#800000",
+    title: "Vocabulary Virtuoso",
   },
   {
     name: "Job Well Done",
@@ -465,6 +485,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 5,
     icon: "fas thumbs-up",
     color: "#32CD32",
+    title: "Job Journeyman",
   },
   {
     name: "On Task",
@@ -472,6 +493,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: 1,
     icon: "fas tasks",
     color: "#6C757D",
+    title: "On-Task Operator",
   },
   {
     name: "Chapel Disruption",
@@ -479,6 +501,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: -3,
     icon: "fas times-circle",
     color: "#DC3545",
+    title: "Chapel Chaotic",
   },
   {
     name: "Konglish",
@@ -487,6 +510,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: -1,
     icon: "fas language",
     color: "#8B0000",
+    title: "Konglish Kollider",
   },
   {
     name: "Non-English",
@@ -494,6 +518,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: -2,
     icon: "fas language",
     color: "#8B0000",
+    title: "Non-English Nuisance",
   },
   {
     name: "Noisy",
@@ -501,6 +526,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: -2,
     icon: "fas volume-mute",
     color: "#DC3545",
+    title: "Noisy Nagger",
   },
   {
     name: "Running",
@@ -508,6 +534,7 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: -3,
     icon: "fas running",
     color: "#8B0000",
+    title: "Running Rebel",
   },
   {
     name: "Off Task",
@@ -516,5 +543,6 @@ export const DEFAULT_BEHAVIORS: Omit<
     point_value: -2,
     icon: "fas ban",
     color: "#DC3545",
+    title: "Off-Task Obstructor",
   },
 ];
