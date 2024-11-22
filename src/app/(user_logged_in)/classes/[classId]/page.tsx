@@ -6,6 +6,9 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { classesOptions } from "~/app/api/queryOptions";
 import StudentGrid from "./components/StudentGrid";
 import ClassGroupsComponent from "../components/ClassGroups";
+import { Button } from "~/components/ui/button";
+import Link from "next/link";
+import { LayoutDashboard } from "lucide-react";
 
 interface Params {
   classId: string;
@@ -32,6 +35,12 @@ export default function ClassDetails({ params }: { params: Params }) {
     <ContentLayout title={courseData.class_name ?? ""}>
       <div className="container flex flex-col items-center gap-4 px-4 py-4">
         <div className="flex w-full flex-col gap-4">
+          <Button asChild variant="outline" className="w-fit">
+            <Link href={`/classes/${courseData.class_id}/dashboard`}>
+              <LayoutDashboard className="mr-2 h-5 w-5" />{" "}
+              {courseData.class_name} Dashboard
+            </Link>
+          </Button>
           <ClassGroupsComponent class={courseData} />
           <div className="text-3xl">Students</div>
           {courseData.students && courseData.groups && (

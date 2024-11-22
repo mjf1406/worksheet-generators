@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { db } from '~/server/db';
 import { auth } from '@clerk/nextjs/server';
-import { eq, and, or, isNull } from 'drizzle-orm';
+import { eq, and, or, isNull, inArray } from 'drizzle-orm';
 import {
   classes,
   teacher_classes,
@@ -11,8 +11,11 @@ import {
   student_classes,
   reward_items,
   behaviors,
+  points,
+  absent_dates,
 } from '~/server/db/schema';
-import type { PointRecord, RedemptionRecord } from '~/server/db/types';
+import type { Point, PointRecord, RedemptionRecord } from '~/server/db/types';
+import { InferModel } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,9 +54,9 @@ export type StudentData = {
   student_email: string | null;
   enrollment_date: string | null;
   points?: number;
-  point_history?: PointRecord[];
+  point_history?: Point[];
   absent_dates?: string[];
-  redemption_history: RedemptionRecord[],
+  redemption_history: RedemptionRecord[];
 };
 
 export type RewardItemData = {
@@ -75,6 +78,7 @@ export type BehaviorData = {
   point_value: number;
   description: string | null;
   icon: string | null;
+  color: string | null;
   class_id: string | null;
   user_id: string;
   created_date: string;
@@ -102,45 +106,15 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
 
   const classesWithDetails: ClassData[] = await Promise.all(
     classesData.map(async (classData) => {
+      // Fetch groups in the class
       const groupsData = await db
         .select()
         .from(groups)
         .where(eq(groups.class_id, classData.class_id))
         .all();
 
-      const groupsWithStudents = await Promise.all(
-        groupsData.map(async (group) => {
-          const studentsData = await db
-            .select({
-              student_id: students.student_id,
-              student_name_en: students.student_name_en,
-              student_name_alt: students.student_name_alt,
-              student_reading_level: students.student_reading_level,
-              student_grade: students.student_grade,
-              student_sex: students.student_sex,
-              student_number: students.student_number,
-              student_email: students.student_email,
-              enrollment_date: student_groups.enrollment_date,
-              points: student_classes.points,
-              point_history: student_classes.point_history,
-              absent_dates: student_classes.absent_dates,
-              redemption_history: student_classes.redemption_history,
-            })
-            .from(student_groups)
-            .innerJoin(students, eq(student_groups.student_id, students.student_id))
-            .innerJoin(student_classes, eq(student_classes.student_id, students.student_id))
-            .where(eq(student_groups.group_id, group.group_id))
-            .all();
-
-          return {
-            group_id: group.group_id,
-            group_name: group.group_name,
-            students: studentsData,
-          };
-        })
-      );
-
-      const allStudentsData = await db
+      // Fetch all students in the class (for allStudentsData)
+      const allStudentsDataRaw = await db
         .select({
           student_id: students.student_id,
           student_name_en: students.student_name_en,
@@ -151,15 +125,172 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
           student_number: students.student_number,
           student_email: students.student_email,
           enrollment_date: student_classes.enrollment_date,
-          points: student_classes.points,
-          point_history: student_classes.point_history,
-          absent_dates: student_classes.absent_dates,
-          redemption_history: student_classes.redemption_history,
         })
         .from(student_classes)
         .innerJoin(students, eq(student_classes.student_id, students.student_id))
         .where(eq(student_classes.class_id, classData.class_id))
         .all();
+
+      // Fetch all student IDs in the class
+      const studentIds = allStudentsDataRaw.map((student) => student.student_id);
+
+      // Fetch all points for students in the class
+      const pointsData = await db
+        .select()
+        .from(points)
+        .where(
+          and(eq(points.class_id, classData.class_id), inArray(points.student_id, studentIds))
+        )
+        .all();
+
+      // Organize points per student
+      const pointsByStudent = new Map<string, InferModel<typeof points>[]>();
+      pointsData.forEach((point) => {
+        const studentId = point.student_id;
+        if (!pointsByStudent.has(studentId)) {
+          pointsByStudent.set(studentId, []);
+        }
+        pointsByStudent.get(studentId)!.push(point);
+      });
+
+      // Fetch all absent dates for students in the class
+      const absentDatesData = await db
+        .select()
+        .from(absent_dates)
+        .where(
+          and(eq(absent_dates.class_id, classData.class_id), inArray(absent_dates.student_id, studentIds))
+        )
+        .all();
+
+      // Organize absent dates per student
+      const absentDatesByStudent = new Map<string, string[]>();
+      absentDatesData.forEach((absence) => {
+        const studentId = absence.student_id;
+        const date = absence.date;
+        if (!absentDatesByStudent.has(studentId)) {
+          absentDatesByStudent.set(studentId, []);
+        }
+        absentDatesByStudent.get(studentId)!.push(date);
+      });
+
+      // Process groups and their students
+      const groupsWithStudents = await Promise.all(
+        groupsData.map(async (group) => {
+          // Fetch students in the group
+          const studentsDataRaw = await db
+            .select({
+              student_id: students.student_id,
+              student_name_en: students.student_name_en,
+              student_name_alt: students.student_name_alt,
+              student_reading_level: students.student_reading_level,
+              student_grade: students.student_grade,
+              student_sex: students.student_sex,
+              student_number: students.student_number,
+              student_email: students.student_email,
+              enrollment_date: student_groups.enrollment_date,
+            })
+            .from(student_groups)
+            .innerJoin(students, eq(student_groups.student_id, students.student_id))
+            .where(eq(student_groups.group_id, group.group_id))
+            .all();
+
+          // Augment each student with points, point_history, absent_dates, redemption_history
+          const studentsData = studentsDataRaw.map((student) => {
+            const studentId = student.student_id;
+            const studentPoints = pointsByStudent.get(studentId) ?? [];
+
+            // Calculate total points
+            const totalPoints = studentPoints.reduce(
+              (sum, point) => sum + point.number_of_points,
+              0
+            );
+
+            // Build point history
+            const pointHistory: Omit<Point, "updated_date">[] = studentPoints.map((point) => ({
+              id: point.id,
+              user_id: point.user_id,
+              class_id: point.class_id,
+              student_id: point.student_id,
+              behavior_id: point.behavior_id,
+              reward_item_id: point.reward_item_id,
+              type: point.type,
+              number_of_points: point.number_of_points,
+              created_date: point.created_date,
+            }));
+
+            // Build redemption history
+            const redemptionHistory: RedemptionRecord[] = studentPoints
+              .filter((point) => point.type === 'redemption')
+              .map((point) => ({
+                item_id: point.reward_item_id!,
+                date: point.created_date,
+                quantity: point.number_of_points,
+              }));
+
+            // Get absent dates
+            const absentDates = absentDatesByStudent.get(studentId) ?? [];
+
+            return {
+              ...student,
+              points: totalPoints,
+              point_history: pointHistory,
+              absent_dates: absentDates,
+              redemption_history: redemptionHistory,
+            };
+          });
+
+          return {
+            group_id: group.group_id,
+            group_name: group.group_name,
+            students: studentsData,
+          };
+        })
+      );
+
+      // Augment all students data
+      const allStudentsData = allStudentsDataRaw.map((student) => {
+        const studentId = student.student_id;
+        const studentPoints = pointsByStudent.get(studentId) ?? [];
+
+        // Calculate total points
+        const totalPoints = studentPoints.reduce(
+          (sum, point) => sum + point.number_of_points,
+          0
+        );
+
+        // Build point history
+        const pointHistory: Omit<Point, "updated_date">[] = studentPoints.map((point) => ({
+          id: point.id,
+          user_id: point.user_id,
+          class_id: point.class_id,
+          student_id: point.student_id,
+          behavior_id: point.behavior_id,
+          reward_item_id: point.reward_item_id,
+          type: point.type,
+          number_of_points: point.number_of_points,
+          created_date: point.created_date,
+        }));
+
+        // Build redemption history
+        const redemptionHistory: RedemptionRecord[] = studentPoints
+          .filter((point) => point.type === 'redemption')
+          .map((point) => ({
+            item_id: point.reward_item_id!,
+            date: point.created_date,
+            quantity: point.number_of_points,
+          }));
+
+        // Get absent dates
+        const absentDates = absentDatesByStudent.get(studentId) ?? [];
+
+        return {
+          ...student,
+          points: totalPoints,
+          point_history: pointHistory,
+          absent_dates: absentDates,
+          redemption_history: redemptionHistory,
+        };
+      });
 
       // Fetch reward items associated with the class and user
       const rewardItemsData = await db

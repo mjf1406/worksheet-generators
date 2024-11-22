@@ -189,3 +189,29 @@ export type RewardItem = {
     created_date?: string;
     updated_date?: string;
   };
+
+  export type AbsentDate = {
+    id: string;
+    user_id: string;
+    class_id: string;
+    student_id: string;
+    date: string; // Format: YYYY-MM-DD
+    created_date: string; // ISO date string
+    updated_date: string; // ISO date string
+  }
+  
+export type PointType = 'positive' | 'negative' | 'redemption';
+
+  export type Point = {
+    id: string;
+    user_id: string;
+    class_id: string;
+    student_id: string;
+    behavior_id?: string | null;
+    reward_item_id?: string | null;
+    type: PointType;
+    number_of_points: number;
+    created_date: string; // ISO date string
+    updated_date: string; // ISO date string
+  }
+  

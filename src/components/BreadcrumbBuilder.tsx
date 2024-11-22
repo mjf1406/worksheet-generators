@@ -30,7 +30,7 @@ import {
   screensData,
 } from "~/lib/constants";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { classesOptions } from "~/app/api/queryOptions";
+import { classesOptions } from "~/app/api/queryOptions"; // Ensure students are part of classesData
 
 export function BreadcrumbBuilder() {
   const pathname = usePathname();
@@ -69,6 +69,49 @@ export function BreadcrumbBuilder() {
         if (matchedGroup) {
           displayName = matchedGroup.group_name;
         }
+      }
+    }
+
+    // Check if this is a student segment
+    if (segment.startsWith("student_")) {
+      const studentId = segment;
+      // Traverse coursesData to find the student
+      let matchedStudentName = null;
+
+      for (const course of coursesData) {
+        // Assuming students are nested within groups or directly under course
+        // Adjust the traversal based on your actual data structure
+        if (course.students) {
+          const student = course.students.find(
+            (s) => s.student_id === studentId,
+          );
+          if (student) {
+            matchedStudentName = student.student_name_en;
+            break;
+          }
+        }
+
+        if (course.groups) {
+          for (const group of course.groups) {
+            if (group.students) {
+              const student = group.students.find(
+                (s) => s.student_id === studentId,
+              );
+              if (student) {
+                matchedStudentName = student.student_name_en;
+                break;
+              }
+            }
+          }
+          if (matchedStudentName) break;
+        }
+      }
+
+      if (matchedStudentName) {
+        displayName = matchedStudentName;
+      } else {
+        // Optionally, handle fallback if student not found
+        displayName = "Student";
       }
     }
 

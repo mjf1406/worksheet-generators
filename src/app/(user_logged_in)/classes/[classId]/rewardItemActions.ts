@@ -4,11 +4,11 @@
 
 import { z } from 'zod';
 import { db } from '~/server/db';
-import { classes, reward_items, student_classes, teacher_classes } from '~/server/db/schema';
+import { classes, points, reward_items, student_classes, teacher_classes } from '~/server/db/schema';
 import { generateUuidWithPrefix } from '~/server/db/helperFunction';
 import { auth } from '@clerk/nextjs/server';
 import { eq, and } from 'drizzle-orm';
-import type { RedemptionRecord, RewardItem } from '~/server/db/types';
+import type { PointType, RedemptionRecord, RewardItem } from '~/server/db/types';
 import type { StudentData } from '~/app/api/getClassesGroupsStudents/route';
 import { DEFAULT_REDEMPTION_ITEMS } from '~/lib/constants';
 
@@ -200,6 +200,112 @@ export async function deleteRewardItem(formData: FormData) {
   }
 }
 
+// export async function applyRewardItem(
+//   item_id: string,
+//   student_data_array: StudentData[],
+//   class_id: string,
+//   inputQuantity: number
+// ): Promise<{ success: boolean; message: string }> {
+//   const { userId } = auth();
+//   if (!userId) throw new Error("User not authenticated");
+
+//   try {
+//     // Start a transaction
+//     await db.transaction(async (tx) => {
+//       // Fetch the reward item details once
+//       const rewardItem = await tx
+//         .select()
+//         .from(reward_items)
+//         .where(eq(reward_items.item_id, item_id))
+//         .get();
+
+//       if (!rewardItem) {
+//         throw new Error("Reward item not found");
+//       }
+
+//       if (inputQuantity < 1) {
+//         throw new Error(`Invalid quantity. Quantity must be at least 1.`);
+//       }
+
+//       const totalCost = rewardItem.price * inputQuantity;
+
+//       const updates = student_data_array.map(async (student_data) => {
+//         // Fetch the student's enrollment record in the class
+//         const enrollment = await tx
+//           .select()
+//           .from(student_classes)
+//           .where(
+//             and(
+//               eq(student_classes.student_id, student_data.student_id),
+//               eq(student_classes.class_id, class_id)
+//             )
+//           )
+//           .get();
+
+//         if (!enrollment) {
+//           throw new Error(
+//             `Student ${student_data.student_id} not enrolled in the class`
+//           );
+//         }
+
+//         // Check if student has enough points
+//         const currentPoints = enrollment.points ?? 0;
+//         if (currentPoints < totalCost) {
+//           throw new Error(
+//             `At least one student does not have enough points to redeem this reward item`
+//           );
+//         }
+
+//         // Calculate the new total points
+//         const newPoints = currentPoints - totalCost;
+
+//         // Update the redemption history
+//         const redemptionHistory = enrollment.redemption_history
+//           ? [...enrollment.redemption_history]
+//           : [];
+
+//         const newRedemptionRecord: RedemptionRecord = {
+//           item_id: item_id,
+//           date: new Date().toISOString(),
+//           quantity: totalCost
+//         };
+
+//         // Add the redemption record inputQuantity times
+//         for (let i = 0; i < inputQuantity; i++) {
+//           redemptionHistory.push(newRedemptionRecord);
+//         }
+
+//         // Update the student's enrollment record with new points and redemption history
+//         await tx
+//           .update(student_classes)
+//           .set({
+//             points: newPoints,
+//             redemption_history: redemptionHistory,
+//           })
+//           .where(eq(student_classes.enrollment_id, enrollment.enrollment_id))
+//           .run();
+//       });
+
+//       // Execute all updates concurrently
+//       await Promise.all(updates);
+//     });
+
+//     return {
+//       success: true,
+//       message: "Reward item redeemed successfully.",
+//     };
+//   } catch (error) {
+//     console.error("Error applying reward item:", error);
+//     return {
+//       success: false,
+//       message:
+//         error instanceof Error
+//           ? error.message
+//           : "Failed to apply reward item due to a server error.",
+//     };
+//   }
+// }
+
 export async function applyRewardItem(
   item_id: string,
   student_data_array: StudentData[],
@@ -229,6 +335,7 @@ export async function applyRewardItem(
 
       const totalCost = rewardItem.price * inputQuantity;
 
+      // For each student in student_data_array
       const updates = student_data_array.map(async (student_data) => {
         // Fetch the student's enrollment record in the class
         const enrollment = await tx
@@ -252,7 +359,7 @@ export async function applyRewardItem(
         const currentPoints = enrollment.points ?? 0;
         if (currentPoints < totalCost) {
           throw new Error(
-            `At least one student does not have enough points to redeem this reward item`
+            `Student ${student_data.student_id} does not have enough points to redeem this reward item`
           );
         }
 
@@ -267,7 +374,7 @@ export async function applyRewardItem(
         const newRedemptionRecord: RedemptionRecord = {
           item_id: item_id,
           date: new Date().toISOString(),
-          quantity: totalCost
+          quantity: rewardItem.price,
         };
 
         // Add the redemption record inputQuantity times
@@ -282,8 +389,30 @@ export async function applyRewardItem(
             points: newPoints,
             redemption_history: redemptionHistory,
           })
-          .where(eq(student_classes.enrollment_id, enrollment.enrollment_id))
-          .run();
+          .where(eq(student_classes.enrollment_id, enrollment.enrollment_id));
+
+        // Now, insert rows into the 'points' table, one per reward item per quantity
+        // So for inputQuantity, we need to insert 'inputQuantity' rows
+        const pointRows = [];
+        for (let i = 0; i < inputQuantity; i++) {
+          const pointType: PointType = 'redemption';
+
+          pointRows.push({
+            id: generateUuidWithPrefix("point_"),
+            user_id: userId,
+            class_id: class_id,
+            student_id: student_data.student_id,
+            behavior_id: null,
+            reward_item_id: item_id,
+            type: pointType,
+            number_of_points: -rewardItem.price, // Deducting points
+            created_date: new Date().toISOString(),
+            updated_date: new Date().toISOString(),
+          });
+        }
+
+        // Insert the point rows into the 'points' table
+        await tx.insert(points).values(pointRows).run();
       });
 
       // Execute all updates concurrently
@@ -305,6 +434,7 @@ export async function applyRewardItem(
     };
   }
 }
+
 
 const addDefaultRewardItemsSchema = z.object({
   classId: z.string(), // Ensure classId is a valid UUID

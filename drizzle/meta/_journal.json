@@ -15,6 +15,13 @@
       "when": 1731568465082,
       "tag": "0001_add-redemption_history",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1732180622138,
+      "tag": "0002_add-points-attendance-tables",
+      "breakpoints": true
     }
   ]
 }

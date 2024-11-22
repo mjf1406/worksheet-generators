@@ -55,6 +55,7 @@
     "@vercel/speed-insights": "^1.0.12",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "drizzle-orm": "^0.30.10",
     "emoji-regex": "^10.4.0",
     "framer-motion": "^11.3.22",

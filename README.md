@@ -88,7 +88,6 @@ This is the collection of worksheet generators that I have created as I needed t
 - Groups: need to optimistically update the cached data
 - when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
 - BUG: fixed a bug that would cause the mouse to click through the sorting dropdown. I have spent nearly 2 hours of this POS bug and I cannot fix it. I want to die. wtf...
-- tools: Points -- move the current open class page to this page
 - my classes: Open -- make this a dashboard for the teacher to see
   - behavior streaks
     - positive
@@ -118,17 +117,33 @@ This is the collection of worksheet generators that I have created as I needed t
         - 20: Benevolent Butterfly
         - 25: Compassionate Crane
   - point leaderboard
-    - current points
-    - earned points
-    - redeemed points
+    - [x] current points
+    - [x] earned points
+    - [x] redeemed points
     - negative points
   - assigner dashboard
     - quantity and date for Round-Robin
     - history for random and dates
     - just all the data for seats, like where they have sat and what dates, who they've sat next to, the teams they've been on, etc.
-  - UI: Student-facing student profile -- clicking on the student reveals their profile where all of the above is shown, but also extra info just for the teacher, however there will be a button that opens a full-screen modal of the info that's safe to show the student and displays it in a more student-friendly way
+  - UI: Student-facing student dashboard -- what should it show?
+    - titles
+    - achievements
+    - redeemed points
+    - negative points
+    - awarded points
+    - total points
 
 ## Change Log
+
+2024/11/22
+
+- UX: basis teacher-facing student dashboard implemented
+- DB: added points and absent_dates tables
+- UI: turned the point and redemption history into tables
+
+2024/11/21
+
+- UI: removed max of 10 on remove and redeem quantities
 
 2024/11/20
 

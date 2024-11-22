@@ -45,6 +45,8 @@ import {
 } from "../rewardItemActions"; // Import applyRewardItem
 import RewardItemsGrid from "./RewardItemsGrid";
 import CustomDialogContent from "~/components/CustomDialogContent";
+import { LayoutDashboard } from "lucide-react";
+import Link from "next/link";
 
 interface StudentDialogProps {
   studentId: string;
@@ -107,13 +109,13 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
 
   const negativePoints =
     studentData?.point_history
-      ?.filter((record) => record.quantity <= 0)
-      .reduce((sum, record) => sum + record.quantity, 0) ?? 0;
+      ?.filter((record) => record.number_of_points <= 0)
+      .reduce((sum, record) => sum + record.number_of_points, 0) ?? 0;
 
   const positivePoints =
     studentData?.point_history
-      ?.filter((record) => record.quantity >= 1)
-      .reduce((sum, record) => sum + record.quantity, 0) ?? 0;
+      ?.filter((record) => record.number_of_points >= 1)
+      .reduce((sum, record) => sum + record.number_of_points, 0) ?? 0;
 
   const redemptionSum =
     studentData?.redemption_history.reduce(
@@ -128,7 +130,6 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
     setLoadingBehaviorId(behavior_id);
     const classId = courseData?.class_id;
     try {
-      console.log("🚀 ~ handleBehaviorSelect ~ behavior_id:", behavior_id);
       const result = await applyBehavior(
         behavior_id,
         [studentData!],
@@ -394,7 +395,6 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                     value={inputQuantity}
                     onChange={setInputQuantity}
                     min={1}
-                    max={10}
                     step={1}
                     name="inputQuantity"
                     id="inputQuantity"
@@ -457,7 +457,6 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                     value={inputQuantity}
                     onChange={setInputQuantity}
                     min={1}
-                    max={10}
                     step={1}
                     name="inputQuantity"
                     id="inputQuantity"
@@ -510,7 +509,16 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle className="mt-5 text-center text-2xl">
-                {studentData?.student_name_en}
+                <div>{studentData?.student_name_en}</div>
+                <Button asChild variant={"outline"}>
+                  <Link
+                    key={studentData?.student_id}
+                    href={`/classes/${courseData?.class_id}/dashboard/${studentData?.student_id}`}
+                  >
+                    <LayoutDashboard className="mr-2 h-3 w-3 md:h-5 md:w-5" />{" "}
+                    {studentData?.student_name_en} Dashboard
+                  </Link>
+                </Button>
               </DrawerTitle>
               <DrawerDescription className="text-center">
                 Award and remove points based on student behaviors.
@@ -532,7 +540,16 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
           <CustomDialogContent className="w-full rounded-xl sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-5xl 2xl:max-w-6xl">
             <DialogHeader>
               <DialogTitle className="mt-5 text-center text-2xl">
-                {studentData?.student_name_en}
+                <div>{studentData?.student_name_en}</div>
+                <Button asChild variant={"outline"}>
+                  <Link
+                    key={studentData?.student_id}
+                    href={`/classes/${courseData?.class_id}/dashboard/${studentData?.student_id}`}
+                  >
+                    <LayoutDashboard className="mr-2 h-3 w-3 md:h-5 md:w-5" />{" "}
+                    {studentData?.student_name_en} Dashboard
+                  </Link>
+                </Button>
               </DialogTitle>
               <DialogDescription className="text-center">
                 Award and remove points based on student behaviors.
