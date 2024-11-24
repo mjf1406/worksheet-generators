@@ -243,5 +243,5 @@ export type Achievement = {
 
 export type NewAchievement = Omit<Achievement, 'created_date' | 'updated_date'>;
 
-export type UpdateAchievement = Partial<Omit<Achievement, 'id' | 'created_date' | 'updated_date'>>;
+export type UpdateAchievement = Omit<Achievement, 'id' | 'created_date' | 'updated_date'>
   

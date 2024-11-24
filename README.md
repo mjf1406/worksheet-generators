@@ -89,15 +89,12 @@ This is the collection of worksheet generators that I have created as I needed t
 - when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
 - BUG: fixed a bug that would cause the mouse to click through the sorting dropdown. I have spent nearly 2 hours of this POS bug and I cannot fix it. I want to die. wtf...
 - my classes: Open -- make this a dashboard for the teacher to see
-
   - behavior streaks
     - positive
     - negative
   - titles
-    - titles are set by the user for each behavior/redemption item
     - titles are displayed publicly somewhere, perhaps on the points screen and for the student to see on their page when they login
-    - only titles that the teacher sets are displayed
-    - title are only displayed publically if the teacher checks the box. Reward Item and Positive Behavior titles are displayed by default.
+    - title are only displayed publicly if the teacher checks the box. Reward Item and Positive Behavior titles are displayed by default.
       - under the title input, put a checkbox that sets whether this title is public
     - e.g., **the noisiest student** would be the student who has received the most Noisy negative behaviors
     - e.g., **the most helpful** would be the student who has received the most Helping Others behaviors
@@ -105,19 +102,6 @@ This is the collection of worksheet generators that I have created as I needed t
   - achievements
     - given to students once they reach certain thresholds for each behavior/redemption item
     - if they have the achievement, a badge is displayed on their profile
-    - thresholds and achievement names can be added when creating a behavior/redemption item
-      - e.g. for Helping Others
-        - 5: Generous Giraffe
-        - 10: Generous Gerbil
-        - 15: Generous Goose
-        - 20: Generous Gorilla
-        - 25: Generous Grizzly
-      - e.g. for Gifted to Classmates
-        - 5: Caring Caterpillar
-        - 10: Supportive Sparrow
-        - 15: Helpful Honeybee
-        - 20: Benevolent Butterfly
-        - 25: Compassionate Crane
   - point leaderboard
     - [x] current points
     - [x] earned points
@@ -135,11 +119,14 @@ This is the collection of worksheet generators that I have created as I needed t
     - awarded points
     - total points
     - streaks
+- DB: need first name and last name columns when adding a class
 
 ## Change Log
 
 2024/11/24
 
+- UI: added basis dialog when clicking on leaderboards in the class dashboard to display all data for the given leaderboard
+- UI: on the class dashboard, added a negative behaviors leaderboard
 - UI: achievements now show up in the edit behavior dialog
 - DB: achievements are now saved when creating a behavior
 - DB: achievements are now saved when creating an award item
