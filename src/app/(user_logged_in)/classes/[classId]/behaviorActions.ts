@@ -8,22 +8,27 @@ import { auth } from '@clerk/nextjs/server';
 import type { BehaviorData } from './components/StudentDialog';
 import type { StudentData } from '~/app/api/getClassesGroupsStudents/route';
 import { and, eq, inArray } from 'drizzle-orm';
-import type { Behavior, NewAchievement, PointRecord, PointType } from '~/server/db/types';
+import type { PointType } from '~/server/db/types';
 import { DEFAULT_BEHAVIORS } from '~/lib/constants';
-import { Point } from 'framer-motion';
-import { BehaviorNew } from './components/EditBehaviorDialog';
+import type { BehaviorNew } from './components/EditBehaviorDialog';
+import type { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 
 // behaviorActions.ts or similar
 
 const behaviorSchema = z.object({
   name: z.string(),
-  title: z.string().optional(),
+  title: z.string().optional().nullable(),
   point_value: z.number().int(),
   description: z.string().nullable(),
-  icon: z.string().nullable(),
+  icon: z
+    .object({
+      name: z.custom<IconName>(),
+      prefix: z.custom<IconPrefix>(),
+    })
+    .optional(),
   color: z.string(),
   class_id: z.string().nullable(),
-  achievementsData: z
+  achievements: z
     .array(
       z.object({
         threshold: z.number().int().nonnegative("Threshold must be a non-negative integer"),
@@ -32,9 +37,6 @@ const behaviorSchema = z.object({
     )
     .optional(),
 });
-
-
-// export async function createBehavior(behaviorDataFromClientForm: BehaviorData) {
 //   const { userId } = auth();
 //   if (!userId) throw new Error('User not authenticated');
 
@@ -90,7 +92,7 @@ export async function createBehavior(behaviorDataFromClientForm: BehaviorData) {
     throw new Error('Invalid input data.');
   }
 
-  const { name, title, point_value, description, icon, color, class_id, achievementsData } = parsedData.data;
+  const { name, title, point_value, description, icon, color, class_id, achievements } = parsedData.data;
 
   if (!class_id) throw new Error("class_id is undefined.");
 
@@ -102,7 +104,7 @@ export async function createBehavior(behaviorDataFromClientForm: BehaviorData) {
         title: title ?? null,
         point_value: point_value, // Use point_value directly
         description: description ?? null,
-        icon: icon ?? null,
+        icon: icon ? `${icon.prefix} ${icon.name}` :  null,
         color,
         class_id,
         user_id: userId,
@@ -112,9 +114,9 @@ export async function createBehavior(behaviorDataFromClientForm: BehaviorData) {
       await tx.insert(behaviors).values(newBehavior).run();
 
       // If achievementsData are provided, insert them into the achievementsData table
-      if (achievementsData && achievementsData.length > 0) {
-        const achievementRows = achievementsData.map((achievement) => ({
-          id: generateUuidWithPrefix('achievement_'),
+      if (achievements && achievements.length > 0) {
+        const achievementRows = achievements.map((achievement) => ({
+          id: generateUuidWithPrefix('ach_'),
           behavior_id: newBehavior.behavior_id,
           reward_item_id: null,
           class_id: class_id,

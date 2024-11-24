@@ -4,47 +4,64 @@
 
 import { z } from 'zod';
 import { db } from '~/server/db';
-import { classes, points, reward_items, student_classes, teacher_classes } from '~/server/db/schema';
+import { classes, points, reward_items, student_classes, teacher_classes, achievements as achievementsTable } from '~/server/db/schema';
 import { generateUuidWithPrefix } from '~/server/db/helperFunction';
 import { auth } from '@clerk/nextjs/server';
 import { eq, and } from 'drizzle-orm';
-import type { PointType, RedemptionRecord, RewardItem } from '~/server/db/types';
+import type { PointType, RedemptionRecord, RewardItem, RewardItemUpdate } from '~/server/db/types';
 import type { StudentData } from '~/app/api/getClassesGroupsStudents/route';
 import { DEFAULT_REDEMPTION_ITEMS } from '~/lib/constants';
 
 // Define the Zod schema for reward item data
 const rewardItemSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  title: z.string().optional(),
   price: z.number().nonnegative("price must be a non-negative number"),
   description: z.string().nullable().optional(),
   icon: z.string().nullable().optional(),
   class_id: z.string().nullable().optional(),
   type: z.enum(["solo", "group", "class"]),
+  achievements: z
+    .array(
+      z.object({
+        id: z.string().optional(), // Optional for existing achievements
+        threshold: z
+          .number()
+          .int()
+          .nonnegative("Threshold must be a non-negative integer"),
+        name: z.string().nonempty("Achievement name is required"),
+      }),
+    )
+    .optional().nullable(),
 });
 
 // Define the return type
 type RewardItemData = z.infer<typeof rewardItemSchema>;
 
-// Create Reward Item
 export async function createRewardItem(rewardItemDataFromClientForm: RewardItemData) {
+  // Authenticate the user
   const { userId } = auth();
   if (!userId) throw new Error('User not authenticated');
 
+  // Validate the incoming data
   const parsedData = rewardItemSchema.safeParse(rewardItemDataFromClientForm);
   if (!parsedData.success) {
     console.error('Validation error:', parsedData.error);
     throw new Error('Invalid input data.');
   }
 
-  const { name, price, description, icon, class_id, type } = parsedData.data;
+  // Destructure the validated data
+  const { name, price, description, icon, class_id, type, title, achievements } = parsedData.data;
 
-  if (!class_id) throw new Error("Class ID is undefined.")
+  if (!class_id) throw new Error("Class ID is undefined.");
 
   try {
+    // Generate a unique ID for the new reward item
     const newRewardItem: RewardItem = {
       item_id: generateUuidWithPrefix('item_'),
       name,
       price,
+      title: title ?? null,
       description: description ?? null,
       icon: icon ?? null,
       class_id: class_id,
@@ -52,17 +69,40 @@ export async function createRewardItem(rewardItemDataFromClientForm: RewardItemD
       user_id: userId,
     };
 
-    // Insert the new reward item into the database
-    await db.insert(reward_items).values(newRewardItem).run();
+    // Begin a transaction to ensure atomicity
+    await db.transaction(async (tx) => {
+      // Insert the new reward item into the 'reward_items' table
+      await tx.insert(reward_items).values(newRewardItem).run();
 
+      // Check if there are any achievements to insert
+      if (achievements && achievements.length > 0) {
+        // Map the achievements to the appropriate format for insertion
+        const achievementRecords = achievements.map((achievement) => ({
+          id: generateUuidWithPrefix('ach_'), // Generate a unique ID for each achievement
+          reward_item_id: newRewardItem.item_id, // Associate with the newly created reward item
+          class_id: class_id, // Associate with the class
+          user_id: userId, // Associate with the user
+          threshold: achievement.threshold,
+          name: achievement.name,
+          behavior_id: null, // Set to null or assign appropriately if available
+          // 'created_date' and 'updated_date' are handled by default
+        }));
+
+        // Insert all achievements into the 'achievements' table
+        await tx.insert(achievementsTable).values(achievementRecords).run();
+      }
+    });
+
+    // If the transaction completes successfully, return a success response
     return {
       success: true,
-      message: 'Reward item added successfully.',
+      message: 'Reward item and achievements added successfully.',
       rewardItem: newRewardItem,
     };
   } catch (error) {
-    console.error('Error adding reward item:', error);
-    throw new Error('Failed to add reward item due to a server error.');
+    // Log the error and throw a server error
+    console.error('Error adding reward item and achievements:', error);
+    throw new Error('Failed to add reward item and achievements due to a server error.');
   }
 }
 
@@ -79,7 +119,7 @@ const updateRewardItemSchema = z.object({
 
 type UpdateRewardItemInput = z.infer<typeof updateRewardItemSchema>;
 
-export async function updateRewardItem(formData: FormData) {
+export async function updateRewardItem(formData: RewardItemUpdate) {
   const { userId } = auth();
   if (!userId) {
     throw new Error('User not authenticated');
@@ -87,13 +127,13 @@ export async function updateRewardItem(formData: FormData) {
 
   // Extract and parse data from FormData
   const data: Partial<UpdateRewardItemInput> = {
-    item_id: formData.get('item_id') as string,
-    name: formData.get('name') as string,
-    price: parseFloat(formData.get('price') as string),
-    description: formData.get('description') as string | null,
-    icon: formData.get('icon') as string | null,
-    class_id: formData.get('class_id') as string | null,
-    type: formData.get('type') as "solo" | "group" | "class",
+    item_id: formData.item_id,
+    name: formData.name,
+    price: formData.price,
+    description: formData.description as string | null,
+    icon: formData.icon as string | null,
+    class_id: formData.class_id as string | null,
+    type: formData.type,
   };
 
   // Validate input data

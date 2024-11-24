@@ -13,8 +13,9 @@ import {
   behaviors,
   points,
   absent_dates,
+  achievements, // Ensure achievements is imported
 } from '~/server/db/schema';
-import type { Point, PointRecord, RedemptionRecord } from '~/server/db/types';
+import type { Achievement, Point, PointRecord, RedemptionRecord } from '~/server/db/types';
 import { InferModel } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
@@ -69,6 +70,7 @@ export type RewardItemData = {
   class_id: string | null;
   user_id: string;
   type: 'solo' | 'group' | 'class';
+  achievements: Achievement[];
   created_date: string;
   updated_date: string;
 };
@@ -83,6 +85,7 @@ export type BehaviorData = {
   color: string | null;
   class_id: string | null;
   user_id: string;
+  achievements: Achievement[];
   created_date: string;
   updated_date: string;
 };
@@ -224,7 +227,6 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
             const redemptionHistory: RedemptionRecord[] = studentPoints
               .filter((point) => point.type === 'redemption')
               .map((point) => ({
-                // TODO: update this to be in accordance with the new table
                 item_id: point.reward_item_id!,
                 date: point.created_date,
                 quantity: point.number_of_points,
@@ -343,12 +345,56 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         )
         .all();
 
+      // Fetch achievements associated with the class and user
+      const achievementsData = await db
+        .select()
+        .from(achievements)
+        .where(
+          and(
+            eq(achievements.class_id, classData.class_id),
+            eq(achievements.user_id, userId)
+          )
+        )
+        .all();
+
+      // Organize achievements by behavior_id and reward_item_id
+      const achievementsByBehavior = new Map<string, Achievement[]>();
+      const achievementsByRewardItem = new Map<string, Achievement[]>();
+
+      achievementsData.forEach((ach) => {
+        if (ach.behavior_id) {
+          if (!achievementsByBehavior.has(ach.behavior_id)) {
+            achievementsByBehavior.set(ach.behavior_id, []);
+          }
+          achievementsByBehavior.get(ach.behavior_id)!.push(ach);
+        }
+
+        if (ach.reward_item_id) {
+          if (!achievementsByRewardItem.has(ach.reward_item_id)) {
+            achievementsByRewardItem.set(ach.reward_item_id, []);
+          }
+          achievementsByRewardItem.get(ach.reward_item_id)!.push(ach);
+        }
+      });
+
+      // Augment behaviors with their respective achievements
+      const behaviorsWithAchievements = behaviorsData.map((behavior) => ({
+        ...behavior,
+        achievements: achievementsByBehavior.get(behavior.behavior_id) ?? [],
+      }));
+
+      // Augment reward items with their respective achievements
+      const rewardItemsWithAchievements = rewardItemsData.map((item) => ({
+        ...item,
+        achievements: achievementsByRewardItem.get(item.item_id) ?? [],
+      }));
+
       return {
         ...classData,
         groups: groupsWithStudents,
         students: allStudentsData,
-        reward_items: rewardItemsData,
-        behaviors: behaviorsData,
+        reward_items: rewardItemsWithAchievements, // Use augmented reward items
+        behaviors: behaviorsWithAchievements,     // Use augmented behaviors
       } as ClassData;
     })
   );

@@ -189,8 +189,19 @@ export type RewardItem = {
     class_id?: string;
     user_id: string;
     type: "solo" | "group" | "class";
+    achievements?: Achievement[];
     created_date?: string;
     updated_date?: string;
+  };
+
+  export type AchievementClient = {
+    id?: string; // Optional for existing achievements
+    threshold: number;
+    name: string;
+  }
+
+  export type RewardItemUpdate = Omit<RewardItem, "created_date" | "achievements"> & {
+    achievements?: AchievementClient[];
   };
 
   export type AbsentDate = {

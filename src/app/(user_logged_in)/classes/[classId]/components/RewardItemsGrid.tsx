@@ -45,6 +45,7 @@ const RewardItemsGrid: React.FC<RewardItemsGridProps> = ({
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedRewardItem, setSelectedRewardItem] =
     useState<RewardItem | null>(null);
+  console.log("🚀 ~ selectedRewardItem:", selectedRewardItem);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [rewardItemToDelete, setRewardItemToDelete] =
     useState<RewardItem | null>(null);

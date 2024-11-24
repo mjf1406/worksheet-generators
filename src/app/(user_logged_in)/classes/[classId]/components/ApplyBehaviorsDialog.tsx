@@ -105,7 +105,18 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
     rewardItem: RewardItemData,
   ): Promise<void> => {
     try {
-      const result = await createRewardItem(rewardItem);
+      const newRewardItem: RewardItemData = {
+        name: rewardItem.name,
+        title: rewardItem.title ?? undefined,
+        price: rewardItem.price,
+        description: rewardItem.description ?? null,
+        icon: rewardItem.icon ? rewardItem.icon : "fas circle-question",
+        type: rewardItem.type,
+        class_id: classId,
+        achievements: rewardItem.achievements ?? null,
+      };
+
+      const result = await createRewardItem(newRewardItem);
 
       if (result.success) {
         await queryClient.invalidateQueries(classesOptions);

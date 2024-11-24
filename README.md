@@ -89,6 +89,7 @@ This is the collection of worksheet generators that I have created as I needed t
 - when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
 - BUG: fixed a bug that would cause the mouse to click through the sorting dropdown. I have spent nearly 2 hours of this POS bug and I cannot fix it. I want to die. wtf...
 - my classes: Open -- make this a dashboard for the teacher to see
+
   - behavior streaks
     - positive
     - negative
@@ -136,6 +137,15 @@ This is the collection of worksheet generators that I have created as I needed t
     - streaks
 
 ## Change Log
+
+2024/11/24
+
+- UI: achievements now show up in the edit behavior dialog
+- DB: achievements are now saved when creating a behavior
+- DB: achievements are now saved when creating an award item
+- UX: can now edit a reward item without error
+- UI: when opening the edit reward item, the correct item is now used to populate the dialog
+- UI: the title is now populated when opening the reward item edit dialog
 
 2024/11/22
 

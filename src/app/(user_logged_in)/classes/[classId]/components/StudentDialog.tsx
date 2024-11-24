@@ -42,7 +42,7 @@ import {
   createRewardItem,
   applyRewardItem,
   addDefaultRewardItems,
-} from "../rewardItemActions"; // Import applyRewardItem
+} from "../rewardItemActions";
 import RewardItemsGrid from "./RewardItemsGrid";
 import CustomDialogContent from "~/components/CustomDialogContent";
 import { LayoutDashboard } from "lucide-react";
@@ -56,7 +56,7 @@ interface StudentDialogProps {
 
 const behaviorFormSchema = z.object({
   name: z.string().nonempty("Name is required"),
-  title: z.string().optional(),
+  title: z.string().optional().nullable(),
   point_value: z.preprocess(
     (val) => parseInt(val as string, 10),
     z.number().int(),
@@ -209,7 +209,13 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
     rewardItem: RewardItemData,
   ): Promise<void> => {
     try {
-      const result = await createRewardItem(rewardItem);
+      const rewardItemData = {
+        ...rewardItem,
+        title: rewardItem.title ?? undefined,
+        achievements: rewardItem.achievements ?? [],
+      };
+
+      const result = await createRewardItem(rewardItemData);
 
       if (result.success) {
         await queryClient.invalidateQueries(classesOptions);

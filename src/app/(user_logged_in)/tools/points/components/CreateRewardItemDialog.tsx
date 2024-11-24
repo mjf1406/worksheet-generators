@@ -52,7 +52,6 @@ const createRewardItemSchema = z.object({
     })
     .optional(),
   type: z.enum(["solo", "group", "class"]),
-  isPositive: z.boolean(),
   achievements: z
     .array(
       z.object({
@@ -73,14 +72,13 @@ export type RewardItemFormData = z.infer<typeof createRewardItemSchema>;
 
 export type RewardItemData = {
   name: string;
-  title?: string | null;
+  title?: string | undefined;
   price: number;
   description?: string | null;
   icon?: string | null;
   type: "solo" | "group" | "class";
   class_id: string | null;
-  isPositive: boolean;
-  achievements?: { threshold: number; name: string }[] | null;
+  achievements?: { threshold: number; name: string }[] | null | undefined;
 };
 
 const CreateRewardItemDialog: React.FC<CreateRewardItemDialogProps> = ({
@@ -106,7 +104,6 @@ const CreateRewardItemDialog: React.FC<CreateRewardItemDialogProps> = ({
       description: "",
       icon: undefined,
       type: "solo",
-      isPositive: true,
       achievements: [],
     },
   });
@@ -121,16 +118,16 @@ const CreateRewardItemDialog: React.FC<CreateRewardItemDialogProps> = ({
   });
 
   const onSubmit = async (data: RewardItemFormData) => {
-    const price = data.isPositive ? data.price : -data.price;
     const newRewardItem: RewardItemData = {
       name: data.name,
-      title: data.title ?? null,
-      price: price,
+      title: data.title ?? undefined,
+      price: data.price,
       description: data.description ?? null,
-      icon: data.icon ? `${data.icon.prefix} ${data.icon.name}` : null,
+      icon: data.icon
+        ? `${data.icon.prefix} ${data.icon.name}`
+        : "fas circle-question",
       type: data.type,
       class_id: classId,
-      isPositive: data.isPositive,
       achievements: data.achievements ?? null,
     };
     try {

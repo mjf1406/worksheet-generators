@@ -107,7 +107,7 @@ const CreateBehaviorDialog: React.FC<CreateBehaviorDialogProps> = ({
       description: data.description ?? undefined,
       icon: data.icon
         ? { prefix: data.icon.prefix, name: data.icon.name }
-        : null,
+        : { prefix: "fas", name: "circle-question" },
       color: data.color,
       class_id: classId,
       achievements: data.achievements ?? undefined,
