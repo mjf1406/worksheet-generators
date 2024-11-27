@@ -120,8 +120,17 @@ This is the collection of worksheet generators that I have created as I needed t
     - total points
     - streaks
 - DB: need first name and last name columns when adding a class
+- feature: Expectations grid to manage expectations for each student for
+  - word count
+  - presentation length
+  - vocab. sentence length
+  -
 
 ## Change Log
+
+2024/11/27
+
+- UX: student total points no longer says they have insufficient points when they have sufficient points to purchase a reward
 
 2024/11/24
 
