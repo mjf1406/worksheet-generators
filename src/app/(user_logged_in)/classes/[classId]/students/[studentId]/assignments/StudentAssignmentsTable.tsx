@@ -1,16 +1,7 @@
 // components/AssignmentTable.tsx
 
 import React from "react";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableCell,
-  TableHead,
-} from "~/components/ui/table"; // Ensure this path is correct
-import { RefreshCcw, RotateCw } from "lucide-react";
-import { ModeToggle } from "~/components/theme/theme-toggle";
+import { RotateCw } from "lucide-react";
 
 interface Assignment {
   sa_id: string;
@@ -50,18 +41,24 @@ const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
         />
         <InstructionStep
           number={2}
-          text="Complete the assignments in order from top to bottom."
+          text={
+            "Click the link in the DATA column to read more details and go to where the required materials are."
+          }
         />
         <InstructionStep
           number={3}
-          text="If you have questions, ask your desk partner and teammates before you ask your teacher."
+          text="Complete the assignments in order from top to bottom."
         />
         <InstructionStep
           number={4}
-          text="When you finish an assignment, bring it to your teacher so they can check it."
+          text="If you have questions, ask your desk partner and teammates before you ask your teacher."
         />
         <InstructionStep
           number={5}
+          text="When you finish an assignment, bring it to your teacher so they can check it."
+        />
+        <InstructionStep
+          number={6}
           text={
             <>
               If your teacher thinks you are done, they will mark it as
