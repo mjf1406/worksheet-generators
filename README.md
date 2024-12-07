@@ -161,7 +161,7 @@ This is the collection of worksheet generators that I have created as I needed t
 
 2024/12/07
 
-- backend: added redis rate limiting to prevent lots of calls to the API
+- backend: added redis rate limiting to prevent lots of calls to the API, thanks to [Upstash](https://upstash.com/)
 - backend: student dashboards are now publicly accessible. It's secure because a bad actor would need to know two UUIDs, the class id and the student id in order to view the data.
 - STUDENT: added a basic assignments page to the student dashboard `/classes/[classId]/students/[studentId]/assignments`
 - fixed: Teaching-facing Student Dashboard now only counts actual negative behaviors as negative points

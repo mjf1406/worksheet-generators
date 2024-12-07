@@ -19,6 +19,7 @@ export const env = createEnv({
     OPENAI_SECRET: z.string(),
     GEMINI_SECRET: z.string(),
     REDIS_URL: z.string(),
+    REDIS_TOKEN: z.string(),
   },
 
   /**
@@ -57,6 +58,7 @@ export const env = createEnv({
     OPENAI_SECRET: process.env.OPENAI_SECRET,
     GEMINI_SECRET: process.env.GEMINI_SECRET,
     REDIS_URL: process.env.REDIS_URL,
+    REDIS_TOKEN: process.env.REDIS_TOKEN,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
