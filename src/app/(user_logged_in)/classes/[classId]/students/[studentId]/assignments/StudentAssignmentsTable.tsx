@@ -9,8 +9,8 @@ import {
   TableCell,
   TableHead,
 } from "~/components/ui/table"; // Ensure this path is correct
-import styles from "./AssignmentTable.module.css"; // Import CSS module for styling
 import { RefreshCcw, RotateCw } from "lucide-react";
+import { ModeToggle } from "~/components/theme/theme-toggle";
 
 interface Assignment {
   sa_id: string;
@@ -36,119 +36,161 @@ interface AssignmentTableProps {
 
 const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
   return (
-    <div className={styles.container}>
+    <div className="m-5 font-serif">
       {/* Introduction for the students */}
-      <div className={styles.intro}>
+      <div className="mb-6 rounded-md border-l-4 border-orange-500 bg-yellow-100 p-4 text-lg dark:bg-gray-800 dark:text-gray-200">
         <p>Here are your assignments for today! Follow these steps:</p>
       </div>
 
       {/* Instructional Steps */}
-      <ol className={styles.instructions}>
-        <li className={styles.instructionItem}>
-          <span className={styles.icon}>1.</span>
-          <span>
-            Read the description to make sure you know what the assignment is.
-          </span>
-        </li>
-        <li className={styles.instructionItem}>
-          <span className={styles.icon}>2.</span>
-          <span>Complete the assignments in order from top to bottom.</span>
-        </li>
-        <li className={styles.instructionItem}>
-          <span className={styles.icon}>3.</span>
-          <span>
-            If you have questions, ask your desk partner and teammates before
-            you ask your teacher.
-          </span>
-        </li>
-        <li className={styles.instructionItem}>
-          <span className={styles.icon}>4.</span>
-          <span>
-            When you finish an assignment, bring it to your teacher so they can
-            check it.
-          </span>
-        </li>
-        <li className={styles.instructionItem}>
-          <span className={styles.icon}>5.</span>
-          <span>
-            If your teacher thinks you are done, they will mark it as complete.
-            You need to refresh this page by clicking the{" "}
-            <RotateCw className="mb-1 inline h-4 w-4" /> button or pressing F5.
-          </span>
-        </li>
+      <ol className="mb-8 space-y-4">
+        <InstructionStep
+          number={1}
+          text="Read the description to make sure you know what the assignment is."
+        />
+        <InstructionStep
+          number={2}
+          text="Complete the assignments in order from top to bottom."
+        />
+        <InstructionStep
+          number={3}
+          text="If you have questions, ask your desk partner and teammates before you ask your teacher."
+        />
+        <InstructionStep
+          number={4}
+          text="When you finish an assignment, bring it to your teacher so they can check it."
+        />
+        <InstructionStep
+          number={5}
+          text={
+            <>
+              If your teacher thinks you are done, they will mark it as
+              complete. You need to refresh this page by clicking the{" "}
+              <RotateCw className="mb-1 inline h-4 w-4" /> button or pressing
+              F5.
+            </>
+          }
+        />
       </ol>
 
       {/* Assignment Table */}
-      <Table className={styles.table}>
-        {/* Table Header */}
-        <TableHeader>
-          <TableRow>
-            <TableHead className="text-foreground">Name</TableHead>
-            <TableHead className="text-foreground">Description</TableHead>
-            <TableHead className="text-foreground">Data</TableHead>
-            <TableHead className="text-foreground">Due Date</TableHead>
-            <TableHead className="text-foreground">Working Date</TableHead>
-            <TableHead className="text-foreground">Created Date</TableHead>
-            <TableHead className="text-foreground">Topic</TableHead>
-            <TableHead className="text-foreground">Complete</TableHead>
-            <TableHead className="text-foreground">Completed At</TableHead>
-          </TableRow>
-        </TableHeader>
+      <div className="overflow-x-auto">
+        <table className="min-w-full overflow-hidden rounded-lg bg-white shadow-md dark:bg-gray-700">
+          {/* Table Header */}
+          <thead className="bg-teal-500 dark:bg-teal-600">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase text-white">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase text-white">
+                Description
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase text-white">
+                Data
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase text-white">
+                Due Date
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase text-white">
+                Working Date
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase text-white">
+                Created Date
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase text-white">
+                Topic
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase text-white">
+                Complete
+              </th>
+              <th className="px-6 py-3 text-left text-sm font-medium uppercase text-white">
+                Completed At
+              </th>
+            </tr>
+          </thead>
 
-        {/* Table Body */}
-        <TableBody>
-          {assignments.map((assignment) => (
-            <TableRow
-              key={assignment.sa_id}
-              className={`${styles.row} ${assignment.sa_complete ? styles.completed : styles.pending}`}
-            >
-              {/* Assignment Name */}
-              <TableCell>
-                <span className={styles.boldText}>
-                  {assignment.assignment_name}
-                </span>
-              </TableCell>
+          {/* Table Body */}
+          <tbody>
+            {assignments.map((assignment) => (
+              <tr
+                key={assignment.sa_id}
+                className={`${
+                  assignment.sa_complete
+                    ? "bg-green-200 dark:bg-green-600"
+                    : "bg-red-200 dark:bg-red-600"
+                } transition-colors hover:bg-blue-100 dark:hover:bg-blue-500`}
+              >
+                {/* Assignment Name */}
+                <td className="whitespace-nowrap px-6 py-4">
+                  <span className="font-bold text-gray-800 dark:text-gray-200">
+                    {assignment.assignment_name}
+                  </span>
+                </td>
 
-              {/* Assignment Description */}
-              <TableCell>{assignment.assignment_description ?? "—"}</TableCell>
+                {/* Assignment Description */}
+                <td className="whitespace-nowrap px-6 py-4 text-gray-700 dark:text-gray-300">
+                  {assignment.assignment_description ?? "—"}
+                </td>
 
-              {/* Assignment Data */}
-              <TableCell>{assignment.assignment_data ?? "—"}</TableCell>
+                {/* Assignment Data */}
+                <td className="whitespace-nowrap px-6 py-4 text-gray-700 dark:text-gray-300">
+                  {assignment.assignment_data ?? "—"}
+                </td>
 
-              {/* Due Date */}
-              <TableCell>
-                {assignment.due_date ? formatDate(assignment.due_date) : "—"}
-              </TableCell>
+                {/* Due Date */}
+                <td className="whitespace-nowrap px-6 py-4 text-gray-700 dark:text-gray-300">
+                  {assignment.due_date ? formatDate(assignment.due_date) : "—"}
+                </td>
 
-              {/* Working Date */}
-              <TableCell>
-                {assignment.working_date
-                  ? formatDate(assignment.working_date)
-                  : "—"}
-              </TableCell>
+                {/* Working Date */}
+                <td className="whitespace-nowrap px-6 py-4 text-gray-700 dark:text-gray-300">
+                  {assignment.working_date
+                    ? formatDate(assignment.working_date)
+                    : "—"}
+                </td>
 
-              {/* Created Date */}
-              <TableCell>{formatDate(assignment.created_date)}</TableCell>
+                {/* Created Date */}
+                <td className="whitespace-nowrap px-6 py-4 text-gray-700 dark:text-gray-300">
+                  {formatDate(assignment.created_date)}
+                </td>
 
-              {/* Topic */}
-              <TableCell>{assignment.topic ?? "—"}</TableCell>
+                {/* Topic */}
+                <td className="whitespace-nowrap px-6 py-4 text-gray-700 dark:text-gray-300">
+                  {assignment.topic ?? "—"}
+                </td>
 
-              {/* Completion Status */}
-              <TableCell>
-                {assignment.sa_complete ? "✅ Yes" : "❌ No"}
-              </TableCell>
+                {/* Completion Status */}
+                <td className="whitespace-nowrap px-6 py-4 text-gray-700 dark:text-gray-300">
+                  {assignment.sa_complete ? "✅ Yes" : "❌ No"}
+                </td>
 
-              {/* Completed At */}
-              <TableCell>
-                {assignment.sa_completed_ts
-                  ? formatDateTime(assignment.sa_completed_ts)
-                  : "—"}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                {/* Completed At */}
+                <td className="whitespace-nowrap px-6 py-4 text-gray-700 dark:text-gray-300">
+                  {assignment.sa_completed_ts
+                    ? formatDateTime(assignment.sa_completed_ts)
+                    : "—"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
+  );
+};
+
+// InstructionStep Component for Reusability
+interface InstructionStepProps {
+  number: number;
+  text: React.ReactNode;
+}
+
+const InstructionStep: React.FC<InstructionStepProps> = ({ number, text }) => {
+  return (
+    <li className="flex items-start rounded-md bg-pink-100 p-4 transition-colors hover:bg-pink-200 dark:bg-gray-800 dark:hover:bg-pink-600">
+      <span className="mr-4 text-lg font-bold text-orange-500">{number}.</span>
+      <span className="text-gray-700 dark:text-gray-300">{text}</span>
+    </li>
   );
 };
 

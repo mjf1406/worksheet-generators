@@ -155,12 +155,13 @@ This is the collection of worksheet generators that I have created as I needed t
 - when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
 - BUG: fixed a bug that would cause the mouse to click through the sorting dropdown.
 - DB: need first name and last name columns when adding a class
-- STUDENT: added a basic assignments page to the student dashboard `/classes/[classId]/students/[studentId]/assignments`
+- backend: student dashboards are now publicly accessible. It's secure because a bad actor would need to know two UUIDs, the class id and the student id in order to view the data.
 
 ## Change Log
 
 2024/12/07
 
+- STUDENT: added a basic assignments page to the student dashboard `/classes/[classId]/students/[studentId]/assignments`
 - fixed: Teaching-facing Student Dashboard now only counts actual negative behaviors as negative points
 - fixed: Class Dashboard now only counts actual negative behaviors as negative points
 - fixed: in the student dialog, the negative points are now correctly calculated

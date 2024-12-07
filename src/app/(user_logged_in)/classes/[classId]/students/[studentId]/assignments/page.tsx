@@ -9,6 +9,7 @@ import Logo from "~/components/brand/Logo";
 import { cn } from "~/lib/utils";
 import { APP_NAME } from "~/lib/constants";
 import Link from "next/link";
+import { ModeToggle } from "~/components/mode-toggle";
 
 interface Params {
   classId: string;
@@ -81,15 +82,18 @@ export default async function StudentAssignmentDashboard({
 
   return (
     <div className="p-5 pl-10">
-      <div className="flex gap-2">
+      <header className="mb-8 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <Logo fill="hsl(var(--primary))" size="25" />
-          <h1 className="text-lg font-bold">{APP_NAME}</h1>
-          <div className="text-top -ml-1 justify-start self-start text-xs">
+          <h1 className="text-2xl font-bold text-teal-600 dark:text-teal-400">
+            {APP_NAME}
+          </h1>
+          <span className="ml-1 justify-start self-start text-xs text-orange-500">
             [ALPHA]
-          </div>
+          </span>
         </Link>
-      </div>
+        <ModeToggle />
+      </header>
 
       <h1 className="mb-4 text-3xl text-blue-700">
         Your Assignments for Today!
