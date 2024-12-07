@@ -13,9 +13,12 @@ import {
   behaviors,
   points,
   absent_dates,
-  achievements, // Ensure achievements is imported
+  achievements,
+  topics,
+  assignments,
+  student_assignments,
 } from '~/server/db/schema';
-import type { Achievement, Point, PointRecord, RedemptionRecord } from '~/server/db/types';
+import type { Achievement, Point, PointRecord, RedemptionRecord, Topic } from '~/server/db/types';
 import { InferModel } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
@@ -42,7 +45,28 @@ export type ClassData = {
   students: StudentData[];
   reward_items: RewardItemData[];
   behaviors: BehaviorData[];
+  topics: Topic[];
+  assignments: AssignmentData[];
 };
+
+export type AssignmentData = {
+  id: string;
+  user_id: string;
+  class_id: string;
+  name: string;
+  description: string | null;
+  data: string | null;
+  due_date: string | null;
+  topic: string | null;
+  working_date: string | null;
+  created_date: string;
+  updated_date: string;
+  students: {
+    student_id: string;
+    complete: boolean;
+    completed_ts: string | null;
+  }[];
+}
 
 export type StudentData = {
   student_id: string;
@@ -286,7 +310,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
           }));
 
         // Get absent dates
-        const absentDates = absentDatesByStudent.get(studentId) ?? [];
+        const absentDates = absentDatesByStudent.get(studentId) ?? [];        
 
         return {
           ...student,
@@ -357,6 +381,39 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         )
         .all();
 
+      const topicsData = await db
+        .select()
+        .from(topics)
+        .where(
+          and(
+            eq(topics.user_id, userId),
+            eq(topics.class_id, classData.class_id)
+          )
+        )
+        .all();
+
+      const assignmentsData = await db
+        .select()
+        .from(assignments)
+        .where(
+          and(
+            eq(assignments.user_id, userId),
+            eq(assignments.class_id, classData.class_id)
+          )
+        )
+        .all();
+
+      const studentAssignmentsData = await db
+        .select()
+        .from(student_assignments)
+        .where(
+          and(
+            eq(student_assignments.user_id, userId),
+            eq(student_assignments.class_id, classData.class_id)
+          )
+        )
+        .all();
+
       // Organize achievements by behavior_id and reward_item_id
       const achievementsByBehavior = new Map<string, Achievement[]>();
       const achievementsByRewardItem = new Map<string, Achievement[]>();
@@ -389,12 +446,34 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         achievements: achievementsByRewardItem.get(item.item_id) ?? [],
       }));
 
+      // Create a map of assignment_id -> students
+      const assignmentStudentsMap = new Map<string, { student_id: string; complete: boolean; completed_ts: string | null }[]>();
+
+      for (const sa of studentAssignmentsData) {
+        if (!assignmentStudentsMap.has(sa.assignment_id)) {
+          assignmentStudentsMap.set(sa.assignment_id, []);
+        }
+        assignmentStudentsMap.get(sa.assignment_id)!.push({
+          student_id: sa.student_id,
+          complete: !!sa.complete,
+          completed_ts: sa.completed_ts
+        });
+      }
+
+      // Add students array to each assignment
+      const assignmentsWithStudents = assignmentsData.map((assignment) => ({
+        ...assignment,
+        students: assignmentStudentsMap.get(assignment.id) ?? []
+      }));
+
       return {
         ...classData,
         groups: groupsWithStudents,
         students: allStudentsData,
-        reward_items: rewardItemsWithAchievements, // Use augmented reward items
-        behaviors: behaviorsWithAchievements,     // Use augmented behaviors
+        reward_items: rewardItemsWithAchievements,
+        behaviors: behaviorsWithAchievements,
+        topics: topicsData,
+        assignments: assignmentsWithStudents,
       } as ClassData;
     })
   );

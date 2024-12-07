@@ -1,0 +1,1 @@
+ALTER TABLE `assignments` RENAME COLUMN `working_data` TO `working_date`;

@@ -92,21 +92,16 @@ This is the collection of worksheet generators that I have created as I needed t
   - behavior streaks
     - positive
     - negative
-  - titles
+  - FEATURE: titles
     - titles are displayed publicly somewhere, perhaps on the points screen and for the student to see on their page when they login
     - title are only displayed publicly if the teacher checks the box. Reward Item and Positive Behavior titles are displayed by default.
       - under the title input, put a checkbox that sets whether this title is public
     - e.g., **the noisiest student** would be the student who has received the most Noisy negative behaviors
     - e.g., **the most helpful** would be the student who has received the most Helping Others behaviors
     - e.g., **the most generous** would be the student who has redeemed the most Gifted to Classmates
-  - achievements
+  - FEATURE: achievements
     - given to students once they reach certain thresholds for each behavior/redemption item
     - if they have the achievement, a badge is displayed on their profile
-  - point leaderboard
-    - [x] current points
-    - [x] earned points
-    - [x] redeemed points
-    - negative points
   - assigner dashboard
     - quantity and date for Round-Robin
     - history for random and dates
@@ -120,11 +115,32 @@ This is the collection of worksheet generators that I have created as I needed t
     - total points
     - streaks
 - DB: need first name and last name columns when adding a class
-- feature: Expectations grid to manage expectations for each student for
+- FEATURE: Expectations grid to manage expectations for each student for
   - word count
   - presentation length
   - vocab. sentence length
-  -
+- UI: Student Dialog now only counts actual negative behaviors as negative points (🚩)
+- UI: Teaching-facing Student Dashboard now only counts actual negative behaviors as negative points
+- UI: Class Dashboard now only counts actual negative behaviors as negative points
+- FEATURE: Assignments
+  - Assignments Page
+    - [x] create assignments
+    - [ ] edit assignments
+    - [ ] delete assignments
+    - [x] create topics
+    - [ ] edit topics
+    - [ ] delete topics
+    - [x] sortable table basics
+    - [ ] can sort by multiple columns
+    - [x] updates assignment status when checking/unchecking
+    - Assignment Filters
+      - [ ] topic
+      - [ ] due date
+      - [ ] created date
+      - [ ] working date
+    - [ ] alert teacher every x minutes if a student hasn't completed an assignment
+    - [ ] easily export URLs for each student
+  - Student Page
 
 ## Change Log
 

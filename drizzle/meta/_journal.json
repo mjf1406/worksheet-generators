@@ -36,6 +36,34 @@
       "when": 1732273321874,
       "tag": "0004_outstanding_the_fallen",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1733542057240,
+      "tag": "0005_add-assignments-topics",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1733544737166,
+      "tag": "0006_add-assignments-topics-updates",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1733545122945,
+      "tag": "0007_add-assignments-topics-updates-1",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1733546377576,
+      "tag": "0008_add-student-assignment-table",
+      "breakpoints": true
     }
   ]
 }

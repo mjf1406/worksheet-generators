@@ -81,6 +81,8 @@ export type TeacherCourse = {
     students: StudentData[] | undefined
     reward_items: RewardItemData[];
     behaviors: BehaviorData[];
+    topics: Topic[];
+    assignments: Assignment[];
   }
 
 export type PointRecord = {
@@ -226,7 +228,7 @@ export type Point = {
     type: PointType;
     number_of_points: number;
     created_date: string; // ISO date string
-    updated_date: string; // ISO date string
+    updated_date?: string | null | undefined; // ISO date string
 }
 
 export type Achievement = {
@@ -244,4 +246,29 @@ export type Achievement = {
 export type NewAchievement = Omit<Achievement, 'created_date' | 'updated_date'>;
 
 export type UpdateAchievement = Omit<Achievement, 'id' | 'created_date' | 'updated_date'>
-  
+
+export type Topic = {
+    id: string;
+    user_id: string;
+    class_id: string;
+    name: string;
+}
+
+export type AssignmentStatus = {
+    student_id: string,
+    complete: boolean,
+    completed_ts: string,
+}
+
+export type Assignment = {
+    id: string;
+    user_id: string;
+    class_id: string;
+    name: string;
+    description: string | null;
+    data: string | null;
+    due_date: string | null;
+    topic: string | null;
+    working_date: string | null;
+    students?: AssignmentStatus[];
+}
