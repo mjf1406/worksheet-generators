@@ -119,12 +119,12 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
 
   const negativePoints =
     studentData?.point_history
-      ?.filter((record) => record.number_of_points < 0)
+      ?.filter((record) => record.type === "negative")
       .reduce((sum, record) => sum + record.number_of_points, 0) ?? 0;
 
   const positivePoints =
     studentData?.point_history
-      ?.filter((record) => record.number_of_points > 0)
+      ?.filter((record) => record.type === "positive")
       .reduce((sum, record) => sum + record.number_of_points, 0) ?? 0;
 
   const redemptionSum =
@@ -325,7 +325,7 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
               icon={["fas", "gift"]}
               className="mr-2 text-blue-500"
             />
-            -{redemptionSum}
+            {redemptionSum}
           </div>
         </div>
         <Tabs

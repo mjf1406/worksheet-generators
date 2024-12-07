@@ -8,7 +8,7 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ## To-do List
 
-### p4
+### p5
 
 - Look into the APIs to determine the tier of a vocabulary word
   - [Datamuse API](https://www.datamuse.com/api/)
@@ -32,7 +32,7 @@ This is the collection of worksheet generators that I have created as I needed t
   - grade level (only appears if **generate for each student** is unchecked)
   - generate comprehension questions?
 
-### p3
+### p4
 
 - screen: Classroom Screen -- a screen that displays the clock and displays shuffler.
   - Shuffler can be run from another user session, like a phone, then the results will appear on the screen.
@@ -45,13 +45,13 @@ This is the collection of worksheet generators that I have created as I needed t
   - can easily select multiple students
 - tool: custom spinning wheels
 
-### p2
+### p3
 
 - tool: classroom clock (duplicates [Class Timers](https://mjf1406.github.io/class-timers/index.html))
 - tool: MagniText -- (duplicates [MagniText](https://mjf1406.github.io/magni-text/index.html))
 - tool: Random Event
 
-### p1
+### p2
 
 - worksheet: word search
 - worksheet: scramble words
@@ -63,65 +63,49 @@ This is the collection of worksheet generators that I have created as I needed t
 - ⚠️ local-first: use [TinyBase](https://tinybase.org/) to implement a local-first architecture
 - ⚠️ i18n: use [next-international](https://next-international.vercel.app/docs/app-setup) for localization
 - Assigner: Round Robin -- need some tests for this one to ensure it's working.
+- PAGE: assigner dashboard
+  - quantity and date for Round-Robin
+  - history for random and dates
+  - just all the data for seats, like where they have sat and what dates, who they've sat next to, the teams they've been on, etc.
 
-### p0
+### p1
 
-- tool: Points -- track points on a per student, group, and class basis
-  - features
-    - [ ] award points
-      - [x] to a single student
-        - [x] clicking on the student opens a dialog with a grid list of all behaviors, with positive and needs work as tabs
-        - [x] need a quantity that defaults to 1
-      - [x] to selected students
-      - [ ] streaks are tracked for each student, and the teacher is alerted
-        - [ ] off days should be declared in the settings, so they are excluded from breaking streaks
-    - [ ] positive and negative behavior
-      - [x] user can create them, setting an icon, name, and point value
-      - [x] user can edit
-      - [x] user can delete
-      - [ ] teacher is notified when a student has a negative behavior streak
-- tool: Attendance
+- FEATURE: Points -- track points on a per student, group, and class basis
+  - [ ] award points
+    - [x] to a single student
+      - [x] clicking on the student opens a dialog with a grid list of all behaviors, with positive and needs work as tabs
+      - [x] need a quantity that defaults to 1
+    - [x] to selected students
+    - [ ] streaks are tracked for each student, and the teacher is alerted
+      - [ ] off days should be declared in the settings, so they are excluded from breaking streaks
+  - [ ] positive and negative behavior
+    - [x] user can create them, setting an icon, name, and point value
+    - [x] user can edit
+    - [x] user can delete
+    - [ ] teacher is notified when a student has a negative behavior streak
+- FEATURE: Attendance
   - [x] stores presence and absence based on user's local time zone
   - [ ] prevents absent students from being awarded points
   - [ ] prevents absent students from losing points
   - [ ] prevents absent students from redeeming points
-- Groups: need to optimistically update the cached data
-- when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
-- BUG: fixed a bug that would cause the mouse to click through the sorting dropdown. I have spent nearly 2 hours of this POS bug and I cannot fix it. I want to die. wtf...
-- my classes: Open -- make this a dashboard for the teacher to see
-  - behavior streaks
-    - positive
-    - negative
-  - FEATURE: titles
-    - titles are displayed publicly somewhere, perhaps on the points screen and for the student to see on their page when they login
-    - title are only displayed publicly if the teacher checks the box. Reward Item and Positive Behavior titles are displayed by default.
-      - under the title input, put a checkbox that sets whether this title is public
-    - e.g., **the noisiest student** would be the student who has received the most Noisy negative behaviors
-    - e.g., **the most helpful** would be the student who has received the most Helping Others behaviors
-    - e.g., **the most generous** would be the student who has redeemed the most Gifted to Classmates
-  - FEATURE: achievements
-    - given to students once they reach certain thresholds for each behavior/redemption item
-    - if they have the achievement, a badge is displayed on their profile
-  - assigner dashboard
-    - quantity and date for Round-Robin
-    - history for random and dates
-    - just all the data for seats, like where they have sat and what dates, who they've sat next to, the teams they've been on, etc.
-  - UI: Student-facing student dashboard -- what should it show?
-    - titles
-    - achievements
-    - redeemed points
-    - negative points
-    - awarded points
-    - total points
-    - streaks
-- DB: need first name and last name columns when adding a class
+- FEATURE: titles
+  - titles are displayed publicly somewhere, perhaps on the points screen and for the student to see on their page when they login
+  - title are only displayed publicly if the teacher checks the box. Reward Item and Positive Behavior titles are displayed by default.
+    - under the title input, put a checkbox that sets whether this title is public
+  - e.g., **the noisiest student** would be the student who has received the most Noisy negative behaviors
+  - e.g., **the most helpful** would be the student who has received the most Helping Others behaviors
+  - e.g., **the most generous** would be the student who has redeemed the most Gifted to Classmates
+- FEATURE: achievements
+  - given to students once they reach certain thresholds for each behavior/redemption item
+  - if they have the achievement, a badge is displayed on their profile
 - FEATURE: Expectations grid to manage expectations for each student for
   - word count
   - presentation length
   - vocab. sentence length
-- UI: Student Dialog now only counts actual negative behaviors as negative points (🚩)
-- UI: Teaching-facing Student Dashboard now only counts actual negative behaviors as negative points
-- UI: Class Dashboard now only counts actual negative behaviors as negative points
+- PAGE: Class Dashboard
+  - behavior streaks
+    - positive
+    - negative
 - FEATURE: Assignments
   - Assignments Page
     - [x] create assignments
@@ -138,11 +122,49 @@ This is the collection of worksheet generators that I have created as I needed t
       - [ ] due date
       - [ ] created date
       - [ ] working date
+      - [ ] automatically exclude assignments that all students have done
     - [ ] alert teacher every x minutes if a student hasn't completed an assignment
     - [ ] easily export URLs for each student
   - Student Page
+    - [ ] upcoming assignments that are due within 1 week
+    - [ ] list of topics in the class
+      - clicking on one takes to currentUrl/assignments
+    - [ ] behavior breakdown
+      - [ ] top 5 positive behaviors
+      - [ ] top 5 negative behaviors
+    - [ ] redemption breakdown
+      - [ ] history
+      - [ ] top 5 most common
+    - [ ] absent dates
+      - praise for 0 absent dates
+      - top x% of the class
+    - [ ] points summary
+      - [ ] total points and ranking in the class with the values of those below and above
+      - [ ] total points earned and ranking in the class with the values of those below and above
+      - [ ] total redeemed points and ranking in the class with the values of those below and above
+      - [ ] total negative points and ranking in the class with the values of those below and above
+      - explainer saying something like "you would have [total points earned] if you didn't receive [negative points]! [something encouraging]
+        - this should have a random message that has the same meaning each time they laod the page, maybe there are 10 different options
+    - [ ] titles
+    - [ ] achievements
+    - [ ] streaks
+
+### p0
+
+- Groups: need to optimistically update the cached data
+- when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
+- BUG: fixed a bug that would cause the mouse to click through the sorting dropdown.
+- DB: need first name and last name columns when adding a class
+- STUDENT: added a basic assignments page to the student dashboard `/classes/[classId]/students/[studentId]/assignments`
 
 ## Change Log
+
+2024/12/07
+
+- fixed: Teaching-facing Student Dashboard now only counts actual negative behaviors as negative points
+- fixed: Class Dashboard now only counts actual negative behaviors as negative points
+- fixed: in the student dialog, the negative points are now correctly calculated
+- UI: added a basic assignments page to track assignments that the students have done
 
 2024/11/27
 

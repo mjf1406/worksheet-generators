@@ -85,11 +85,11 @@ export default function StudentDashboard({ params }: { params: Params }) {
 
   // Total positive and negative points
   const totalPositivePoints = pointHistory
-    .filter((p) => p.number_of_points > 0)
+    .filter((p) => p.type === "positive")
     .reduce((sum, p) => sum + p.number_of_points, 0);
 
   const totalNegativePoints = pointHistory
-    .filter((p) => p.number_of_points < 0)
+    .filter((p) => p.type === "negative")
     .reduce((sum, p) => sum + p.number_of_points, 0);
 
   // Pagination States

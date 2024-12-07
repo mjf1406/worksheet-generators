@@ -23,6 +23,8 @@ import {
   type Option,
 } from "../../components/SelectRadioGroup";
 
+import Link from "next/link"; // Import Link
+
 // Import your server action directly:
 import { updateStudentAssignment } from "../actions/studentAssignmentsActions";
 
@@ -357,7 +359,12 @@ export default function AssignmentsTable({ params }: { params: Params }) {
                   {studentGroup?.group_name ?? "No Group"}
                 </TableCell>
                 <TableCell className="text-center">
-                  {student.student_name_en.split(" ")[1]}
+                  <Link
+                    href={`/classes/${classId}/students/${student.student_id}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    {student.student_name_en.split(" ")[1]}
+                  </Link>
                 </TableCell>
                 {sortedAssignments.map((assignment) => (
                   <AssignmentCell
