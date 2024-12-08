@@ -126,7 +126,7 @@ This is the collection of worksheet generators that I have created as I needed t
     - [ ] alert teacher every x minutes if a student hasn't completed an assignment
     - [ ] easily export URLs for each student
   - Student Page
-    - [ ] upcoming assignments that are due within 1 week
+    - [x] upcoming assignments that are due within 1 week
     - [ ] list of topics in the class
       - clicking on one takes to currentUrl/assignments
     - [ ] behavior breakdown
@@ -158,6 +158,10 @@ This is the collection of worksheet generators that I have created as I needed t
 - UX: need to ensure the local timezone is used when rendering the date on the student dashboard
 
 ## Change Log
+
+2024/12/08
+
+- UI: student-facing dashboard in its most basic form
 
 2024/12/07
 

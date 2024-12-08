@@ -69,6 +69,7 @@ export default function AssignmentsTable({ params }: { params: Params }) {
   const { classId } = params;
   const { data: coursesData = [] } = useSuspenseQuery(classesOptions);
   const courseData = coursesData.find((course) => course.class_id === classId);
+  console.log("🚀 ~ AssignmentsTable ~ courseData:", courseData);
 
   const students = courseData?.students ?? [];
   const assignments = courseData?.assignments ?? [];
