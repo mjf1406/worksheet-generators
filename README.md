@@ -117,6 +117,7 @@ This is the collection of worksheet generators that I have created as I needed t
     - [x] sortable table basics
     - [ ] can sort by multiple columns
     - [x] updates assignment status when checking/unchecking
+    - [ ] add column for excused, which marks complete as false, but shows a blue checkbox with an X inside instead of an empty checkbox or checked version
     - Assignment Filters
       - [ ] topic
       - [ ] due date
@@ -126,6 +127,8 @@ This is the collection of worksheet generators that I have created as I needed t
     - [ ] alert teacher every x minutes if a student hasn't completed an assignment
     - [ ] easily export URLs for each student
   - Student Page
+    - fixed: resources links are now properly formatted as a list of links
+    - fixed: the topic name is correctly displayed instead of its ID
     - [x] upcoming assignments that are due within 1 week
     - [ ] list of topics in the class
       - clicking on one takes to currentUrl/assignments

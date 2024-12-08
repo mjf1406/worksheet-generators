@@ -16,13 +16,10 @@ const redis = new Redis({
 });
 
 const WINDOW_IN_SECONDS = 15 * 60; // 15 minutes
-const MAX_REQUESTS = 90; // Max requests in the 15-minute window
+const MAX_REQUESTS = 90000; // Max requests in the 15-minute window
+// const WINDOW_IN_SECONDS = 60; // 1 minute
+// const MAX_REQUESTS = 12; // Average of 1 request every 5 seconds
 
-/**
- * Formats the reset time from seconds to human-readable format like "1m 32s"
- * @param {number} seconds - Number of seconds to format
- * @returns {string} - Formatted time like "1m 32s"
- */
 function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;

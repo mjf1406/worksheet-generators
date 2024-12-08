@@ -215,7 +215,7 @@ const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
                     Description
                   </TableHead>
                   <TableHead className="w-[100px] whitespace-nowrap">
-                    Data
+                    Resources
                   </TableHead>
                   <TableHead className="w-[150px] whitespace-nowrap">
                     Due Date

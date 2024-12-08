@@ -64,6 +64,13 @@
       "when": 1733546377576,
       "tag": "0008_add-student-assignment-table",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1733626118353,
+      "tag": "0009_add-excused-column",
+      "breakpoints": true
     }
   ]
 }

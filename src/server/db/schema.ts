@@ -259,6 +259,7 @@ export const student_assignments = sqliteTable('student_assignments',
         student_id: text('student_id').notNull().references(() => students.student_id),
         assignment_id: text('assignment_id').notNull().references(() => assignments.id),
         complete: integer('complete', { mode: 'boolean' }),
+        excused: integer('excused', { mode: 'boolean' }),
         completed_ts: text('completed_ts'),
     },
     (table) => {
