@@ -15,10 +15,10 @@ const redis = new Redis({
   token: process.env.REDIS_TOKEN, // Use this if you have a separate token for Upstash
 });
 
-// const WINDOW_IN_SECONDS = 15 * 60; // 15 minutes
-// const MAX_REQUESTS = 90000; // Max requests in the 15-minute window
-const WINDOW_IN_SECONDS = 60; // 1 minute
-const MAX_REQUESTS = 12; // Average of 1 request every 5 seconds
+const WINDOW_IN_SECONDS = 15 * 60; // 15 minutes
+const MAX_REQUESTS = 90; // Max requests in the 15-minute window
+// const WINDOW_IN_SECONDS = 60; // 1 minute
+// const MAX_REQUESTS = 12; // Average of 1 request every 5 seconds
 
 function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
