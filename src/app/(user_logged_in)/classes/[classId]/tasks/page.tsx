@@ -46,7 +46,7 @@ export default function Assignments({ params }: { params: Params }) {
                 {courseData?.class_name}
               </Link>
               <ChevronRight />
-              Assignments
+              Tasks
             </div>
             <CreateAssignmentsDialog topics={courseData.topics ?? []} />
             <CreateTopicDialog />

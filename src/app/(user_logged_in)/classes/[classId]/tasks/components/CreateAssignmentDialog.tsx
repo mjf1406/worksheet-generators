@@ -173,15 +173,14 @@ export default function CreateAssignmentsDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="mr-2" /> Create Assignment(s)
+          <Plus className="mr-2" /> Create Task(s)
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Create Multiple Assignments</DialogTitle>
+          <DialogTitle>Create Multiple Tasks</DialogTitle>
           <DialogDescription>
-            Add one or more assignments below. You can then submit them all at
-            once.
+            Add one or more tasks below. You can then submit them all at once.
           </DialogDescription>
         </DialogHeader>
         <form
@@ -212,7 +211,7 @@ export default function CreateAssignmentsDialog({
                   onChange={(e) =>
                     handleFieldChange(index, "name", e.target.value)
                   }
-                  placeholder="Assignment name"
+                  placeholder="Task name"
                   required
                 />
               </div>
@@ -226,7 +225,7 @@ export default function CreateAssignmentsDialog({
                   onChange={(e) =>
                     handleFieldChange(index, "description", e.target.value)
                   }
-                  placeholder="Assignment description"
+                  placeholder="Task description"
                 />
               </div>
               <div className="space-y-2">
@@ -294,7 +293,7 @@ export default function CreateAssignmentsDialog({
           ))}
           <div>
             <Button type="button" variant="secondary" onClick={addAssignment}>
-              Add Another Assignment
+              Add Another Task
             </Button>
           </div>
           <DialogFooter>
@@ -302,7 +301,7 @@ export default function CreateAssignmentsDialog({
               {mutation.isPending && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}
-              {mutation.isPending ? "Submitting..." : "Submit Assignment(s)"}
+              {mutation.isPending ? "Submitting..." : "Submit Task(s)"}
             </Button>
           </DialogFooter>
         </form>

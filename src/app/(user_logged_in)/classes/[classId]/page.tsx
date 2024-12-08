@@ -42,8 +42,8 @@ export default function ClassDetails({ params }: { params: Params }) {
               </Link>
             </Button>
             <Button asChild variant="outline" className="w-fit">
-              <Link href={`/classes/${courseData.class_id}/assignments`}>
-                <NotebookPen className="mr-2 h-5 w-5" /> Assignments
+              <Link href={`/classes/${courseData.class_id}/tasks`}>
+                <NotebookPen className="mr-2 h-5 w-5" /> Tasks
               </Link>
             </Button>
           </div>

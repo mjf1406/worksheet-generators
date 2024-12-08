@@ -119,7 +119,7 @@ This is the collection of worksheet generators that I have created as I needed t
     - [x] updates assignment status when checking/unchecking
     - [ ] add column for excused, which marks complete as false, but shows a blue checkbox with an X inside instead of an empty checkbox or checked version
     - Assignment Filters
-      - [ ] topic
+      - [x] topic
       - [ ] due date
       - [ ] created date
       - [ ] working date
@@ -164,6 +164,7 @@ This is the collection of worksheet generators that I have created as I needed t
 
 2024/12/08
 
+- UX: added basic date and topic filters to tasks table in `/tasks`
 - UI: student-facing dashboard in its most basic form
 
 2024/12/07

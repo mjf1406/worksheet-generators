@@ -271,4 +271,5 @@ export type Assignment = {
     topic: string | null;
     working_date: string | null;
     students?: AssignmentStatus[];
+    created_date?: string | null;
 }

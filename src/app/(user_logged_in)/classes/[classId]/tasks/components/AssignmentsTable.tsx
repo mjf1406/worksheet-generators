@@ -22,11 +22,10 @@ import {
   FancyRadioGroup,
   type Option,
 } from "../../components/SelectRadioGroup";
+import Link from "next/link";
 
-import Link from "next/link"; // Import Link
-
-// Import your server action directly:
 import { updateStudentAssignment } from "../actions/studentAssignmentsActions";
+import { AssignmentsFilter, DateFilterMode } from "./AssignmentsFilters";
 
 interface Params {
   classId: string;
@@ -69,11 +68,11 @@ export default function AssignmentsTable({ params }: { params: Params }) {
   const { classId } = params;
   const { data: coursesData = [] } = useSuspenseQuery(classesOptions);
   const courseData = coursesData.find((course) => course.class_id === classId);
-  console.log("🚀 ~ AssignmentsTable ~ courseData:", courseData);
 
   const students = courseData?.students ?? [];
   const assignments = courseData?.assignments ?? [];
   const groups = courseData?.groups ?? [];
+  const topics = courseData?.topics ?? [];
 
   const [selectedGroupId, setSelectedGroupId] = useState<string>("all");
 
@@ -94,7 +93,13 @@ export default function AssignmentsTable({ params }: { params: Params }) {
 
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
 
-  // Initialize checkboxStatuses from assignments data
+  // Filters state
+  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
+  const [filterDueDate, setFilterDueDate] = useState(false);
+  const [filterCreatedDate, setFilterCreatedDate] = useState(false);
+  const [filterWorkingDate, setFilterWorkingDate] = useState(false);
+
+  // Initialize checkboxStatuses
   const initialCheckboxStatuses = useMemo(() => {
     const statuses: Record<string, boolean> = {};
     for (const assignment of assignments) {
@@ -256,8 +261,69 @@ export default function AssignmentsTable({ params }: { params: Params }) {
     );
   }, [selectedGroupId, sortedStudents, groups]);
 
+  // Filter assignments based on selectedTopicIds and other date filters
+  const filteredAssignments = useMemo(() => {
+    return sortedAssignments.filter((assignment) => {
+      const passesTopicFilter =
+        selectedTopicIds.length === 0 ||
+        selectedTopicIds.includes(assignment.topic ?? "");
+
+      let passesDueDateFilter = true;
+      let passesCreatedDateFilter = true;
+      let passesWorkingDateFilter = true;
+
+      if (filterDueDate) {
+        // For example, only show assignments that have a due_date defined
+        passesDueDateFilter = !!assignment.due_date;
+      }
+
+      if (filterCreatedDate) {
+        // Only show assignments with a created_date defined
+        passesCreatedDateFilter = !!assignment.created_date;
+      }
+
+      if (filterWorkingDate) {
+        // Only show assignments with a working_date defined
+        passesWorkingDateFilter = !!assignment.working_date;
+      }
+
+      return (
+        passesTopicFilter &&
+        passesDueDateFilter &&
+        passesCreatedDateFilter &&
+        passesWorkingDateFilter
+      );
+    });
+  }, [
+    sortedAssignments,
+    selectedTopicIds,
+    filterDueDate,
+    filterCreatedDate,
+    filterWorkingDate,
+  ]);
+
+  const handleFilterChange = (filters: {
+    selectedTopicIds: string[];
+    dueDateMode: DateFilterMode;
+    dueDateStart: Date | undefined;
+    dueDateEnd: Date | undefined;
+    createdDateMode: DateFilterMode;
+    createdDateStart: Date | undefined;
+    createdDateEnd: Date | undefined;
+    workingDateMode: DateFilterMode;
+    workingDateStart: Date | undefined;
+    workingDateEnd: Date | undefined;
+  }) => {
+    // Update the state with the new filter values
+    setSelectedTopicIds(filters.selectedTopicIds);
+    setFilterDueDate(filters.dueDateMode !== "none");
+    setFilterCreatedDate(filters.createdDateMode !== "none");
+    setFilterWorkingDate(filters.workingDateMode !== "none");
+  };
+
   return (
     <div className="w-full space-y-4 overflow-x-auto">
+      {/* Existing group filters */}
       <div className="mt-2 flex items-center gap-2">
         <FancyRadioGroup
           options={allGroupsOptions}
@@ -266,12 +332,16 @@ export default function AssignmentsTable({ params }: { params: Params }) {
         />
       </div>
 
+      {/* New filters for assignments */}
+      <AssignmentsFilter topics={topics} onFilterChange={handleFilterChange} />
+
       <Table>
-        <TableCaption>Assignments for {courseData?.class_name}</TableCaption>
+        <TableCaption>Tasks for {courseData?.class_name}</TableCaption>
         <TableHeader>
           <TableRow>
+            {/* Column 1: Student Number */}
             <TableHead
-              className="cursor-pointer text-foreground"
+              className="sticky left-0 z-10 w-16 cursor-pointer bg-background text-foreground"
               onClick={() => handleSort("student_number")}
             >
               <div className="flex items-center justify-center">
@@ -288,8 +358,9 @@ export default function AssignmentsTable({ params }: { params: Params }) {
               </div>
             </TableHead>
 
+            {/* Column 2: Group */}
             <TableHead
-              className="cursor-pointer text-foreground"
+              className="sticky left-16 z-10 w-32 cursor-pointer bg-background text-foreground"
               onClick={() => handleSort("group")}
             >
               <div className="flex items-center justify-center">
@@ -306,8 +377,9 @@ export default function AssignmentsTable({ params }: { params: Params }) {
               </div>
             </TableHead>
 
+            {/* Column 3: Student Name */}
             <TableHead
-              className="cursor-pointer text-foreground"
+              className="sticky left-48 z-10 w-48 cursor-pointer bg-background text-foreground"
               onClick={() => handleSort("student_name")}
             >
               <div className="flex items-center justify-center">
@@ -324,7 +396,8 @@ export default function AssignmentsTable({ params }: { params: Params }) {
               </div>
             </TableHead>
 
-            {sortedAssignments.map((assignment) => {
+            {/* Assignment Columns */}
+            {filteredAssignments.map((assignment) => {
               const sortKey = `assignment_${assignment.id}` as SortKey;
               return (
                 <TableHead
@@ -353,13 +426,18 @@ export default function AssignmentsTable({ params }: { params: Params }) {
             );
             return (
               <TableRow key={student.student_id}>
-                <TableCell className="text-center">
+                {/* Column 1: Student Number */}
+                <TableCell className="sticky left-0 z-10 w-16 bg-background text-center">
                   {student.student_number}
                 </TableCell>
-                <TableCell className="text-center">
+
+                {/* Column 2: Group */}
+                <TableCell className="sticky left-16 z-10 w-32 bg-background text-center">
                   {studentGroup?.group_name ?? "No Group"}
                 </TableCell>
-                <TableCell className="text-center">
+
+                {/* Column 3: Student Name */}
+                <TableCell className="sticky left-48 z-10 w-48 bg-background text-center">
                   <Link
                     href={`/classes/${classId}/students/${student.student_id}`}
                     className="text-blue-500 hover:underline"
@@ -367,7 +445,9 @@ export default function AssignmentsTable({ params }: { params: Params }) {
                     {student.student_name_en.split(" ")[1]}
                   </Link>
                 </TableCell>
-                {sortedAssignments.map((assignment) => (
+
+                {/* Assignment Cells */}
+                {filteredAssignments.map((assignment) => (
                   <AssignmentCell
                     key={assignment.id}
                     assignmentId={assignment.id}

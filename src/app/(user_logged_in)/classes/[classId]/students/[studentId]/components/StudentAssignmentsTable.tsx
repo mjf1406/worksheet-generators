@@ -116,9 +116,9 @@ const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
     <>
       <Card className="mx-auto w-full font-serif">
         <CardHeader>
-          <CardTitle className="text-center text-2xl">Assignments</CardTitle>
+          <CardTitle className="text-center text-2xl">Tasks</CardTitle>
           <Button variant="outline" onClick={() => setIsModalOpen(true)}>
-            View all assignments
+            View all tasks
           </Button>
         </CardHeader>
         <CardContent className="-mt-6">
@@ -163,7 +163,7 @@ const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
         <DialogContent className="max-h-screen w-[100vw] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl text-blue-700">
-              📃 Assignments
+              📃 Tasks
             </DialogTitle>
             <DialogClose className="absolute right-4 top-4" />
           </DialogHeader>
@@ -173,15 +173,15 @@ const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
             <ol className="mt-2 max-w-4xl space-y-2">
               <InstructionStep
                 number={1}
-                text="Read the description to make sure you know what the assignment is."
+                text="Read the description to make sure you know what the task is."
               />
               <InstructionStep
                 number={2}
-                text="Click the link in the DATA column to read more details and go to where the required materials are."
+                text="Click the link in the Resources column to read more details and go to where the required materials are."
               />
               <InstructionStep
                 number={3}
-                text="Complete the assignments in order from top to bottom."
+                text="Complete the tasks in order from top to bottom."
               />
               <InstructionStep
                 number={4}
@@ -189,7 +189,7 @@ const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
               />
               <InstructionStep
                 number={5}
-                text="When you finish an assignment, bring it to your teacher so they can check it."
+                text="When you finish a task, bring it to your teacher so they can check it."
               />
               <InstructionStep
                 number={6}
