@@ -483,7 +483,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = auth();
+    const { userId } = await auth();
     if (!userId) {
       throw new Error('User ID is null');
     }
