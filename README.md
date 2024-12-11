@@ -50,6 +50,11 @@ This is the collection of worksheet generators that I have created as I needed t
 - tool: classroom clock (duplicates [Class Timers](https://mjf1406.github.io/class-timers/index.html))
 - tool: MagniText -- (duplicates [MagniText](https://mjf1406.github.io/magni-text/index.html))
 - tool: Random Event
+- FEATURE: Power-ups -- For rewards that can be saved
+  - THings like when you spin the wheel, you get 5 minutes of free time
+  - needs a card on the Student Dashboard
+- FEATURE: Levels
+  - Allows student to choose, at each new level, new powers that they can use during class.
 
 ### p2
 
@@ -67,6 +72,11 @@ This is the collection of worksheet generators that I have created as I needed t
   - quantity and date for Round-Robin
   - history for random and dates
   - just all the data for seats, like where they have sat and what dates, who they've sat next to, the teams they've been on, etc.
+- FEATURE: Attendance
+  - [x] stores presence and absence based on user's local time zone
+  - [ ] prevents absent students from being awarded points
+  - [ ] prevents absent students from losing points
+  - [ ] prevents absent students from redeeming points
 
 ### p1
 
@@ -83,11 +93,7 @@ This is the collection of worksheet generators that I have created as I needed t
     - [x] user can edit
     - [x] user can delete
     - [ ] teacher is notified when a student has a negative behavior streak
-- FEATURE: Attendance
-  - [x] stores presence and absence based on user's local time zone
-  - [ ] prevents absent students from being awarded points
-  - [ ] prevents absent students from losing points
-  - [ ] prevents absent students from redeeming points
+  - [ ] Can delete on teacher-facing student dashboard
 - FEATURE: titles
   - titles are displayed publicly somewhere, perhaps on the points screen and for the student to see on their page when they login
   - title are only displayed publicly if the teacher checks the box. Reward Item and Positive Behavior titles are displayed by default.
@@ -102,10 +108,13 @@ This is the collection of worksheet generators that I have created as I needed t
   - word count
   - presentation length
   - vocab. sentence length
+  - put a card for this on the student dashboard
 - PAGE: Class Dashboard
   - behavior streaks
     - positive
     - negative
+- PAGE: Teacher-facing Student Dashboard
+  - Group behaviors if they are the same time and same id like we have done on the student dashboard
 - FEATURE: Assignments
   - Assignments Page
     - [x] create assignments
@@ -151,6 +160,7 @@ This is the collection of worksheet generators that I have created as I needed t
     - [ ] titles
     - [ ] achievements
     - [ ] streaks
+    - [ ] expectations
 
 ### p0
 

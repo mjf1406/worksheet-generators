@@ -1,4 +1,4 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { Redis } from '@upstash/redis';
@@ -9,16 +9,13 @@ if (!redisUrl) {
   throw new Error('❌ REDIS_URL is not defined in environment variables');
 }
 
-// Upstash Redis (this is fully compatible with Edge Runtime)
 const redis = new Redis({
   url: redisUrl,
-  token: process.env.REDIS_TOKEN, // Use this if you have a separate token for Upstash
+  token: process.env.REDIS_TOKEN,
 });
 
 const WINDOW_IN_SECONDS = 15 * 60; // 15 minutes
-const MAX_REQUESTS = 90; // Max requests in the 15-minute window
-// const WINDOW_IN_SECONDS = 60; // 1 minute
-// const MAX_REQUESTS = 12; // Average of 1 request every 5 seconds
+const MAX_REQUESTS = 180; // Average of 1 request every 5 seconds over 15 minutes
 
 function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / 60);
