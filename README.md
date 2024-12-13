@@ -169,6 +169,8 @@ This is the collection of worksheet generators that I have created as I needed t
 - BUG: fixed a bug that would cause the mouse to click through the sorting dropdown.
 - DB: need first name and last name columns when adding a class
 - UX: need to ensure the local timezone is used when rendering the date on the student dashboard
+- PAGE: Tasks - auto award Task Completed on check, and delete the last one on uncheck
+- PAGE: Tasks - somehow add in Student Dialog to make it easier to adjust points
 
 ## Change Log
 
