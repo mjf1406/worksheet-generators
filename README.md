@@ -176,6 +176,7 @@ This is the collection of worksheet generators that I have created as I needed t
 
 2024/12/16
 
+- UI: teacher-facing student dashboard no longer includes redemptions in point history
 - UI: changed student dashboard view details buttons to secondary from outline
 - UI: mobile student grid now has 4 columns
 

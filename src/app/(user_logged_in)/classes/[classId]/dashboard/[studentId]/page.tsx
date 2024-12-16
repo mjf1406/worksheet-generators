@@ -99,6 +99,7 @@ export default function StudentDashboard({ params }: { params: Params }) {
   const pointStartIndex = (pointCurrentPage - 1) * ITEMS_PER_PAGE;
   const pointEndIndex = pointStartIndex + ITEMS_PER_PAGE;
   const currentPointHistory = pointHistory
+    .filter((i) => i.type === "negative" || i.type === "positive")
     .slice()
     .sort(
       (a, b) =>
