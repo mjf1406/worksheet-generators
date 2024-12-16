@@ -18,6 +18,7 @@ import {
 } from "~/server/db/schema";
 import AssignmentTable from "./components/StudentAssignmentsTable";
 import PointsCard from "./components/PointsCard";
+import StudentBehaviorLeadersCard from "./components/StudentBehaviorLeadersCard";
 
 interface Params {
   classId: string;
@@ -32,7 +33,6 @@ interface StudentAssignmentWithDetails {
   sa_assignment_id: string;
   sa_complete: boolean;
   sa_completed_ts: string | null;
-  // Assignment Details (excluding IDs)
   assignment_name: string;
   assignment_description: string | null;
   assignment_data: string | null;
@@ -42,6 +42,16 @@ interface StudentAssignmentWithDetails {
   created_date: string;
   updated_date: string;
 }
+
+// PointClient type as defined in PointsCard
+type PointClient = {
+  id: string;
+  type: "positive" | "negative" | "redemption";
+  number_of_points: number;
+  behavior_name: string | null | undefined;
+  reward_item_name: string | null | undefined;
+  created_date: string;
+};
 
 // Helper function to extract the first name
 const getFirstName = (fullName: string | null | undefined): string => {
@@ -58,8 +68,7 @@ export default async function studentDashboard({ params }: { params: Params }) {
     return <div className="p-5 pl-10 text-red-500">Invalid parameters.</div>;
   }
 
-  // Fetch classData and studentData in parallel
-  const [classData, studentData, rawStudentAssignments, pointsData] =
+  const [classData, studentData, rawStudentAssignments, allClassPointsData] =
     await Promise.all([
       // classData
       db.select().from(classes).where(eq(classes.class_id, classId)).limit(1),
@@ -79,7 +88,7 @@ export default async function studentDashboard({ params }: { params: Params }) {
           sa_assignment_id: student_assignments.assignment_id,
           sa_complete: student_assignments.complete,
           sa_completed_ts: student_assignments.completed_ts,
-          // Assignment Details (excluding IDs)
+          // Assignment Details
           assignment_name: assignments.name,
           assignment_description: assignments.description,
           assignment_data: assignments.data,
@@ -100,10 +109,11 @@ export default async function studentDashboard({ params }: { params: Params }) {
             eq(student_assignments.class_id, classId),
           ),
         ),
-      // pointData
       db
         .select({
           id: points.id,
+          student_id: points.student_id,
+          behavior_id: points.behavior_id,
           type: points.type,
           number_of_points: points.number_of_points,
           created_date: points.created_date,
@@ -113,9 +123,7 @@ export default async function studentDashboard({ params }: { params: Params }) {
         .from(points)
         .leftJoin(behaviors, eq(behaviors.behavior_id, points.behavior_id))
         .leftJoin(reward_items, eq(reward_items.item_id, points.reward_item_id))
-        .where(
-          and(eq(points.class_id, classId), eq(points.student_id, studentId)),
-        ),
+        .where(eq(points.class_id, classId)),
     ]);
 
   const studentAssignments: StudentAssignmentWithDetails[] =
@@ -129,13 +137,97 @@ export default async function studentDashboard({ params }: { params: Params }) {
     return <div className="p-5 pl-10 text-red-500">Student not found.</div>;
   }
 
-  // Optionally, validate classData if you intend to use it
+  // Validate classData existence
   if (classData.length === 0) {
     return <div className="p-5 pl-10 text-red-500">Class not found.</div>;
   }
 
-  // Extract the first (and only) student from the array
   const student = studentData[0];
+
+  // Aggregate points by (behavior_id, student_id)
+  const behaviorMap = new Map<string, Map<string, number>>();
+  const behaviorTypeMap = new Map<
+    string,
+    { behavior_name: string; type: string }
+  >();
+
+  for (const p of allClassPointsData) {
+    if (!p.behavior_id || !p.behavior_name) continue;
+    const behaviorKey = p.behavior_id;
+    if (!behaviorMap.has(behaviorKey)) {
+      behaviorMap.set(behaviorKey, new Map());
+      behaviorTypeMap.set(behaviorKey, {
+        behavior_name: p.behavior_name,
+        type: p.type,
+      });
+    }
+    const studentPoints = behaviorMap.get(behaviorKey)!;
+    const currentPoints = studentPoints.get(p.student_id) ?? 0;
+    studentPoints.set(p.student_id, currentPoints + (p.number_of_points ?? 0));
+  }
+
+  // Adjust the interface to include otherStudentsCount
+  interface BehaviorRankAggregate {
+    behavior: string;
+    type: string;
+    totalPoints: number;
+    otherStudentsCount?: number; // optional field
+  }
+
+  const topPositiveBehaviors: BehaviorRankAggregate[] = [];
+  const topNegativeBehaviors: BehaviorRankAggregate[] = [];
+
+  for (const [behaviorKey, studentScores] of behaviorMap.entries()) {
+    const { behavior_name, type } = behaviorTypeMap.get(behaviorKey)!;
+    if (!behavior_name) continue;
+
+    const entries = Array.from(studentScores.entries()); // [ [student_id, totalPoints], ... ]
+
+    if (type === "positive") {
+      // max is #1
+      const maxPoints = Math.max(...entries.map(([_, pts]) => pts));
+      const topStudents = entries
+        .filter(([_, pts]) => pts === maxPoints)
+        .map(([id]) => id);
+
+      if (topStudents.includes(studentId)) {
+        // other students besides our student
+        const otherStudentsCount = topStudents.length - 1;
+        topPositiveBehaviors.push({
+          behavior: behavior_name,
+          type,
+          totalPoints: maxPoints,
+          otherStudentsCount,
+        });
+      }
+    } else if (type === "negative") {
+      // min is #1
+      const minPoints = Math.min(...entries.map(([_, pts]) => pts));
+      const bottomStudents = entries
+        .filter(([_, pts]) => pts === minPoints)
+        .map(([id]) => id);
+
+      if (bottomStudents.includes(studentId)) {
+        const otherStudentsCount = bottomStudents.length - 1;
+        topNegativeBehaviors.push({
+          behavior: behavior_name,
+          type,
+          totalPoints: minPoints,
+          otherStudentsCount,
+        });
+      }
+    }
+  }
+
+  // Map allClassPointsData to PointClient for PointsCard
+  const mappedPointsData: PointClient[] = allClassPointsData.map((p) => ({
+    id: p.id,
+    type: p.type,
+    number_of_points: p.number_of_points ?? 0,
+    behavior_name: p.behavior_name ?? null,
+    reward_item_name: p.reward_item_name ?? null,
+    created_date: p.created_date ?? new Date().toISOString(),
+  }));
 
   return (
     <div className="h-dvh">
@@ -152,8 +244,6 @@ export default async function studentDashboard({ params }: { params: Params }) {
         <ModeToggle />
       </header>
       <main className="h-full bg-accent/20 p-5 pl-10 font-serif dark:bg-gray-900">
-        {/* Header Section */}
-
         {/* Welcome Section */}
         <section className="mb-8 rounded-md border-l-4 border-orange-500 bg-pink-100 p-6 shadow-lg dark:bg-pink-800">
           <h1 className="text-3xl font-bold text-purple-700 dark:text-purple-300">
@@ -165,10 +255,26 @@ export default async function studentDashboard({ params }: { params: Params }) {
           </p>
         </section>
 
-        {/* Assignments Button */}
-        <div className="grid gap-5 sm:grid-cols-1 md:grid-cols-2">
-          <AssignmentTable assignments={studentAssignments} />
-          <PointsCard pointsData={pointsData} />
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="md:col-span-1">
+            <AssignmentTable assignments={studentAssignments} />
+          </div>
+          <div className="md:col-span-1">
+            <PointsCard
+              pointsData={mappedPointsData.filter((pData) => {
+                const originalItem = allClassPointsData.find(
+                  (orig) => orig.id === pData.id,
+                );
+                return originalItem?.student_id === studentId;
+              })}
+            />
+          </div>
+          <div className="md:col-span-1">
+            <StudentBehaviorLeadersCard
+              topPositive={topPositiveBehaviors}
+              topNegative={topNegativeBehaviors}
+            />
+          </div>
         </div>
       </main>
     </div>

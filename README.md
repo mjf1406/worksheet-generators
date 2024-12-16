@@ -176,6 +176,7 @@ This is the collection of worksheet generators that I have created as I needed t
 
 2024/12/16
 
+- UI: STUDENT DASHBOARD -- added "titles" in the form of seeing if the student is #1 in the class for which behaviors and showing it plus how many they are tied with
 - backend: rate limiting is working again with Clerk login
 - UI: teacher-facing student dashboard no longer includes redemptions in point history
 - UI: changed student dashboard view details buttons to secondary from outline

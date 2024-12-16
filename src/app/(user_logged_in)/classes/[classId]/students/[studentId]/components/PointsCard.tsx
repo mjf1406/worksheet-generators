@@ -20,7 +20,7 @@ import {
   DialogFooter,
 } from "~/components/ui/dialog";
 
-type PointClient = {
+export type PointClient = {
   id: string;
   type: "positive" | "negative" | "redemption";
   number_of_points: number;
@@ -78,6 +78,7 @@ const aggregatePoints = (points: PointClient[]): PointClient[] => {
 };
 
 const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
+  console.log("🚀 ~ pointsData:", pointsData);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const sortPoints = (a: PointClient, b: PointClient) =>
