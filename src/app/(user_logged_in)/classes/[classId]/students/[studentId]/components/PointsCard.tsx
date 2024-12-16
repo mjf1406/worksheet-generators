@@ -146,7 +146,7 @@ const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
           <CardTitle className="text-center text-2xl">Points</CardTitle>
           <Button
             className="mb-4 w-full"
-            variant="outline"
+            variant="secondary"
             onClick={() => setIsDialogOpen(true)}
           >
             View Details

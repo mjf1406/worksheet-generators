@@ -117,7 +117,7 @@ const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
       <Card className="mx-auto w-full font-serif">
         <CardHeader>
           <CardTitle className="text-center text-2xl">Tasks</CardTitle>
-          <Button variant="outline" onClick={() => setIsModalOpen(true)}>
+          <Button variant="secondary" onClick={() => setIsModalOpen(true)}>
             View all tasks
           </Button>
         </CardHeader>
