@@ -174,6 +174,11 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ## Change Log
 
+2024/12/16
+
+- UI: changed student dashboard view details buttons to secondary from outline
+- UI: mobile student grid now has 4 columns
+
 2024/12/08
 
 - UX: added basic date and topic filters to tasks table in `/tasks`

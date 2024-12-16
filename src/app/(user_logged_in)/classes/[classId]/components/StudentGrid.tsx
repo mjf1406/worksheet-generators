@@ -624,7 +624,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
       </div>
 
       {/* Student Grid */}
-      <div className="grid grid-cols-5 gap-2 md:grid-cols-4 lg:grid-cols-4 lg:gap-5 xl:grid-cols-6 2xl:grid-cols-8">
+      <div className="grid grid-cols-4 gap-2 lg:grid-cols-4 lg:gap-5 xl:grid-cols-6 2xl:grid-cols-8">
         {students.map((student) => {
           const isSelected = selectedStudents.some(
             (s) => s.student_id === student.student_id,
