@@ -4,12 +4,7 @@
 
 import React, { useEffect, useState, useTransition } from "react";
 import { Button } from "~/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "~/components/ui/dialog";
+import { Dialog } from "~/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,9 +15,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Checkbox } from "~/components/ui/checkbox";
 import { Edit, Loader2, MoreVertical, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
@@ -33,7 +25,6 @@ import {
 import type { Group, TeacherCourse } from "~/server/db/types";
 import { deleteGroup, updateGroup } from "../[classId]/updateGroup"; // Ensure correct import
 import { useToast } from "~/components/ui/use-toast";
-import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 import Link from "next/link";
 import {
   Card,
@@ -44,6 +35,7 @@ import {
 import AddGroupDialog from "./AddGroupDialog";
 import { z } from "zod";
 import { useQueryClient } from "@tanstack/react-query";
+import EditGroupDialog from "./EditGroupDialog";
 
 // Define Zod schemas for validation
 const UpdateGroupSchema = z.object({
@@ -62,96 +54,6 @@ interface ClassGroupsComponentProps {
   class: TeacherCourse;
 }
 
-const EditGroupDialog = ({
-  group,
-  allStudents,
-  onSave,
-  isSaving,
-}: {
-  group: Group;
-  allStudents: StudentData[];
-  onSave: (updatedGroup: Group) => void;
-  isSaving: boolean;
-}) => {
-  const [groupName, setGroupName] = useState(group.group_name);
-  const [selectedStudents, setSelectedStudents] = useState<
-    Record<string, boolean>
-  >(
-    Object.fromEntries(
-      allStudents.map((student) => [
-        student.student_id,
-        group.students.some((s) => s.student_id === student.student_id),
-      ]),
-    ),
-  );
-
-  const selectedCount = Object.values(selectedStudents).filter(Boolean).length;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const updatedStudents = allStudents.filter(
-      (student) => selectedStudents[student.student_id ?? ""],
-    );
-    onSave({ ...group, group_name: groupName, students: updatedStudents });
-  };
-
-  const handleStudentToggle = (studentId: string) => {
-    setSelectedStudents((prev) => ({ ...prev, [studentId]: !prev[studentId] }));
-  };
-
-  return (
-    <DialogContent className="sm:max-w-[425px]">
-      <DialogHeader>
-        <DialogTitle>Edit Group</DialogTitle>
-      </DialogHeader>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="group-name">Group Name</Label>
-          <Input
-            id="group-name"
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label>Select Students</Label>
-          <div className="max-h-60 overflow-y-auto rounded border p-2">
-            {allStudents.map((student) => (
-              <div
-                key={student.student_id}
-                className="flex items-center space-x-2"
-              >
-                <Checkbox
-                  id={`student-${student.student_id}`}
-                  checked={selectedStudents[student.student_id ?? ""] ?? false}
-                  onCheckedChange={() =>
-                    handleStudentToggle(student.student_id ?? "")
-                  }
-                />
-                <Label htmlFor={`student-${student.student_id}`}>
-                  {student.student_name_en}
-                </Label>
-              </div>
-            ))}
-          </div>
-          <div>Selected: {selectedCount}</div>
-        </div>
-        <Button type="submit" disabled={isSaving}>
-          {isSaving ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Saving...
-            </>
-          ) : (
-            "Save Changes"
-          )}
-        </Button>
-      </form>
-    </DialogContent>
-  );
-};
-
 const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
   class: courseData,
 }) => {
@@ -166,11 +68,32 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
     setGroups(courseData.groups ?? []);
   }, [courseData]);
 
-  // Function to handle group updates
+  // Helper function to update the cache
+  const updateClassesCache = (updatedClass: TeacherCourse) => {
+    queryClient.setQueryData<TeacherCourse[]>(["classes"], (oldData) => {
+      if (!oldData) return [updatedClass];
+      return oldData.map((cls) =>
+        cls.class_id === updatedClass.class_id ? updatedClass : cls,
+      );
+    });
+  };
+
   const handleSaveGroup = async (updatedGroup: Group) => {
+    // Optimistically update the UI
+    const previousGroups = [...groups];
+    const updatedGroups = groups.map((g) =>
+      g.group_id === updatedGroup.group_id ? updatedGroup : g,
+    );
+
+    // Update local state and cache optimistically
+    setGroups(updatedGroups);
+    updateClassesCache({
+      ...courseData,
+      groups: updatedGroups,
+    });
+
     startTransition(async () => {
       try {
-        // Create FormData object
         const formData = new FormData();
         formData.append("groupId", updatedGroup.group_id ?? "");
         formData.append("groupName", updatedGroup.group_name ?? "");
@@ -179,7 +102,6 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
           formData.append("studentIds", student.student_id ?? "");
         });
 
-        // Validate the FormData using UpdateGroupSchema
         const validatedFields = UpdateGroupSchema.safeParse({
           groupId: formData.get("groupId"),
           groupName: formData.get("groupName"),
@@ -188,21 +110,14 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
         });
 
         if (!validatedFields.success) {
-          // Handle validation errors
           throw new Error(
             validatedFields.error.errors.map((err) => err.message).join(", "),
           );
         }
 
-        // Call updateGroup with FormData
         const result = await updateGroup(formData);
 
         if (result.success) {
-          setGroups((prevGroups) =>
-            prevGroups.map((group) =>
-              group.group_id === updatedGroup.group_id ? updatedGroup : group,
-            ),
-          );
           toast({
             title: "Success",
             description: "Group updated successfully.",
@@ -212,6 +127,13 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
           throw new Error(result.message ?? "Failed to update group.");
         }
       } catch (error) {
+        // Revert optimistic update on error
+        setGroups(previousGroups);
+        updateClassesCache({
+          ...courseData,
+          groups: previousGroups,
+        });
+
         console.error("Failed to update group:", error);
         toast({
           title: "Error",
@@ -225,42 +147,38 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
     });
   };
 
-  // Function to handle group deletion
   const handleDeleteGroup = async (group: Group) => {
+    // Optimistically update the UI
+    const previousGroups = [...groups];
+    const updatedGroups = groups.filter((g) => g.group_id !== group.group_id);
+
+    // Update local state and cache optimistically
+    setGroups(updatedGroups);
+    updateClassesCache({
+      ...courseData,
+      groups: updatedGroups,
+    });
+
     startTransition(async () => {
       try {
-        // Create FormData object as required
         const formData = new FormData();
         formData.append("groupId", group.group_id ?? "");
         formData.append("classId", courseData.class_id ?? "");
 
-        // Validate the FormData using DeleteGroupSchema
         const validatedFields = DeleteGroupSchema.safeParse({
           groupId: formData.get("groupId"),
           classId: formData.get("classId"),
         });
 
         if (!validatedFields.success) {
-          // Handle validation errors
           throw new Error(
             validatedFields.error.errors.map((err) => err.message).join(", "),
           );
         }
 
-        // Call deleteGroup with FormData
         const result = await deleteGroup(formData);
 
         if (result.success) {
-          await queryClient.invalidateQueries({
-            queryKey: ["groups", courseData.class_id],
-          });
-          await queryClient.refetchQueries({
-            queryKey: ["groups", courseData.class_id],
-          });
-          await queryClient.invalidateQueries({ queryKey: ["classes"] });
-          setGroups((prevGroups) =>
-            prevGroups.filter((g) => g.group_id !== group.group_id),
-          );
           toast({
             title: "Success",
             description: "Group deleted successfully.",
@@ -270,6 +188,13 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
           throw new Error(result.message || "Failed to delete group.");
         }
       } catch (error) {
+        // Revert optimistic update on error
+        setGroups(previousGroups);
+        updateClassesCache({
+          ...courseData,
+          groups: previousGroups,
+        });
+
         console.error("Failed to delete group:", error);
         toast({
           title: "Error",
@@ -283,9 +208,17 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
     });
   };
 
-  // Function to handle adding a new group
   const handleGroupAdded = (newGroup: Group) => {
-    setGroups((prevGroups) => [...prevGroups, newGroup]);
+    // Optimistically update the UI
+    const updatedGroups = [...groups, newGroup];
+
+    // Update local state and cache optimistically
+    setGroups(updatedGroups);
+    updateClassesCache({
+      ...courseData,
+      groups: updatedGroups,
+    });
+
     toast({
       title: "Success",
       description: "Group added successfully.",
@@ -343,7 +276,6 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
             </Link>
           </Card>
         ))}
-
         {/* Edit Group Dialog */}
         <Dialog
           open={editingGroup !== null}
@@ -355,10 +287,12 @@ const ClassGroupsComponent: React.FC<ClassGroupsComponentProps> = ({
               allStudents={courseData.students ?? []}
               onSave={handleSaveGroup}
               isSaving={isPending}
+              otherGroups={groups.filter(
+                (g) => g.group_id !== editingGroup.group_id,
+              )}
             />
           )}
         </Dialog>
-
         {/* Delete Group Confirmation Dialog */}
         <AlertDialog
           open={deletingGroup !== null}

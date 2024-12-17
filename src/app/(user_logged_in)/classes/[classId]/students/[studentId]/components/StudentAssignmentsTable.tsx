@@ -114,7 +114,7 @@ const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
 
   return (
     <>
-      <Card className="mx-auto w-full font-serif">
+      <Card className="mx-auto h-full w-full">
         <CardHeader>
           <CardTitle className="text-center text-2xl">Tasks</CardTitle>
           <Button variant="secondary" onClick={() => setIsModalOpen(true)}>
@@ -138,11 +138,11 @@ const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
                 {topAssignments.map((assignment) => (
                   <TableRow
                     key={assignment.sa_id}
-                    className={`cursor-pointer ${
+                    className={` ${
                       assignment.sa_complete
                         ? "bg-green-200 dark:bg-green-600"
                         : "bg-red-200 dark:bg-red-600"
-                    } transition-colors hover:bg-blue-100 dark:hover:bg-blue-500`}
+                    } transition-color`}
                   >
                     <TableCell>
                       <span className="font-bold text-gray-800 dark:text-gray-200">

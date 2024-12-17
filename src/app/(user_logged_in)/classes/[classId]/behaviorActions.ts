@@ -7,7 +7,7 @@ import { generateUuidWithPrefix } from '~/server/db/helperFunction';
 import { auth } from '@clerk/nextjs/server';
 import type { BehaviorData } from './components/StudentDialog';
 import type { StudentData } from '~/app/api/getClassesGroupsStudents/route';
-import { and, eq, inArray } from 'drizzle-orm';
+import { and, desc, eq, inArray } from 'drizzle-orm';
 import type { PointType } from '~/server/db/types';
 import { DEFAULT_BEHAVIORS } from '~/lib/constants';
 import type { BehaviorNew } from './components/EditBehaviorDialog';
@@ -582,6 +582,58 @@ export async function addDefaultBehaviors(
         error instanceof Error
           ? error.message
           : 'Failed to add default behaviors due to a server error.',
+    };
+  }
+}
+export async function deleteLastBehaviorOccurrence(
+  behavior_id: string,
+  student_id: string,
+  class_id: string
+): Promise<{ success: boolean; message: string }> {
+  const { userId } = auth();
+  if (!userId) throw new Error("User not authenticated");
+
+  try {
+    await db.transaction(async (tx) => {
+      // First find the most recent point entry for this behavior, student, and class
+      const lastPoint = await tx
+        .select()
+        .from(points)
+        .where(
+          and(
+            eq(points.behavior_id, behavior_id),
+            eq(points.student_id, student_id),
+            eq(points.class_id, class_id),
+            eq(points.user_id, userId)
+          )
+        )
+        .orderBy((points) => desc(points.created_date))
+        .limit(1)
+        .get();
+
+      if (!lastPoint) {
+        throw new Error("No behavior occurrences found to delete");
+      }
+
+      // Delete the found point
+      await tx
+        .delete(points)
+        .where(eq(points.id, lastPoint.id))
+        .run();
+    });
+
+    return {
+      success: true,
+      message: "Last behavior occurrence deleted successfully",
+    };
+  } catch (error) {
+    console.error("Error deleting behavior occurrence:", error);
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to delete behavior occurrence due to a server error.",
     };
   }
 }

@@ -78,7 +78,6 @@ const aggregatePoints = (points: PointClient[]): PointClient[] => {
 };
 
 const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
-  console.log("🚀 ~ pointsData:", pointsData);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const sortPoints = (a: PointClient, b: PointClient) =>
@@ -142,7 +141,7 @@ const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
 
   return (
     <>
-      <Card className="max-w-2x mx-auto w-full">
+      <Card className="max-w-2x mx-auto h-full w-full">
         <CardHeader className="flex flex-col items-center">
           <CardTitle className="text-center text-2xl">Points</CardTitle>
           <Button
@@ -152,8 +151,8 @@ const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
           >
             View Details
           </Button>
-          <div className="mt-4 flex flex-col items-center">
-            <div className="flex items-center text-4xl font-bold text-yellow-500 dark:text-yellow-400">
+          <div className="mt-4 flex flex-col items-center justify-center">
+            <div className="my-2 flex items-center justify-center text-4xl font-bold text-yellow-500 dark:text-yellow-400">
               <FontAwesomeIcon icon={faTrophy} className="mr-2" />
               {totalPoints ?? 0}
             </div>
@@ -190,7 +189,7 @@ const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
               value="positive"
               className="flex-1 overflow-auto bg-green-50 p-4 dark:bg-gray-800"
             >
-              <table className="w-full table-auto">
+              <table className="h-full w-full table-auto">
                 <thead>
                   <tr>
                     <th className="px-4 py-2 text-left text-gray-700 dark:text-gray-300">
@@ -204,7 +203,9 @@ const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
                     </th>
                   </tr>
                 </thead>
-                <tbody>{renderRows(recentPositivePoints, "positive")}</tbody>
+                <tbody className="h-full">
+                  {renderRows(recentPositivePoints, "positive")}
+                </tbody>
               </table>
             </TabsContent>
             <TabsContent

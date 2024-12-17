@@ -17,15 +17,30 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { Button } from "~/components/ui/button";
+import { ArrowUp, ArrowDown, MoreVertical } from "lucide-react";
 import {
   FancyRadioGroup,
   type Option,
 } from "../../components/SelectRadioGroup";
-import Link from "next/link";
-
 import { updateStudentAssignment } from "../actions/studentAssignmentsActions";
-import { AssignmentsFilter, DateFilterMode } from "./AssignmentsFilters";
+import { AssignmentsFilter, type DateFilterMode } from "./AssignmentsFilters";
+import StudentDialog from "../../components/StudentDialog";
+import { type StudentData } from "~/app/api/getClassesGroupsStudents/route";
+import { useToast } from "~/components/ui/use-toast";
+import Link from "next/link";
+import {
+  applyBehavior,
+  deleteLastBehaviorOccurrence,
+} from "../../behaviorActions";
 
 interface Params {
   classId: string;
@@ -36,6 +51,7 @@ interface AssignmentCellProps {
   studentId: string;
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
+  isLoading?: boolean;
 }
 
 function AssignmentCell({
@@ -43,11 +59,50 @@ function AssignmentCell({
   studentId,
   checked,
   onCheckedChange,
+  isLoading,
 }: AssignmentCellProps) {
   return (
     <TableCell className={`text-center ${checked ? "bg-secondary" : ""}`}>
-      <Checkbox checked={checked} onCheckedChange={onCheckedChange} />
+      <Checkbox
+        checked={checked}
+        onCheckedChange={onCheckedChange}
+        disabled={isLoading}
+      />
     </TableCell>
+  );
+}
+
+function StudentActions({
+  student,
+  classId,
+  onOpenDialog,
+}: {
+  student: StudentData;
+  classId: string;
+  onOpenDialog: () => void;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+          <MoreVertical className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-[200px]">
+        <DropdownMenuLabel>Student Actions</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <Link href={`/classes/${classId}/students/${student.student_id}`}>
+            Student Dashboard
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={`/classes/${classId}/dashboard/${student.student_id}`}>
+            Teaching-facing Student Dashboard
+          </Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -66,6 +121,7 @@ interface SortConfig {
 
 export default function AssignmentsTable({ params }: { params: Params }) {
   const { classId } = params;
+  const { toast } = useToast();
   const { data: coursesData = [] } = useSuspenseQuery(classesOptions);
   const courseData = coursesData.find((course) => course.class_id === classId);
 
@@ -75,6 +131,18 @@ export default function AssignmentsTable({ params }: { params: Params }) {
   const topics = courseData?.topics ?? [];
 
   const [selectedGroupId, setSelectedGroupId] = useState<string>("all");
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
+  const [filterDueDate, setFilterDueDate] = useState(false);
+  const [filterCreatedDate, setFilterCreatedDate] = useState(false);
+  const [filterWorkingDate, setFilterWorkingDate] = useState(false);
+  const [isStudentDialogOpen, setIsStudentDialogOpen] =
+    useState<boolean>(false);
+  const [selectedStudentToView, setSelectedStudentToView] =
+    useState<StudentData | null>(null);
+  const [loadingBehaviorId, setLoadingBehaviorId] = useState<string | null>(
+    null,
+  );
 
   const groupsOptions: Option[] = groups.map((group) => ({
     value: group.group_id,
@@ -90,14 +158,6 @@ export default function AssignmentsTable({ params }: { params: Params }) {
     },
     ...groupsOptions,
   ];
-
-  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
-
-  // Filters state
-  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
-  const [filterDueDate, setFilterDueDate] = useState(false);
-  const [filterCreatedDate, setFilterCreatedDate] = useState(false);
-  const [filterWorkingDate, setFilterWorkingDate] = useState(false);
 
   // Initialize checkboxStatuses
   const initialCheckboxStatuses = useMemo(() => {
@@ -154,6 +214,74 @@ export default function AssignmentsTable({ params }: { params: Params }) {
     },
   });
 
+  const applyBehaviorMutation = useMutation({
+    mutationFn: async ({
+      behaviorId,
+      studentId,
+      classId,
+      inputQuantity = 1,
+    }: {
+      behaviorId: string;
+      studentId: string;
+      classId: string;
+      inputQuantity?: number;
+    }) => {
+      const result = await applyBehavior(
+        behaviorId,
+        [
+          {
+            student_id: studentId,
+            student_name_en: "",
+            student_name_alt: null,
+            student_reading_level: null,
+            student_grade: null,
+            student_sex: null,
+            student_number: null,
+            student_email: null,
+            enrollment_date: null,
+            redemption_history: [],
+          },
+        ],
+        classId,
+        inputQuantity,
+      );
+      if (!result.success) {
+        throw new Error(result.message);
+      }
+      return result;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: classesOptions.queryKey,
+      });
+      toast({
+        title: "Success",
+        description: "Task marked complete.",
+      });
+    },
+    onError: (error) => {
+      console.error("Error applying behavior:", error);
+      toast({
+        title: "Error",
+        description: "Failed to apply behavior. Please try again.",
+        variant: "destructive",
+      });
+    },
+    onSettled: () => {
+      setLoadingBehaviorId(null);
+    },
+  });
+
+  const handleNameClick = (student: StudentData) => {
+    setSelectedStudentToView(student);
+    setIsStudentDialogOpen(true);
+  };
+
+  const closeStudentDialog = () => {
+    setIsStudentDialogOpen(false);
+    setSelectedStudentToView(null);
+  };
+
   const handleSort = (key: SortKey) => {
     setSortConfig((prev) => {
       if (prev?.key === key) {
@@ -164,24 +292,77 @@ export default function AssignmentsTable({ params }: { params: Params }) {
     });
   };
 
-  const handleCheckboxChange = (
+  const handleCheckboxChange = async (
     studentId: string,
     assignmentId: string,
     checked: boolean,
   ) => {
-    // Optimistic update
+    const behaviorId = "behavior_20c4128a-fa4c-4632-bb29-848c5143bbe4"; // Store ID in a constant
+
     setCheckboxStatuses((prev) => ({
       ...prev,
       [`${studentId}_${assignmentId}`]: checked,
     }));
 
-    // Run mutation
-    mutation.mutate({
-      classId,
-      studentId,
-      assignmentId,
-      completed: checked,
-    });
+    try {
+      // First update the assignment status
+      await mutation.mutateAsync({
+        classId,
+        studentId,
+        assignmentId,
+        completed: checked,
+      });
+
+      // If checked, apply the behavior
+      if (checked) {
+        setLoadingBehaviorId(behaviorId);
+        await applyBehaviorMutation.mutateAsync({
+          behaviorId,
+          studentId,
+          classId,
+        });
+      } else {
+        // If unchecked, remove the last behavior occurrence
+        setLoadingBehaviorId(behaviorId);
+        const result = await deleteLastBehaviorOccurrence(
+          behaviorId,
+          studentId,
+          classId,
+        );
+
+        if (!result.success) {
+          throw new Error(result.message);
+        }
+
+        toast({
+          title: "Success",
+          description: "Task marked incomplete.",
+        });
+
+        await queryClient.invalidateQueries({
+          queryKey: classesOptions.queryKey,
+        });
+      }
+    } catch (error) {
+      // Revert checkbox state if either operation fails
+      setCheckboxStatuses((prev) => ({
+        ...prev,
+        [`${studentId}_${assignmentId}`]: !checked,
+      }));
+
+      console.error("Error updating assignment or behavior:", error);
+
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to update assignment or behavior. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingBehaviorId(null);
+    }
   };
 
   const sortedStudents = useMemo(() => {
@@ -216,12 +397,9 @@ export default function AssignmentsTable({ params }: { params: Params }) {
               aValue = aGroup ?? "No Group";
               bValue = bGroup ?? "No Group";
               break;
-            default:
-              break;
           }
         }
 
-        // Handle boolean sorting
         if (typeof aValue === "boolean" && typeof bValue === "boolean") {
           if (aValue === bValue) return 0;
           return sortConfig.order === "asc"
@@ -233,13 +411,8 @@ export default function AssignmentsTable({ params }: { params: Params }) {
               : -1;
         }
 
-        // Handle string/number sorting
-        if (aValue < bValue) {
-          return sortConfig.order === "asc" ? -1 : 1;
-        }
-        if (aValue > bValue) {
-          return sortConfig.order === "asc" ? 1 : -1;
-        }
+        if (aValue < bValue) return sortConfig.order === "asc" ? -1 : 1;
+        if (aValue > bValue) return sortConfig.order === "asc" ? 1 : -1;
         return 0;
       });
     }
@@ -261,31 +434,17 @@ export default function AssignmentsTable({ params }: { params: Params }) {
     );
   }, [selectedGroupId, sortedStudents, groups]);
 
-  // Filter assignments based on selectedTopicIds and other date filters
   const filteredAssignments = useMemo(() => {
     return sortedAssignments.filter((assignment) => {
       const passesTopicFilter =
         selectedTopicIds.length === 0 ||
         selectedTopicIds.includes(assignment.topic ?? "");
 
-      let passesDueDateFilter = true;
-      let passesCreatedDateFilter = true;
-      let passesWorkingDateFilter = true;
-
-      if (filterDueDate) {
-        // For example, only show assignments that have a due_date defined
-        passesDueDateFilter = !!assignment.due_date;
-      }
-
-      if (filterCreatedDate) {
-        // Only show assignments with a created_date defined
-        passesCreatedDateFilter = !!assignment.created_date;
-      }
-
-      if (filterWorkingDate) {
-        // Only show assignments with a working_date defined
-        passesWorkingDateFilter = !!assignment.working_date;
-      }
+      const passesDueDateFilter = !filterDueDate || !!assignment.due_date;
+      const passesCreatedDateFilter =
+        !filterCreatedDate || !!assignment.created_date;
+      const passesWorkingDateFilter =
+        !filterWorkingDate || !!assignment.working_date;
 
       return (
         passesTopicFilter &&
@@ -314,7 +473,6 @@ export default function AssignmentsTable({ params }: { params: Params }) {
     workingDateStart: Date | undefined;
     workingDateEnd: Date | undefined;
   }) => {
-    // Update the state with the new filter values
     setSelectedTopicIds(filters.selectedTopicIds);
     setFilterDueDate(filters.dueDateMode !== "none");
     setFilterCreatedDate(filters.createdDateMode !== "none");
@@ -323,7 +481,6 @@ export default function AssignmentsTable({ params }: { params: Params }) {
 
   return (
     <div className="w-full space-y-4 overflow-x-auto">
-      {/* Existing group filters */}
       <div className="mt-2 flex items-center gap-2">
         <FancyRadioGroup
           options={allGroupsOptions}
@@ -332,14 +489,19 @@ export default function AssignmentsTable({ params }: { params: Params }) {
         />
       </div>
 
-      {/* New filters for assignments */}
       <AssignmentsFilter topics={topics} onFilterChange={handleFilterChange} />
 
+      {isStudentDialogOpen && selectedStudentToView && (
+        <StudentDialog
+          studentId={selectedStudentToView.student_id}
+          classId={classId}
+          onClose={closeStudentDialog}
+        />
+      )}
       <Table>
         <TableCaption>Tasks for {courseData?.class_name}</TableCaption>
         <TableHeader>
           <TableRow>
-            {/* Column 1: Student Number */}
             <TableHead
               className="sticky left-0 z-10 w-16 cursor-pointer bg-background text-foreground"
               onClick={() => handleSort("student_number")}
@@ -352,13 +514,9 @@ export default function AssignmentsTable({ params }: { params: Params }) {
                   ) : (
                     <ArrowDown className="ml-1 h-4 w-4" />
                   ))}
-                {sortConfig?.key !== "student_number" && (
-                  <ArrowDown className="ml-1 h-4 w-4 text-transparent" />
-                )}
               </div>
             </TableHead>
 
-            {/* Column 2: Group */}
             <TableHead
               className="sticky left-16 z-10 w-32 cursor-pointer bg-background text-foreground"
               onClick={() => handleSort("group")}
@@ -371,13 +529,9 @@ export default function AssignmentsTable({ params }: { params: Params }) {
                   ) : (
                     <ArrowDown className="ml-1 h-4 w-4" />
                   ))}
-                {sortConfig?.key !== "group" && (
-                  <ArrowDown className="ml-1 h-4 w-4 text-transparent" />
-                )}
               </div>
             </TableHead>
 
-            {/* Column 3: Student Name */}
             <TableHead
               className="sticky left-48 z-10 w-48 cursor-pointer bg-background text-foreground"
               onClick={() => handleSort("student_name")}
@@ -390,13 +544,9 @@ export default function AssignmentsTable({ params }: { params: Params }) {
                   ) : (
                     <ArrowDown className="ml-1 h-4 w-4" />
                   ))}
-                {sortConfig?.key !== "student_name" && (
-                  <ArrowDown className="ml-1 h-4 w-4 text-transparent" />
-                )}
               </div>
             </TableHead>
 
-            {/* Assignment Columns */}
             {filteredAssignments.map((assignment) => {
               const sortKey = `assignment_${assignment.id}` as SortKey;
               return (
@@ -426,27 +576,30 @@ export default function AssignmentsTable({ params }: { params: Params }) {
             );
             return (
               <TableRow key={student.student_id}>
-                {/* Column 1: Student Number */}
                 <TableCell className="sticky left-0 z-10 w-16 bg-background text-center">
                   {student.student_number}
                 </TableCell>
 
-                {/* Column 2: Group */}
                 <TableCell className="sticky left-16 z-10 w-32 bg-background text-center">
                   {studentGroup?.group_name ?? "No Group"}
                 </TableCell>
 
-                {/* Column 3: Student Name */}
-                <TableCell className="sticky left-48 z-10 w-48 bg-background text-center">
-                  <Link
-                    href={`/classes/${classId}/students/${student.student_id}`}
-                    className="text-blue-500 hover:underline"
-                  >
-                    {student.student_name_en.split(" ")[1]}
-                  </Link>
+                <TableCell className="sticky left-48 z-10 w-48 bg-background">
+                  <div className="flex items-center justify-between px-2">
+                    <button
+                      onClick={() => handleNameClick(student)}
+                      className="text-primary hover:underline"
+                    >
+                      {student.student_name_en.split(" ")[1]}
+                    </button>
+                    <StudentActions
+                      student={student}
+                      classId={classId}
+                      onOpenDialog={() => handleNameClick(student)}
+                    />
+                  </div>
                 </TableCell>
 
-                {/* Assignment Cells */}
                 {filteredAssignments.map((assignment) => (
                   <AssignmentCell
                     key={assignment.id}
@@ -464,6 +617,7 @@ export default function AssignmentsTable({ params }: { params: Params }) {
                         checked,
                       )
                     }
+                    isLoading={loadingBehaviorId !== null}
                   />
                 ))}
               </TableRow>

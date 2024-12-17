@@ -546,3 +546,219 @@ export const DEFAULT_BEHAVIORS: Omit<
     title: "Off-Task Obstructor",
   },
 ];
+
+export type ConversationStarter = {
+  text: string;
+  category: "learning" | "encouragement" | "daily" | "goals";
+};
+
+export const conversationStarters: ConversationStarter[] = [
+  // Learning focused
+  {
+    text: "Can you teach me a new word you learned in English?",
+    category: "learning",
+  },
+  { text: "What book are you reading right now?", category: "learning" },
+  {
+    text: "What's one thing you know now that you didn’t know last week?",
+    category: "learning",
+  },
+  {
+    text: "If you could learn about any topic today, what would it be?",
+    category: "learning",
+  },
+  {
+    text: "What English word is hard to pronounce for you?",
+    category: "learning",
+  },
+  {
+    text: "Do you like reading, writing, speaking, or listening to English the most?",
+    category: "learning",
+  },
+  {
+    text: "Can you explain what a 'noun' is in your own words?",
+    category: "learning",
+  },
+  { text: "Which words sound funny to you in English?", category: "learning" },
+  {
+    text: "If you had to write a story today, what would it be about?",
+    category: "learning",
+  },
+  {
+    text: "Can you think of a word in your language that sounds similar to an English word?",
+    category: "learning",
+  },
+  {
+    text: "What strategy do you use when you don't understand a word?",
+    category: "learning",
+  },
+  {
+    text: "What’s a topic you would like to research more?",
+    category: "learning",
+  },
+  {
+    text: "Can you think of a sentence with the word 'because' in it?",
+    category: "learning",
+  },
+  { text: "What's one new fact you learned this week?", category: "learning" },
+  {
+    text: "If you were a teacher, how would you help someone learn a new word?",
+    category: "learning",
+  },
+
+  // Encouragement
+  {
+    text: "Your hard work is paying off — keep going!",
+    category: "encouragement",
+  },
+  {
+    text: "Even when it's hard, you're still trying. That's amazing!",
+    category: "encouragement",
+  },
+  {
+    text: "I noticed how you kept trying even when it was difficult. Great job!",
+    category: "encouragement",
+  },
+  {
+    text: "Mistakes are part of learning. You're doing an awesome job!",
+    category: "encouragement",
+  },
+  {
+    text: "You have learned so much already. Imagine how much more you’ll learn!",
+    category: "encouragement",
+  },
+  {
+    text: "You're getting better every single day!",
+    category: "encouragement",
+  },
+  {
+    text: "Remember, everyone learns at their own pace. You’re doing just fine!",
+    category: "encouragement",
+  },
+  {
+    text: "Don't give up now – you're so close to understanding it!",
+    category: "encouragement",
+  },
+  {
+    text: "Look how far you've come from the beginning of the year!",
+    category: "encouragement",
+  },
+  {
+    text: "I believe in you – you’re smarter than you think!",
+    category: "encouragement",
+  },
+  {
+    text: "Small steps every day lead to big changes!",
+    category: "encouragement",
+  },
+  {
+    text: "You have the power to improve little by little, and that’s awesome!",
+    category: "encouragement",
+  },
+  {
+    text: "You just did something really tricky — celebrate that!",
+    category: "encouragement",
+  },
+  {
+    text: "If something feels too hard, it just means your brain is growing!",
+    category: "encouragement",
+  },
+  {
+    text: "You’re better at this today than you were yesterday. Progress is real!",
+    category: "encouragement",
+  },
+
+  // Daily activities
+  { text: "What did you have for breakfast today?", category: "daily" },
+  { text: "What’s your favorite part of the school day?", category: "daily" },
+  {
+    text: "If you could do anything right now, what would it be?",
+    category: "daily",
+  },
+  { text: "What's one thing that made you smile today?", category: "daily" },
+  {
+    text: "If you could have a superpower today, what would it be?",
+    category: "daily",
+  },
+  {
+    text: "What was something kind you did for someone today?",
+    category: "daily",
+  },
+  { text: "What did you play at recess?", category: "daily" },
+  { text: "Who did you sit next to at lunch today?", category: "daily" },
+  {
+    text: "What’s the weather like today? Is it hot, cold, sunny, or rainy?",
+    category: "daily",
+  },
+  { text: "What’s your favorite thing to do after school?", category: "daily" },
+  { text: "Did anything surprise you today?", category: "daily" },
+  {
+    text: "What’s one thing you’re really looking forward to this week?",
+    category: "daily",
+  },
+  {
+    text: "If you could be an animal today, what animal would you be?",
+    category: "daily",
+  },
+  {
+    text: "What’s the funniest thing that happened to you recently?",
+    category: "daily",
+  },
+  {
+    text: "If you could design a game for the class, what would it be about?",
+    category: "daily",
+  },
+
+  // Goals and progress
+  {
+    text: "What is one thing you want to achieve by the end of the week?",
+    category: "goals",
+  },
+  {
+    text: "What are you most excited to learn about today?",
+    category: "goals",
+  },
+  {
+    text: "What do you think will be the most challenging thing for you this week?",
+    category: "goals",
+  },
+  { text: "What’s one goal you have for next month?", category: "goals" },
+  {
+    text: "What can you do today to get better at English?",
+    category: "goals",
+  },
+  {
+    text: "If you could master one English word today, what would it be?",
+    category: "goals",
+  },
+  {
+    text: "If you make a mistake, what’s your plan to learn from it?",
+    category: "goals",
+  },
+  {
+    text: "What’s one thing you want to do better than yesterday?",
+    category: "goals",
+  },
+  { text: "What’s one thing you did well this week?", category: "goals" },
+  {
+    text: "If you could set a goal for your class, what would it be?",
+    category: "goals",
+  },
+  {
+    text: "What will you do today to make your future self proud?",
+    category: "goals",
+  },
+  {
+    text: "What’s one question you have about something new you’re learning?",
+    category: "goals",
+  },
+  { text: "What’s one habit you want to start this week?", category: "goals" },
+  {
+    text: "How will you know if you’re getting better at something?",
+    category: "goals",
+  },
+  {
+    text: "If you could set a challenge for yourself today, what would it be?",
+    category: "goals",
+  },
+];

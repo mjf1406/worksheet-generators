@@ -104,11 +104,12 @@ This is the collection of worksheet generators that I have created as I needed t
 - FEATURE: achievements
   - given to students once they reach certain thresholds for each behavior/redemption item
   - if they have the achievement, a badge is displayed on their profile
-- FEATURE: Expectations grid to manage expectations for each student for
+- PAGE: Expectations grid to manage expectations for each student for
   - word count
   - presentation length
   - vocab. sentence length
   - put a card for this on the student dashboard
+- PAGE: Reward Items --- students can see what they can purchase with their points easily.
 - PAGE: Class Dashboard
   - behavior streaks
     - positive
@@ -164,15 +165,20 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ### p0
 
-- Groups: need to optimistically update the cached data
-- when editing a group's members or creating a group, should be able to set the selected students to the opposite of another group, e.g. I want Group B to be all the students not in Group A
 - BUG: fixed a bug that would cause the mouse to click through the sorting dropdown.
-- DB: need first name and last name columns when adding a class
+- DB: need first name and last name columns when adding a class.
+
+## Change Log
+
+2024/12/17
+
+- PAGE: student dashboard -- added a reward items grid so they know what they can purchase with their points
+- UI: dramatically improved the look of the student dashboard
 - UX: need to ensure the local timezone is used when rendering the date on the student dashboard
 - PAGE: Tasks - auto award Task Completed on check, and delete the last one on uncheck
 - PAGE: Tasks - somehow add in Student Dialog to make it easier to adjust points
-
-## Change Log
+- UX: groups CRUD operations are now optimistically updated
+- UX: when editing a group's members or creating a group, the user can now set the selected students to the opposite of another group
 
 2024/12/16
 
