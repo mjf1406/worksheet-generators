@@ -35,6 +35,7 @@ import {
   Trash2,
   Loader,
   UserCheck,
+  Monitor,
 } from "lucide-react";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
 import { FancyRadioGroup, type Option } from "./SelectRadioGroup";
@@ -131,6 +132,9 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
 
   // State for handling transitions
   const [isPending, startTransition] = useTransition();
+
+  // New state for Compact Mode
+  const [isCompactMode, setIsCompactMode] = useState<boolean>(false);
 
   // Handler to update the students state when new students are added
   const handleStudentsAdded = (newStudents: Student[]) => {
@@ -570,6 +574,22 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
             existingStudents={students as unknown as Student[]}
             onStudentsAdded={handleStudentsAdded}
           />
+          {/* New Compact Mode Toggle Button */}
+          <Button
+            variant={isCompactMode ? "secondary" : "default"}
+            size={"icon"}
+            onClick={() => setIsCompactMode(!isCompactMode)}
+          >
+            {isCompactMode ? (
+              <>
+                <Monitor size={16} />
+              </>
+            ) : (
+              <>
+                <Monitor size={16} />
+              </>
+            )}
+          </Button>
         </div>
         <div className="flex flex-row items-center gap-2">
           <div>
@@ -624,7 +644,9 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
       </div>
 
       {/* Student Grid */}
-      <div className="grid grid-cols-4 gap-2 lg:grid-cols-4 lg:gap-5 xl:grid-cols-6 2xl:grid-cols-8">
+      <div
+        className={`grid grid-cols-4 gap-2 lg:grid-cols-4 lg:gap-5 xl:grid-cols-6 2xl:grid-cols-8`}
+      >
         {students.map((student) => {
           const isSelected = selectedStudents.some(
             (s) => s.student_id === student.student_id,
@@ -642,116 +664,146 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                 (isAttendanceMode || isMultiSelectMode) && "cursor-pointer",
                 isAttendanceMode && attendance === "absent" && "opacity-40",
                 !isAttendanceMode && isAbsentToday && "opacity-30",
+                // isCompactMode ? "flex items-center justify-center" : "",
               )}
               onClick={() => {
                 handleStudentClick(student.student_id);
               }}
             >
-              {/* Attendance Indicator */}
-              {isAttendanceMode && (
-                <div className="absolute bottom-0 right-0 m-1 flex items-center justify-center rounded-xl">
-                  {attendance === "present" ? (
-                    <Check size={54} className="text-green-500 opacity-50" />
-                  ) : (
-                    <X size={54} className="text-red-500 opacity-50" />
-                  )}
-                </div>
-              )}
-
-              {/* Student Number Tooltip */}
-              <div className="text-2xs absolute left-1 top-1 md:text-sm">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger className="cursor-help">
-                      #{student.student_number}
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Student number</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-
-              {/* Dropdown Menu */}
-              <div className="absolute bottom-1 right-1">
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <Button
-                      variant={"ghost"}
-                      size={"icon"}
-                      className="h-fit w-fit p-1 md:p-2"
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent card click when opening dropdown
-                      }}
-                    >
-                      <EllipsisVertical className="h-2 w-2 md:h-4 md:w-4" />{" "}
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent card click when selecting edit
-                        setSelectedStudentToEdit(student);
-                        setIsEditDialogOpen(true);
-                      }}
-                    >
-                      <Edit size={16} className="mr-2" /> Edit student
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="text-destructive"
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent card click when selecting delete
-                        openDeleteDialog(student);
-                      }}
-                    >
-                      <Trash2 size={16} className="mr-2" /> Delete student
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-
-              {/* Points Tooltip */}
-              <div className="absolute right-1 top-1 flex flex-row items-center justify-center md:right-2 md:top-2">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger className="cursor-help">
-                      <div className="text-2xs flex h-4 w-fit min-w-6 items-center justify-center rounded-full bg-primary p-0.5 text-background md:h-7 md:p-2 md:text-base">
-                        {student.points ?? 0}
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Points</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-
-              {/* Reading Level Tooltip */}
-              <div className="absolute bottom-1 left-1 flex flex-row items-center justify-center">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger className="cursor-help">
-                      <div className="text-2xs flex flex-row items-center justify-center md:text-base">
-                        <BookOpen className="mr-1 h-2 w-2 md:h-4 md:w-4" />
-                        {student.student_reading_level}
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Reading level</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-
-              {/* Student Name */}
-              <CardHeader className="p-1 pt-5 md:p-6 md:pt-8">
-                <CardTitle className="flex flex-col text-center text-sm md:text-xl">
-                  <div>{student.student_name_en.split(" ").pop()}</div>
-                  <div className="text-3xs md:text-xs">
-                    {student.student_sex === "male" ? "Boy" : "Girl"}
+              {/* Compact Mode Rendering */}
+              {isCompactMode ? (
+                <>
+                  <div className="absolute left-2 top-1 text-lg text-gray-500">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger className="cursor-help">
+                          #{student.student_number}
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Student number</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
-                </CardTitle>
-              </CardHeader>
+                  {/* Points Front and Center */}
+                  <CardHeader className="p-1 pt-5 md:p-6 md:pt-8">
+                    <CardTitle className="flex flex-col text-center text-4xl font-bold text-primary">
+                      {student.points ?? 0}
+                    </CardTitle>
+                  </CardHeader>
+                </>
+              ) : (
+                <>
+                  {/* Attendance Indicator */}
+                  {isAttendanceMode && (
+                    <div className="absolute bottom-0 right-0 m-1 flex items-center justify-center rounded-xl">
+                      {attendance === "present" ? (
+                        <Check
+                          size={54}
+                          className="text-green-500 opacity-50"
+                        />
+                      ) : (
+                        <X size={54} className="text-red-500 opacity-50" />
+                      )}
+                    </div>
+                  )}
+
+                  {/* Student Number Tooltip */}
+                  <div className="text-2xs absolute left-1 top-1 md:text-sm">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger className="cursor-help">
+                          #{student.student_number}
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Student number</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+
+                  {/* Dropdown Menu */}
+                  <div className="absolute bottom-1 right-1">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <Button
+                          variant={"ghost"}
+                          size={"icon"}
+                          className="h-fit w-fit p-1 md:p-2"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent card click when opening dropdown
+                          }}
+                        >
+                          <EllipsisVertical className="h-2 w-2 md:h-4 md:w-4" />{" "}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent card click when selecting edit
+                            setSelectedStudentToEdit(student);
+                            setIsEditDialogOpen(true);
+                          }}
+                        >
+                          <Edit size={16} className="mr-2" /> Edit student
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent card click when selecting delete
+                            openDeleteDialog(student);
+                          }}
+                        >
+                          <Trash2 size={16} className="mr-2" /> Delete student
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                  {/* Points Tooltip */}
+                  <div className="absolute right-1 top-1 flex flex-row items-center justify-center md:right-2 md:top-2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger className="cursor-help">
+                          <div className="text-2xs flex h-4 w-fit min-w-6 items-center justify-center rounded-full bg-primary p-0.5 text-background md:h-7 md:p-2 md:text-base">
+                            {student.points ?? 0}
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Points</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+
+                  {/* Reading Level Tooltip */}
+                  <div className="absolute bottom-1 left-1 flex flex-row items-center justify-center">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger className="cursor-help">
+                          <div className="text-2xs flex flex-row items-center justify-center md:text-base">
+                            <BookOpen className="mr-1 h-2 w-2 md:h-4 md:w-4" />
+                            {student.student_reading_level}
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Reading level</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+
+                  {/* Student Name */}
+                  <CardHeader className="p-1 pt-5 md:p-6 md:pt-8">
+                    <CardTitle className="flex flex-col text-center text-sm md:text-xl">
+                      <div>{student.student_name_en.split(" ").pop()}</div>
+                      <div className="text-3xs md:text-xs">
+                        {student.student_sex === "male" ? "Boy" : "Girl"}
+                      </div>
+                    </CardTitle>
+                  </CardHeader>
+                </>
+              )}
             </Card>
           );
         })}

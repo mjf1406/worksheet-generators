@@ -172,6 +172,7 @@ This is the collection of worksheet generators that I have created as I needed t
 
 2024/12/18
 
+- UX: added a point display mode that only shows student numbers and their points. It's meant to be safe to show the entire class.
 - UI: some enhancements to the student dashboard
 - UI: some UI enhancements to the Tasks table
 
