@@ -1,6 +1,7 @@
 import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 import type { AssignerItemStatuses, PointRecord, RedemptionRecord } from "./types";
+import { number } from "zod";
 
 // Core Tables
 
@@ -285,6 +286,45 @@ export const topics = sqliteTable('topics',
         return {
             topics_by_class_id_idx: index("topics_by_class_id_idx").on(table.class_id),
             topics_by_user_id_idx: index("topics_by_user_id_idx").on(table.user_id)
+        }
+    }
+)
+
+export const expectations = sqliteTable('expectations',
+    {
+        id: text('id').notNull().primaryKey(),
+        user_id: text('user_id').notNull().references(() => users.user_id),
+        class_id: text('class_id').notNull().references(() => classes.class_id),
+        name: text('name').notNull(),
+        description: text('description'),
+        created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+        updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+    },
+    (table) => {
+        return {
+            expectations_by_class_id_idx: index("expectations_by_class_id_idx").on(table.class_id),
+            expectations_by_user_id_idx: index("expectations_by_user_id_idx").on(table.user_id)
+        }
+    }
+)
+
+export const student_expectations = sqliteTable('student_expectations',
+    {
+        id: text('id').notNull().primaryKey(),
+        expectation_id: text('expectation_id').notNull().references(() => expectations.id),
+        student_id: text('student_id').notNull().references(() => students.student_id),
+        user_id: text('user_id').notNull().references(() => users.user_id),
+        class_id: text('class_id').notNull().references(() => classes.class_id),
+        value: text('value'), // This or the below must not be null
+        number: integer('number'), // This or the above must not be null
+        created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+        updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+    },
+    (table) => {
+        return {
+            student_expectations_by_class_id_idx: index("student_expectations_by_class_id_idx").on(table.class_id),
+            student_expectations_by_user_id_idx: index("student_expectations_by_user_id_idx").on(table.user_id),
+            student_expectations_by_student_id_idx: index("student_expectations_by_student_id_idx").on(table.student_id)
         }
     }
 )

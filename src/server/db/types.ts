@@ -83,6 +83,7 @@ export type TeacherCourse = {
     behaviors: BehaviorData[];
     topics: Topic[];
     assignments: Assignment[];
+    expectations: Expectation[];
   }
 
 export type PointRecord = {
@@ -273,3 +274,25 @@ export type Assignment = {
     students?: AssignmentStatus[];
     created_date?: string | null;
 }
+
+export type Expectation = {
+    id: string;
+    user_id: string;
+    class_id: string;
+    name: string;
+    description: string | null;
+    created_date?: string | null;
+    updated_date?: string | null;
+}
+
+export type StudentExpectation = {
+    id: string;
+    expectation_id: string;
+    student_id: string;
+    user_id: string;
+    class_id: string;
+    value?: string;
+    number?: number;
+    created_date: string;
+    updated_date: string;
+};

@@ -9,6 +9,8 @@ import {
   Trash2,
   LayoutDashboard,
   MoreVertical,
+  NotebookPen,
+  CircleCheckBig,
 } from "lucide-react";
 import Link from "next/link";
 import removeClassFromTeacher from "~/server/actions/removeClassFromTeacher";
@@ -51,6 +53,12 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "~/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 export default function ClassList() {
   const [courseToDelete, setCourseToDelete] = useState<string | null>(null);
@@ -248,7 +256,7 @@ export default function ClassList() {
               <CardContent className="flex-1 px-6 py-4">
                 {/* Additional content can be added here */}
               </CardContent>
-              <CardFooter className="flex items-center justify-between px-6 py-4">
+              <CardFooter className="flex items-center justify-start gap-2">
                 <Button asChild variant="outline">
                   <Link
                     href={{
@@ -263,11 +271,50 @@ export default function ClassList() {
                     Open
                   </Link>
                 </Button>
-                <Button asChild variant="ghost">
-                  <Link href={`/classes/${course.class_id}/dashboard`}>
-                    <LayoutDashboard className="mr-2 h-5 w-5" /> Dashboard
-                  </Link>
-                </Button>
+                <TooltipProvider>
+                  <Tooltip delayDuration={0}>
+                    <TooltipTrigger>
+                      <Button asChild variant="ghost" size={"icon"}>
+                        <Link href={`/classes/${course.class_id}/dashboard`}>
+                          <LayoutDashboard size={20} />
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Dashboard</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip delayDuration={0}>
+                    <TooltipTrigger>
+                      <Button asChild variant="ghost" size={"icon"}>
+                        <Link href={`/classes/${course.class_id}/tasks`}>
+                          <NotebookPen size={20} />
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Tasks</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+
+                <TooltipProvider>
+                  <Tooltip delayDuration={0}>
+                    <TooltipTrigger>
+                      <Button asChild variant="ghost" size={"icon"}>
+                        <Link href={`/classes/${course.class_id}/expectations`}>
+                          <CircleCheckBig size={20} />
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Expectations</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </CardFooter>
             </Card>
           ))

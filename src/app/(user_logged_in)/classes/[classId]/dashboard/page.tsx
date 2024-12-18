@@ -8,14 +8,10 @@ import { classesOptions } from "~/app/api/queryOptions";
 import Link from "next/link";
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
-  DialogClose,
 } from "~/components/ui/dialog"; // Adjust the import path as necessary
-import { X } from "lucide-react"; // Importing close icon
 
 interface Params {
   classId: string;
@@ -124,7 +120,9 @@ export default function ClassDashboard({ params }: { params: Params }) {
     return (
       <ContentLayout title="Error">
         <div className="container flex flex-col items-center gap-12 px-4 py-16">
-          <h1 className="text-5xl">Error retrieving class data</h1>
+          <h1 className="text-5xl">
+            Error retrieving class data. Please refresh the page to try again.
+          </h1>
         </div>
       </ContentLayout>
     );

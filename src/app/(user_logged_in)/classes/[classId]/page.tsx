@@ -8,7 +8,7 @@ import StudentGrid from "./components/StudentGrid";
 import ClassGroupsComponent from "../components/ClassGroups";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import { LayoutDashboard, NotebookPen } from "lucide-react";
+import { CircleCheckBig, LayoutDashboard, NotebookPen } from "lucide-react";
 
 interface Params {
   classId: string;
@@ -44,6 +44,11 @@ export default function ClassDetails({ params }: { params: Params }) {
             <Button asChild variant="outline" className="w-fit">
               <Link href={`/classes/${courseData.class_id}/tasks`}>
                 <NotebookPen className="mr-2 h-5 w-5" /> Tasks
+              </Link>
+            </Button>
+            <Button asChild variant="outline" className="w-fit">
+              <Link href={`/classes/${courseData.class_id}/expectations`}>
+                <CircleCheckBig className="mr-2 h-5 w-5" /> Expectations
               </Link>
             </Button>
           </div>

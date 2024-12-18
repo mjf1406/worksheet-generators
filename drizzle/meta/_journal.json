@@ -71,6 +71,20 @@
       "when": 1733626118353,
       "tag": "0009_add-excused-column",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1734519261467,
+      "tag": "0010_add-expectations-table",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1734522443636,
+      "tag": "0011_add-student-expectations-table",
+      "breakpoints": true
     }
   ]
 }
