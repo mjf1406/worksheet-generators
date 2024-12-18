@@ -170,6 +170,11 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ## Change Log
 
+2024/12/18
+
+- UI: some enhancements to the student dashboard
+- UI: some UI enhancements to the Tasks table
+
 2024/12/17
 
 - PAGE: student dashboard -- added a reward items grid so they know what they can purchase with their points

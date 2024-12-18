@@ -32,7 +32,7 @@ import {
   type Option,
 } from "../../components/SelectRadioGroup";
 import { updateStudentAssignment } from "../actions/studentAssignmentsActions";
-import { AssignmentsFilter, type DateFilterMode } from "./AssignmentsFilters";
+import { TasksFilter, type DateFilterMode } from "./TasksFilters";
 import StudentDialog from "../../components/StudentDialog";
 import { type StudentData } from "~/app/api/getClassesGroupsStudents/route";
 import { useToast } from "~/components/ui/use-toast";
@@ -119,7 +119,7 @@ interface SortConfig {
   order: SortOrder;
 }
 
-export default function AssignmentsTable({ params }: { params: Params }) {
+export default function TasksTable({ params }: { params: Params }) {
   const { classId } = params;
   const { toast } = useToast();
   const { data: coursesData = [] } = useSuspenseQuery(classesOptions);
@@ -489,7 +489,7 @@ export default function AssignmentsTable({ params }: { params: Params }) {
         />
       </div>
 
-      <AssignmentsFilter topics={topics} onFilterChange={handleFilterChange} />
+      <TasksFilter topics={topics} onFilterChange={handleFilterChange} />
 
       {isStudentDialogOpen && selectedStudentToView && (
         <StudentDialog
@@ -533,7 +533,7 @@ export default function AssignmentsTable({ params }: { params: Params }) {
             </TableHead>
 
             <TableHead
-              className="sticky left-48 z-10 w-48 cursor-pointer bg-background text-foreground"
+              className="sticky left-32 z-10 w-48 cursor-pointer border-r border-dotted border-foreground bg-background text-foreground lg:left-48"
               onClick={() => handleSort("student_name")}
             >
               <div className="flex items-center justify-center">
@@ -584,8 +584,8 @@ export default function AssignmentsTable({ params }: { params: Params }) {
                   {studentGroup?.group_name ?? "No Group"}
                 </TableCell>
 
-                <TableCell className="sticky left-48 z-10 w-48 bg-background">
-                  <div className="flex items-center justify-between px-2">
+                <TableCell className="sticky left-32 z-10 w-48 border-r border-dotted border-foreground bg-background lg:left-48">
+                  <div className="flex items-center justify-between">
                     <button
                       onClick={() => handleNameClick(student)}
                       className="text-primary hover:underline"

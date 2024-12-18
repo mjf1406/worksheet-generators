@@ -8,7 +8,13 @@ import {
   faFlag,
   faGift,
 } from "@fortawesome/free-solid-svg-icons";
-import { Card, CardHeader, CardContent, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardTitle,
+  CardDescription,
+} from "~/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 import { Button } from "~/components/ui/button";
 import {
@@ -19,6 +25,12 @@ import {
   DialogDescription,
   DialogFooter,
 } from "~/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 
 export type PointClient = {
   id: string;
@@ -142,38 +154,81 @@ const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
   return (
     <>
       <Card className="max-w-2x mx-auto h-full w-full">
-        <CardHeader className="flex flex-col items-center">
-          <CardTitle className="text-center text-2xl">Points</CardTitle>
+        <CardHeader>
+          <CardTitle>Points</CardTitle>
+          <CardDescription>
+            Take a look at your entire point history in this class!
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex h-80 flex-col gap-2">
           <Button
-            className="mb-4 w-full"
+            className="w-full"
             variant="secondary"
             onClick={() => setIsDialogOpen(true)}
           >
-            View Details
+            View entire point history
           </Button>
-          <div className="mt-4 flex flex-col items-center justify-center">
-            <div className="my-2 flex items-center justify-center text-4xl font-bold text-yellow-500 dark:text-yellow-400">
-              <FontAwesomeIcon icon={faTrophy} className="mr-2" />
-              {totalPoints ?? 0}
-            </div>
+          <div className="flex flex-col items-center justify-center">
+            <TooltipProvider>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger className="cursor-help">
+                  <div className="my-2 flex items-center justify-center text-4xl font-bold text-yellow-500 dark:text-yellow-400">
+                    <FontAwesomeIcon icon={faTrophy} className="mr-2" />
+                    {totalPoints ?? 0}
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Your current points.</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <div className="mt-2 flex gap-12">
-              <div className="flex items-center text-lg text-green-600 dark:text-green-400">
-                <FontAwesomeIcon icon={faAward} className="mr-2" />
-                {totalPositivePoints}
-              </div>
-              <div className="flex items-center text-lg text-red-500 dark:text-red-400">
-                <FontAwesomeIcon icon={faFlag} className="mr-2" />
-                {totalNegativePoints}
-              </div>
-              <div className="flex items-center text-lg text-blue-500 dark:text-blue-400">
-                <FontAwesomeIcon icon={faGift} className="mr-2" />
-                {totalRedemptionPoints}
-              </div>
+              <TooltipProvider>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger className="cursor-help">
+                    <div className="flex items-center text-lg text-green-600 dark:text-green-400">
+                      <FontAwesomeIcon icon={faAward} className="mr-2" />
+                      {totalPositivePoints}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>The amount of positive points you&apos;ve earned.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              <TooltipProvider>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger className="cursor-help">
+                    <div className="flex items-center text-lg text-red-500 dark:text-red-400">
+                      <FontAwesomeIcon icon={faFlag} className="mr-2" />
+                      {totalNegativePoints}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>The sum of all negative points you&apos;ve received.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+
+              <TooltipProvider>
+                <Tooltip delayDuration={0}>
+                  <TooltipTrigger className="cursor-help">
+                    <div className="flex items-center text-lg text-blue-500 dark:text-blue-400">
+                      <FontAwesomeIcon icon={faGift} className="mr-2" />
+                      {totalRedemptionPoints}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      The total number of points you&apos;ve spent on rewards.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="flex h-80 flex-col">
-          <Tabs className="flex h-full flex-col" defaultValue="positive">
+          <Tabs className="mt-8 flex h-full flex-col" defaultValue="positive">
             <TabsList className="grid flex-shrink-0 grid-cols-3 rounded-t-md">
               <TabsTrigger value="positive" className="text-background">
                 <FontAwesomeIcon icon={faAward} className="mr-2" /> Positive

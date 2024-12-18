@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import { reward_items } from "~/server/db/schema";
-import RewardItemsViewGrid from "../components/RewardItemsViewGrid";
+import RewardItemsViewGrid from "../components/RewardItemsViewCard";
 
 interface Params {
   classId: string;

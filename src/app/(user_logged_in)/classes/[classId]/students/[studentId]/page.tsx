@@ -28,7 +28,8 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import Image from "next/image";
-import RewardItemsViewGrid from "./components/RewardItemsViewGrid";
+import RewardItemsViewGrid from "./components/RewardItemsViewCard";
+import RewardItemsViewCard from "./components/RewardItemsViewCard";
 
 interface Params {
   classId: string;
@@ -264,7 +265,7 @@ export default async function studentDashboard({ params }: { params: Params }) {
 
   return (
     <main>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-5">
+      <div className="grid grid-cols-5 gap-4">
         <div className="relative col-span-1 -ml-6 -mt-5 aspect-square w-full">
           <Image
             src="/assets/img/monkey-hanging-from-branch.png"
@@ -293,11 +294,11 @@ export default async function studentDashboard({ params }: { params: Params }) {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-        <div className="md:col-span-1">
+      <div className="flex flex-col gap-5 lg:grid lg:grid-cols-3">
+        <div className="col-span-1">
           <AssignmentTable assignments={studentAssignments} />
         </div>
-        <div className="md:col-span-1">
+        <div className="col-span-1">
           <PointsCard
             pointsData={mappedPointsData.filter((pData) => {
               const originalItem = allClassPointsData.find(
@@ -307,14 +308,14 @@ export default async function studentDashboard({ params }: { params: Params }) {
             })}
           />
         </div>
-        <div className="md:col-span-1">
+        <div className="col-span-1">
           <StudentBehaviorLeadersCard
             topPositive={topPositiveBehaviors}
             topNegative={topNegativeBehaviors}
           />
         </div>
-        <div className="col-span-3">
-          <RewardItemsViewGrid rewardItems={rewardItems} />
+        <div className="col-span-1">
+          <RewardItemsViewCard rewardItems={rewardItems} />
         </div>
       </div>
     </main>

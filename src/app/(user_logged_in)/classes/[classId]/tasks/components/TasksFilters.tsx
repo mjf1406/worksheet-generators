@@ -15,7 +15,7 @@ interface Topic {
 
 export type DateFilterMode = "none" | "single" | "range";
 
-interface AssignmentsFilterProps {
+interface TasksFilterProps {
   topics: Topic[];
   onFilterChange: (filters: {
     selectedTopicIds: string[];
@@ -31,10 +31,7 @@ interface AssignmentsFilterProps {
   }) => void;
 }
 
-export function AssignmentsFilter({
-  topics,
-  onFilterChange,
-}: AssignmentsFilterProps) {
+export function TasksFilter({ topics, onFilterChange }: TasksFilterProps) {
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
 
   // Due date filters
@@ -192,7 +189,7 @@ export function AssignmentsFilter({
         onChange={setSelectedTopicIds}
       />
 
-      {renderDateFilterControls(
+      {/* {renderDateFilterControls(
         "Due Date",
         dueDateMode,
         setDueDateMode,
@@ -220,7 +217,7 @@ export function AssignmentsFilter({
         setWorkingDateStart,
         workingDateEnd,
         setWorkingDateEnd,
-      )}
+      )} */}
     </div>
   );
 }

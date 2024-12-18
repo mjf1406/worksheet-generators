@@ -4,13 +4,11 @@ import React from "react";
 import { ContentLayout } from "~/components/admin-panel/content-layout";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { classesOptions } from "~/app/api/queryOptions";
-import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import { ChevronRight, LayoutDashboard } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import CreateAssignmentsDialog from "./components/CreateAssignmentDialog";
 import CreateTopicDialog from "./components/CreateTopicDialog";
-import { Topic } from "~/server/db/types";
-import AssignmentsTable from "./components/AssignmentsTable";
+import AssignmentsTable from "./components/TasksTable";
 
 interface Params {
   classId: string;

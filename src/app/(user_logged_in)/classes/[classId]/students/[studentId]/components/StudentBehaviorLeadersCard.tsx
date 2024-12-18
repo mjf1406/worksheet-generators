@@ -1,7 +1,13 @@
 // pages/components/StudentBehaviorLeadersCard.tsx
 
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card"; // Adjust the import path based on your project structure
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "~/components/ui/card"; // Adjust the import path based on your project structure
 
 interface BehaviorAggregate {
   behavior: string;
@@ -20,20 +26,23 @@ export default function StudentBehaviorLeadersCard({
   topNegative,
 }: Props) {
   return (
-    <Card className="bg-white shadow-lg dark:bg-black">
-      <CardHeader className="border-b border-gray-200 dark:border-gray-600">
-        <CardTitle className="text-center text-2xl font-semibold">
-          Top 1 Behaviors in the Class
-        </CardTitle>
+    <Card className="bg-white dark:bg-black">
+      <CardHeader>
+        <CardTitle>Are you #1 in the class?</CardTitle>
+        <CardDescription>
+          Take a look at all the behaviors where you&apos;re number one in the
+          whole class! Careful! It&apos;s not so good to be #1 for negative
+          behaviors.
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Positive Behaviors */}
         <div>
-          <h3 className="text-xl font-bold text-green-700 dark:text-green-300">
+          <h3 className="text-lg font-bold text-green-700 dark:text-green-300">
             Glows
           </h3>
           {topPositive.length !== 0 && (
-            <p className="mt-2 text-gray-700 dark:text-gray-200">
+            <p className="mt-2 text-sm text-gray-700 dark:text-gray-200">
               These are the positive behaviors where you&apos;re ranked #1 in
               the whole class! Keep up the great work! You&apos;re crushing it!
               💪
@@ -72,11 +81,11 @@ export default function StudentBehaviorLeadersCard({
         </div>
         {/* Negative Behaviors */}
         <div>
-          <h3 className="text-xl font-bold text-red-700 dark:text-red-300">
+          <h3 className="text-lg font-bold text-red-700 dark:text-red-300">
             Grows
           </h3>
           {topNegative.length !== 0 && (
-            <p className="mt-2 text-gray-700 dark:text-gray-200">
+            <p className="mt-2 text-sm text-gray-700 dark:text-gray-200">
               These are the negative behaviors where you&apos;re ranked #1 in
               the whole class. I know you can do better. Think carefully before
               doing one of the below again. 🥺

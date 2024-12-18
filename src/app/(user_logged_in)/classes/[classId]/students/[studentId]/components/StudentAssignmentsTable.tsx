@@ -10,7 +10,13 @@ import {
   DialogTitle,
   DialogClose,
 } from "~/components/ui/dialog";
-import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardDescription,
+} from "~/components/ui/card";
 import {
   Table,
   TableHead,
@@ -116,12 +122,20 @@ const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
     <>
       <Card className="mx-auto h-full w-full">
         <CardHeader>
-          <CardTitle className="text-center text-2xl">Tasks</CardTitle>
-          <Button variant="secondary" onClick={() => setIsModalOpen(true)}>
+          <CardTitle>Tasks</CardTitle>
+          <CardDescription>
+            Take a look at all the tasks you&apos;ve completed and all those
+            left for you to do! Earn one point per completed task!
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Button
+            className="w-full"
+            variant="secondary"
+            onClick={() => setIsModalOpen(true)}
+          >
             View all tasks
           </Button>
-        </CardHeader>
-        <CardContent className="-mt-6">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
