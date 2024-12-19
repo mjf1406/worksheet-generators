@@ -71,7 +71,7 @@ const RewardItemsDashboard = ({ rewardItems }: RewardItemsDashboardProps) => {
   );
 
   return (
-    <Card className="w-full">
+    <Card className="mx-auto w-full max-w-2xl">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>

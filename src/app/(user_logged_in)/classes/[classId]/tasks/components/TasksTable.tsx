@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   useSuspenseQuery,
   useQueryClient,
@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Button } from "~/components/ui/button";
-import { ArrowUp, ArrowDown, MoreVertical } from "lucide-react";
+import { ArrowUp, ArrowDown, MoreVertical, ExternalLink } from "lucide-react";
 import {
   FancyRadioGroup,
   type Option,
@@ -35,12 +35,23 @@ import { updateStudentAssignment } from "../actions/studentAssignmentsActions";
 import { TasksFilter, type DateFilterMode } from "./TasksFilters";
 import StudentDialog from "../../components/StudentDialog";
 import { type StudentData } from "~/app/api/getClassesGroupsStudents/route";
-import { useToast } from "~/components/ui/use-toast";
 import Link from "next/link";
 import {
   applyBehavior,
   deleteLastBehaviorOccurrence,
 } from "../../behaviorActions";
+import { TeacherCourse } from "~/server/db/types";
+
+// Import the Alert Dialog components from shadcn (adjust path if needed)
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+} from "~/components/ui/alert-dialog";
 
 interface Params {
   classId: string;
@@ -67,6 +78,7 @@ function AssignmentCell({
         checked={checked}
         onCheckedChange={onCheckedChange}
         disabled={isLoading}
+        className="h-6 w-6"
       />
     </TableCell>
   );
@@ -92,13 +104,23 @@ function StudentActions({
         <DropdownMenuLabel>Student Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Link href={`/classes/${classId}/students/${student.student_id}`}>
-            Student Dashboard
+          <Link
+            href={`/classes/${classId}/students/${student.student_id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-between gap-2 text-xs"
+          >
+            Student Dashboard <ExternalLink size={18} />
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Link href={`/classes/${classId}/dashboard/${student.student_id}`}>
-            Teaching-facing Student Dashboard
+          <Link
+            href={`/classes/${classId}/dashboard/${student.student_id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full items-center justify-between gap-2 text-xs"
+          >
+            Teaching Dashboard <ExternalLink size={18} />
           </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -121,9 +143,10 @@ interface SortConfig {
 
 export default function TasksTable({ params }: { params: Params }) {
   const { classId } = params;
-  const { toast } = useToast();
   const { data: coursesData = [] } = useSuspenseQuery(classesOptions);
-  const courseData = coursesData.find((course) => course.class_id === classId);
+  const courseData = coursesData.find(
+    (course: TeacherCourse) => course.class_id === classId,
+  );
 
   const students = courseData?.students ?? [];
   const assignments = courseData?.assignments ?? [];
@@ -143,6 +166,12 @@ export default function TasksTable({ params }: { params: Params }) {
   const [loadingBehaviorId, setLoadingBehaviorId] = useState<string | null>(
     null,
   );
+
+  // State for alert dialog
+  const [incompleteStudents, setIncompleteStudents] = useState<StudentData[]>(
+    [],
+  );
+  const [isAlertOpen, setIsAlertOpen] = useState<boolean>(false);
 
   const groupsOptions: Option[] = groups.map((group) => ({
     value: group.group_id,
@@ -254,18 +283,9 @@ export default function TasksTable({ params }: { params: Params }) {
       await queryClient.invalidateQueries({
         queryKey: classesOptions.queryKey,
       });
-      toast({
-        title: "Success",
-        description: "Task marked complete.",
-      });
     },
     onError: (error) => {
       console.error("Error applying behavior:", error);
-      toast({
-        title: "Error",
-        description: "Failed to apply behavior. Please try again.",
-        variant: "destructive",
-      });
     },
     onSettled: () => {
       setLoadingBehaviorId(null);
@@ -297,7 +317,7 @@ export default function TasksTable({ params }: { params: Params }) {
     assignmentId: string,
     checked: boolean,
   ) => {
-    const behaviorId = "behavior_20c4128a-fa4c-4632-bb29-848c5143bbe4"; // Store ID in a constant
+    const behaviorId = "behavior_20c4128a-fa4c-4632-bb29-848c5143bbe4"; // example ID
 
     setCheckboxStatuses((prev) => ({
       ...prev,
@@ -334,11 +354,6 @@ export default function TasksTable({ params }: { params: Params }) {
           throw new Error(result.message);
         }
 
-        toast({
-          title: "Success",
-          description: "Task marked incomplete.",
-        });
-
         await queryClient.invalidateQueries({
           queryKey: classesOptions.queryKey,
         });
@@ -351,15 +366,6 @@ export default function TasksTable({ params }: { params: Params }) {
       }));
 
       console.error("Error updating assignment or behavior:", error);
-
-      toast({
-        title: "Error",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Failed to update assignment or behavior. Please try again.",
-        variant: "destructive",
-      });
     } finally {
       setLoadingBehaviorId(null);
     }
@@ -479,8 +485,104 @@ export default function TasksTable({ params }: { params: Params }) {
     setFilterWorkingDate(filters.workingDateMode !== "none");
   };
 
+  // ---- NEW LOGIC FOR ALERT ----
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!courseData) return;
+
+      const cutoff = Date.now() - 10 * 60 * 1000; // 10 minutes ago
+      const notCompletedStudents: StudentData[] = [];
+
+      for (const s of filteredStudents) {
+        // Check if student has any incomplete tasks in the currently displayed assignments
+        const studentCompletedAssignments = filteredAssignments.filter(
+          (assignment) =>
+            checkboxStatuses[`${s.student_id}_${assignment.id}`] === true,
+        );
+        const studentIncompleteAssignments = filteredAssignments.filter(
+          (assignment) =>
+            checkboxStatuses[`${s.student_id}_${assignment.id}`] !== true,
+        );
+
+        // If the student has completed all filtered tasks, skip them
+        if (studentIncompleteAssignments.length === 0) {
+          continue;
+        }
+
+        // Now check if they have completed any task recently
+        const allCompletions = filteredAssignments.flatMap((assignment) =>
+          (assignment.students ?? [])
+            .filter(
+              (st) =>
+                st.student_id === s.student_id &&
+                st.complete === true &&
+                // Ensure this assignment is still one of the filtered ones
+                filteredAssignments.some((fa) => fa.id === assignment.id),
+            )
+            .map((st) => new Date(st.completed_ts).getTime()),
+        );
+
+        // If no completions at all or no recent completion, mark them incomplete
+        if (allCompletions.length === 0) {
+          notCompletedStudents.push(s);
+          continue;
+        }
+
+        const mostRecentCompletion = Math.max(...allCompletions);
+        if (mostRecentCompletion < cutoff) {
+          notCompletedStudents.push(s);
+        }
+      }
+
+      if (notCompletedStudents.length > 0) {
+        setIncompleteStudents(notCompletedStudents);
+        setIsAlertOpen(true);
+      } else {
+        setIncompleteStudents([]);
+        setIsAlertOpen(false);
+      }
+    }, 60 * 1000); // check every minute
+
+    return () => clearInterval(interval);
+  }, [courseData, filteredStudents, filteredAssignments, checkboxStatuses]);
+  // ---- END NEW LOGIC FOR ALERT ----
+
   return (
     <div className="w-full space-y-4 overflow-x-auto">
+      {/* Alert Dialog for incomplete students */}
+      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              <span className="font-bold">{incompleteStudents.length}</span>{" "}
+              Students Require Attention
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              The following{" "}
+              <span className="font-bold">{incompleteStudents.length}</span>{" "}
+              students have not completed a task in the last 10 minutes!
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="grid grid-cols-3">
+            {incompleteStudents.map((student) => (
+              <div className="col-span-1" key={student.student_id}>
+                {student.student_name_en.split(" ")[1]}
+              </div>
+            ))}
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => {
+                // Just close
+                setIsAlertOpen(false);
+              }}
+            >
+              Acknowledged
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="mt-2 flex items-center gap-2">
         <FancyRadioGroup
           options={allGroupsOptions}

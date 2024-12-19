@@ -11,9 +11,11 @@ import {
   assignments,
   behaviors,
   classes,
+  expectations,
   points,
   reward_items,
   student_assignments,
+  student_expectations,
   students,
 } from "~/server/db/schema";
 import AssignmentTable from "./components/StudentAssignmentsTable";
@@ -30,6 +32,7 @@ import {
 import Image from "next/image";
 import RewardItemsViewGrid from "./components/RewardItemsViewCard";
 import RewardItemsViewCard from "./components/RewardItemsViewCard";
+import ExpectationsCard from "./components/ExpectationsCard";
 
 interface Params {
   classId: string;
@@ -94,6 +97,7 @@ export default async function studentDashboard({ params }: { params: Params }) {
     rawStudentAssignments,
     allClassPointsData,
     rewardItems,
+    studentExpectationsData,
   ] = await Promise.all([
     // classData
     db.select().from(classes).where(eq(classes.class_id, classId)).limit(1),
@@ -158,6 +162,30 @@ export default async function studentDashboard({ params }: { params: Params }) {
       })
       .from(reward_items)
       .where(eq(reward_items.class_id, classId)),
+    db
+      .select({
+        // Student Expectation fields
+        id: student_expectations.id,
+        student_id: student_expectations.student_id,
+        class_id: student_expectations.class_id,
+        value: student_expectations.value,
+        number: student_expectations.number,
+        // Expectation fields
+        expectation_name: expectations.name,
+        expectation_description: expectations.description,
+        expectation_class_id: expectations.class_id,
+      })
+      .from(student_expectations)
+      .innerJoin(
+        expectations,
+        eq(student_expectations.expectation_id, expectations.id),
+      )
+      .where(
+        and(
+          eq(student_expectations.student_id, studentId),
+          eq(student_expectations.class_id, classId),
+        ),
+      ),
   ]);
 
   const studentAssignments: StudentAssignmentWithDetails[] =
@@ -316,6 +344,9 @@ export default async function studentDashboard({ params }: { params: Params }) {
         </div>
         <div className="col-span-1">
           <RewardItemsViewCard rewardItems={rewardItems} />
+        </div>
+        <div className="col-span-1">
+          <ExpectationsCard expectations={studentExpectationsData} />
         </div>
       </div>
     </main>

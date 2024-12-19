@@ -18,8 +18,9 @@ import {
   assignments,
   student_assignments,
   expectations,
+  student_expectations,
 } from '~/server/db/schema';
-import type { Achievement, Expectation, Point, PointRecord, RedemptionRecord, Topic } from '~/server/db/types';
+import type { Achievement, Expectation, Point, PointRecord, RedemptionRecord, StudentExpectation, Topic } from '~/server/db/types';
 import { InferModel } from 'drizzle-orm';
 
 export const dynamic = 'force-dynamic';
@@ -49,6 +50,7 @@ export type ClassData = {
   topics: Topic[];
   assignments: AssignmentData[];
   expectations: Expectation[];
+  student_expectations: StudentExpectation[];
 };
 
 export type AssignmentData = {
@@ -427,6 +429,17 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         )
         .all();
 
+      const studentExpecationsData = await db
+        .select()
+        .from(student_expectations)
+        .where(
+          and(
+            eq(student_expectations.user_id, userId),
+            eq(student_expectations.class_id, classData.class_id)
+          )
+        )
+        .all();
+
       // Organize achievements by behavior_id and reward_item_id
       const achievementsByBehavior = new Map<string, Achievement[]>();
       const achievementsByRewardItem = new Map<string, Achievement[]>();
@@ -488,6 +501,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         topics: topicsData,
         assignments: assignmentsWithStudents,
         expectations: expectationsData,
+        student_expectations: studentExpecationsData
       } as ClassData;
     })
   );

@@ -84,6 +84,7 @@ export type TeacherCourse = {
     topics: Topic[];
     assignments: Assignment[];
     expectations: Expectation[];
+    student_expectations: StudentExpectation[];
   }
 
 export type PointRecord = {

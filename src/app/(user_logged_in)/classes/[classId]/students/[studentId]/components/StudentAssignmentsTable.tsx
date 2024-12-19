@@ -26,7 +26,12 @@ import {
   TableCell,
 } from "~/components/ui/table";
 import { Button } from "~/components/ui/button";
-import { RotateCw } from "lucide-react";
+import { ChevronDown, RotateCw } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/ui/collapsible";
 
 interface Assignment {
   sa_id: string;
@@ -114,13 +119,14 @@ const formatDateTime = (dateTimeStr: string): string => {
 
 const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isInstructionsOpen, setIsInstructionsOpen] = useState(false);
 
   // Get only the top 5 assignments
   const topAssignments = assignments.slice(0, 5);
 
   return (
     <>
-      <Card className="mx-auto h-full w-full">
+      <Card className="mx-auto h-full w-full max-w-2xl">
         <CardHeader>
           <CardTitle>Tasks</CardTitle>
           <CardDescription>
@@ -176,47 +182,61 @@ const AssignmentTable: React.FC<AssignmentTableProps> = ({ assignments }) => {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="max-h-screen w-[100vw] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-2xl text-blue-700">
+            <DialogTitle className="text-4xl text-blue-700">
               📃 Tasks
             </DialogTitle>
             <DialogClose className="absolute right-4 top-4" />
           </DialogHeader>
           {/* Instructional Steps */}
-          <div className="mt-6 flex flex-col items-center justify-center">
-            <h3 className="text-xl">Instructions</h3>
-            <ol className="mt-2 max-w-4xl space-y-2">
-              <InstructionStep
-                number={1}
-                text="Read the description to make sure you know what the task is."
-              />
-              <InstructionStep
-                number={2}
-                text="Click the link in the Resources column to read more details and go to where the required materials are."
-              />
-              <InstructionStep
-                number={3}
-                text="Complete the tasks in order from top to bottom."
-              />
-              <InstructionStep
-                number={4}
-                text="If you have questions, ask your desk partner and teammates before you ask your teacher."
-              />
-              <InstructionStep
-                number={5}
-                text="When you finish a task, bring it to your teacher so they can check it."
-              />
-              <InstructionStep
-                number={6}
-                text={
-                  <>
-                    If your teacher thinks you are done, they will mark it as
-                    complete. You need to refresh this page by clicking the{" "}
-                    <RotateCw className="mb-1 inline h-4 w-4" /> button or
-                    pressing F5.
-                  </>
-                }
-              />
-            </ol>
+          <div className="mt-6 flex flex-col items-start justify-center">
+            <Collapsible
+              open={isInstructionsOpen}
+              onOpenChange={setIsInstructionsOpen}
+            >
+              <CollapsibleTrigger className="flex items-center gap-2">
+                <h3 className="text-3xl">Instructions</h3>
+                <ChevronDown
+                  className={`h-6 w-6 transition-transform duration-200 ${
+                    isInstructionsOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <ol className="mt-2 max-w-4xl space-y-2">
+                  <InstructionStep
+                    number={1}
+                    text="Read the description to make sure you know what the task is."
+                  />
+                  <InstructionStep
+                    number={2}
+                    text="Click the link in the Resources column to read more details and go to where the required materials are."
+                  />
+                  <InstructionStep
+                    number={3}
+                    text="Complete the tasks in order from top to bottom."
+                  />
+                  <InstructionStep
+                    number={4}
+                    text="If you have questions, ask your desk partner and teammates before you ask your teacher."
+                  />
+                  <InstructionStep
+                    number={5}
+                    text="When you finish a task, bring it to your teacher so they can check it."
+                  />
+                  <InstructionStep
+                    number={6}
+                    text={
+                      <>
+                        If your teacher thinks you are done, they will mark it
+                        as complete. You need to refresh this page by clicking
+                        the <RotateCw className="mb-1 inline h-4 w-4" /> button
+                        or pressing F5.
+                      </>
+                    }
+                  />
+                </ol>
+              </CollapsibleContent>
+            </Collapsible>
           </div>
           <div className="overflow-x-auto">
             <Table>

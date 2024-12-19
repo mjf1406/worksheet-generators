@@ -126,49 +126,67 @@ const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
   const totalPoints =
     totalPositivePoints + totalNegativePoints + totalRedemptionPoints;
 
-  const renderRows = (points: PointClient[], type: string) => {
-    return points.map((point) => (
-      <tr
-        key={point.id}
-        className="text-sm transition-colors duration-200 hover:bg-blue-100 dark:hover:bg-gray-700"
-      >
-        <td className="px-4 py-2">
-          {type === "positive"
-            ? point.behavior_name
-            : type === "negative"
-              ? point.behavior_name
-              : point.reward_item_name}
-        </td>
-        <td className="px-4 py-2 text-center">
-          {type === "positive"
-            ? `+${point.number_of_points}`
-            : `${point.number_of_points}`}
-        </td>
-        <td className="px-4 py-2 text-right text-sm text-gray-600 dark:text-gray-400">
-          {formatDateTime(point.created_date)}
-        </td>
-      </tr>
-    ));
-  };
+  const renderRows = (points: PointClient[], type: string) => (
+    <div className="h-full overflow-auto">
+      <table className="w-full table-auto">
+        <thead className="sticky top-0 bg-inherit">
+          <tr>
+            <th className="px-4 py-2 text-left text-gray-700 dark:text-gray-300">
+              {type === "redemption" ? "Reward" : "Activity"}
+            </th>
+            <th className="px-4 py-2 text-center text-gray-700 dark:text-gray-300">
+              Points
+            </th>
+            <th className="px-4 py-2 text-right text-gray-700 dark:text-gray-300">
+              Date
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {points.map((point) => (
+            <tr
+              key={point.id}
+              className="text-sm transition-colors duration-200 hover:bg-blue-100 dark:hover:bg-gray-700"
+            >
+              <td className="px-4 py-2">
+                {type === "redemption"
+                  ? point.reward_item_name
+                  : point.behavior_name}
+              </td>
+              <td className="px-4 py-2 text-center">
+                {type === "positive"
+                  ? `+${point.number_of_points}`
+                  : point.number_of_points}
+              </td>
+              <td className="px-4 py-2 text-right text-sm text-gray-600 dark:text-gray-400">
+                {formatDateTime(point.created_date)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 
   return (
     <>
-      <Card className="max-w-2x mx-auto h-full w-full">
-        <CardHeader>
+      <Card className="mx-auto h-[600px] w-full max-w-2xl">
+        <CardHeader className="flex-none">
           <CardTitle>Points</CardTitle>
           <CardDescription>
             Take a look at your entire point history in this class!
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex h-80 flex-col gap-2">
+        <CardContent className="flex h-[calc(100%-8rem)] flex-col gap-2">
           <Button
-            className="w-full"
+            className="w-full flex-none"
             variant="secondary"
             onClick={() => setIsDialogOpen(true)}
           >
             View entire point history
           </Button>
-          <div className="flex flex-col items-center justify-center">
+
+          <div className="flex flex-none flex-col items-center justify-center">
             <TooltipProvider>
               <Tooltip delayDuration={0}>
                 <TooltipTrigger className="cursor-help">
@@ -228,8 +246,12 @@ const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
               </TooltipProvider>
             </div>
           </div>
-          <Tabs className="mt-8 flex h-full flex-col" defaultValue="positive">
-            <TabsList className="grid flex-shrink-0 grid-cols-3 rounded-t-md">
+
+          <Tabs
+            className="flex min-h-0 flex-1 flex-col"
+            defaultValue="positive"
+          >
+            <TabsList className="grid flex-none grid-cols-3">
               <TabsTrigger value="positive" className="text-background">
                 <FontAwesomeIcon icon={faAward} className="mr-2" /> Positive
               </TabsTrigger>
@@ -240,78 +262,32 @@ const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
                 <FontAwesomeIcon icon={faGift} className="mr-2" /> Redemptions
               </TabsTrigger>
             </TabsList>
-            <TabsContent
-              value="positive"
-              className="flex-1 overflow-auto bg-green-50 p-4 dark:bg-gray-800"
-            >
-              <table className="h-full w-full table-auto">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 text-left text-gray-700 dark:text-gray-300">
-                      Activity
-                    </th>
-                    <th className="px-4 py-2 text-center text-gray-700 dark:text-gray-300">
-                      Points
-                    </th>
-                    <th className="px-4 py-2 text-right text-gray-700 dark:text-gray-300">
-                      Date
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="h-full">
-                  {renderRows(recentPositivePoints, "positive")}
-                </tbody>
-              </table>
-            </TabsContent>
-            <TabsContent
-              value="negative"
-              className="flex-1 overflow-auto bg-red-50 p-4 dark:bg-gray-800"
-            >
-              <table className="w-full table-auto">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 text-left text-gray-700 dark:text-gray-300">
-                      Activity
-                    </th>
-                    <th className="px-4 py-2 text-center text-gray-700 dark:text-gray-300">
-                      Points
-                    </th>
-                    <th className="px-4 py-2 text-right text-gray-700 dark:text-gray-300">
-                      Date
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>{renderRows(recentNegativePoints, "negative")}</tbody>
-              </table>
-            </TabsContent>
-            <TabsContent
-              value="redemptions"
-              className="flex-1 overflow-auto bg-blue-50 p-4 dark:bg-gray-800"
-            >
-              <table className="w-full table-auto">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2 text-left text-gray-700 dark:text-gray-300">
-                      Reward
-                    </th>
-                    <th className="px-4 py-2 text-center text-gray-700 dark:text-gray-300">
-                      Points
-                    </th>
-                    <th className="px-4 py-2 text-right text-gray-700 dark:text-gray-300">
-                      Date
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {renderRows(recentRedemptionPoints, "redemption")}
-                </tbody>
-              </table>
-            </TabsContent>
+
+            <div className="min-h-0 flex-1">
+              <TabsContent
+                value="positive"
+                className="h-full bg-green-50 p-4 dark:bg-gray-800"
+              >
+                {renderRows(recentPositivePoints, "positive")}
+              </TabsContent>
+              <TabsContent
+                value="negative"
+                className="h-full bg-red-50 p-4 dark:bg-gray-800"
+              >
+                {renderRows(recentNegativePoints, "negative")}
+              </TabsContent>
+              <TabsContent
+                value="redemptions"
+                className="h-full bg-blue-50 p-4 dark:bg-gray-800"
+              >
+                {renderRows(recentRedemptionPoints, "redemption")}
+              </TabsContent>
+            </div>
           </Tabs>
         </CardContent>
       </Card>
 
-      {/* Dialog for full history */}
+      {/* Full history dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="flex h-full w-full flex-col rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
           <DialogHeader>
@@ -348,64 +324,19 @@ const PointsCard: React.FC<PointsCardProps> = ({ pointsData }) => {
                 value="positive"
                 className="max-h-[70vh] flex-1 overflow-y-scroll bg-green-50 p-4 dark:bg-gray-800"
               >
-                <table className="w-full table-auto">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-2 text-left text-gray-700 dark:text-gray-300">
-                        Activity
-                      </th>
-                      <th className="px-4 py-2 text-center text-gray-700 dark:text-gray-300">
-                        Points
-                      </th>
-                      <th className="px-4 py-2 text-right text-gray-700 dark:text-gray-300">
-                        Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>{renderRows(positivePoints, "positive")}</tbody>
-                </table>
+                {renderRows(positivePoints, "positive")}
               </TabsContent>
               <TabsContent
                 value="negative"
                 className="flex-1 overflow-auto bg-red-50 p-4 dark:bg-gray-800"
               >
-                <table className="w-full table-auto">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-2 text-left text-gray-700 dark:text-gray-300">
-                        Activity
-                      </th>
-                      <th className="px-4 py-2 text-center text-gray-700 dark:text-gray-300">
-                        Points
-                      </th>
-                      <th className="px-4 py-2 text-right text-gray-700 dark:text-gray-300">
-                        Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>{renderRows(negativePoints, "negative")}</tbody>
-                </table>
+                {renderRows(negativePoints, "negative")}
               </TabsContent>
               <TabsContent
                 value="redemptions"
                 className="flex-1 overflow-auto bg-blue-50 p-4 dark:bg-gray-800"
               >
-                <table className="w-full table-auto">
-                  <thead>
-                    <tr>
-                      <th className="px-4 py-2 text-left text-gray-700 dark:text-gray-300">
-                        Reward
-                      </th>
-                      <th className="px-4 py-2 text-center text-gray-700 dark:text-gray-300">
-                        Points
-                      </th>
-                      <th className="px-4 py-2 text-right text-gray-700 dark:text-gray-300">
-                        Date
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>{renderRows(redemptionPoints, "redemption")}</tbody>
-                </table>
+                {renderRows(redemptionPoints, "redemption")}
               </TabsContent>
             </Tabs>
           </div>

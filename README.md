@@ -109,7 +109,6 @@ This is the collection of worksheet generators that I have created as I needed t
   - presentation length
   - vocab. sentence length
   - put a card for this on the student dashboard
-- PAGE: Reward Items --- students can see what they can purchase with their points easily.
 - PAGE: Class Dashboard
   - behavior streaks
     - positive
@@ -167,8 +166,23 @@ This is the collection of worksheet generators that I have created as I needed t
 
 - BUG: fixed a bug that would cause the mouse to click through the sorting dropdown.
 - DB: need first name and last name columns when adding a class.
+- FEATURE: Expectations -- can edit expectations
+- FEATURE: Expectations -- can delete expectations
 
 ## Change Log
+
+2024/12/19
+
+- FEATURE: Expectations -- added a card to the student dashboard
+- FEATURE: Expectations -- creating expectations is now optimistic
+- FEATURE: Expectations -- on editing a student's expectation, the data is optimistically updated
+- FEATURE: Expectations -- can edit an expectation for any given student
+- FEATURE: Expectations -- can create an expectation
+- UX: made the instructions collapsible in the all tasks modal on the student dashboard
+- UX: added an alert that displays students who have not completed a task in the last 10 minutes on `/tasks`. This is filter-compliant.
+- UI: fixed up some card wonky UI on the student dashboard
+- UI: made the checkboxes larger on the tasks table
+- UI: reduced the size of Student Action menu links and made them open in new tabs
 
 2024/12/18
 

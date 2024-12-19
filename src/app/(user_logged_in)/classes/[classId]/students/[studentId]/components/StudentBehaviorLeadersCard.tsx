@@ -26,7 +26,7 @@ export default function StudentBehaviorLeadersCard({
   topNegative,
 }: Props) {
   return (
-    <Card className="bg-white dark:bg-black">
+    <Card className="mx-auto max-w-2xl bg-white dark:bg-black">
       <CardHeader>
         <CardTitle>Are you #1 in the class?</CardTitle>
         <CardDescription>
