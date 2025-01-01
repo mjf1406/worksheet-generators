@@ -1,7 +1,6 @@
 import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 import type { AssignerItemStatuses, PointRecord, RedemptionRecord } from "./types";
-import { number } from "zod";
 
 // Core Tables
 
@@ -21,7 +20,7 @@ export const classes = sqliteTable('classes',
         class_id: text('class_id').notNull().primaryKey(),
         class_name: text('class_name').notNull(),
         class_language: text('class_language').notNull(),
-        class_grade: text('class_grade', { enum: ["1","2","3","4","5"] }),
+        class_grade: text('class_grade', { enum: ["1","2","3","4","5", "6"] }),
         class_year: text('class_year'),
         complete: text('complete', { mode: 'json' }).$type<{ s1: boolean, s2: boolean }>(),
         created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
@@ -32,13 +31,15 @@ export const classes = sqliteTable('classes',
 export const students = sqliteTable('students',
     {
         student_id: text('student_id').notNull().primaryKey(),
-        student_name_en: text('student_name_en').notNull(),
+        student_name_en: text('student_name_en'),
+        student_name_first_en: text('student_name_first_en').notNull(),
+        student_name_last_en: text('student_name_last_en').notNull(),
         student_name_alt: text('student_name_alt'),
         student_reading_level: text('student_reading_level'),
         student_grade: text('student_grade'),
         student_sex: text('student_sex', { enum: ["male", "female"] }),
         student_number: integer('student_number', { mode: 'number' }),
-        student_email: text('student_email').unique(),
+        student_email: text('student_email'),
         joined_date: text('joined_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
         updated_date: text('updated_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
     }

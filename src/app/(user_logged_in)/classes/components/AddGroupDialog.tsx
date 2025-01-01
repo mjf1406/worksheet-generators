@@ -140,7 +140,8 @@ const AddGroupDialog: React.FC<AddGroupDialogProps> = ({
                     }
                   />
                   <Label htmlFor={`student-${student.student_id}`}>
-                    {student.student_name_en}
+                    {student.student_name_first_en}{" "}
+                    {student.student_name_last_en}
                   </Label>
                 </div>
               ))}

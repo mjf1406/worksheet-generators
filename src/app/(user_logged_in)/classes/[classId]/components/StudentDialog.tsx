@@ -549,14 +549,18 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
           <DrawerContent>
             <DrawerHeader>
               <DrawerTitle className="mt-5 text-center text-2xl">
-                <div>{studentData?.student_name_en}</div>
+                <div>
+                  {studentData?.student_name_first_en}{" "}
+                  {studentData?.student_name_last_en}
+                </div>
                 <Button asChild variant={"outline"}>
                   <Link
                     key={studentData?.student_id}
                     href={`/classes/${courseData?.class_id}/dashboard/${studentData?.student_id}`}
                   >
                     <LayoutDashboard className="mr-2 h-3 w-3 md:h-5 md:w-5" />{" "}
-                    {studentData?.student_name_en} Dashboard
+                    {studentData?.student_name_first_en}{" "}
+                    {studentData?.student_name_last_en} Dashboard
                   </Link>
                 </Button>
               </DrawerTitle>
@@ -580,14 +584,18 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
           <CustomDialogContent className="w-full rounded-xl sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-5xl 2xl:max-w-6xl">
             <DialogHeader>
               <DialogTitle className="mt-5 text-center text-2xl">
-                <div>{studentData?.student_name_en}</div>
+                <div>
+                  {studentData?.student_name_first_en}{" "}
+                  {studentData?.student_name_last_en}
+                </div>
                 <Button asChild variant={"outline"}>
                   <Link
                     key={studentData?.student_id}
                     href={`/classes/${courseData?.class_id}/dashboard/${studentData?.student_id}`}
                   >
                     <LayoutDashboard className="mr-2 h-3 w-3 md:h-5 md:w-5" />{" "}
-                    {studentData?.student_name_en} Dashboard
+                    {studentData?.student_name_first_en}{" "}
+                    {studentData?.student_name_last_en} Dashboard
                   </Link>
                 </Button>
               </DialogTitle>

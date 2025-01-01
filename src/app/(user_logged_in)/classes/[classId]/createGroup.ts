@@ -76,6 +76,8 @@ export async function addGroup(formData: FormData): Promise<AddGroupResponse> {
         updated_date: groups.updated_date,
         student_id: student_groups.student_id,
         student_name_en: students.student_name_en,
+        student_name_first_en: students.student_name_first_en,
+        student_name_last_en: students.student_name_last_en,
         student_name_alt: students.student_name_alt,
         student_reading_level: students.student_reading_level,
         student_grade: students.student_grade,
@@ -105,6 +107,8 @@ export async function addGroup(formData: FormData): Promise<AddGroupResponse> {
       students: groupData.map((row) => ({
         student_id: row.student_id ?? "",
         student_name_en: row.student_name_en ?? "",
+        student_name_first_en: row.student_name_first_en ?? "",
+        student_name_last_en: row.student_name_last_en ?? "",
         student_name_alt: row.student_name_alt ?? "",
         student_reading_level: row.student_reading_level ?? "",
         student_grade: row.student_grade ?? "",

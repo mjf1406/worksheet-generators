@@ -153,12 +153,13 @@ export function DataTable({ data, columns }: DataTableProps) {
         <Input
           placeholder="Filter students..."
           value={
-            (table.getColumn("student_name_en")?.getFilterValue() as string) ??
-            ""
+            (table
+              .getColumn("student_name_first_en")
+              ?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
             table
-              .getColumn("student_name_en")
+              .getColumn("student_name_first_en")
               ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"

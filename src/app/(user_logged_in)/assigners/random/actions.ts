@@ -130,7 +130,7 @@ export async function runRandomAssigner(
             if (className && assignedData[className]) assignedData[className].push({
               item: element,
               studentNumber: studentsShuffled[index]?.student_number,
-              studentName: studentsShuffled[index]?.student_name_en
+              studentName: studentsShuffled[index]?.student_name_first_en,
             })
           }
         }
@@ -145,7 +145,7 @@ export async function runRandomAssigner(
               assignedData[groupName].push({
                 item: element,
                 studentNumber: studentsShuffled[index]?.student_number,
-                studentName: studentsShuffled[index]?.student_name_en
+                studentName: studentsShuffled[index]?.student_name_first_en
               })
             }
           }  

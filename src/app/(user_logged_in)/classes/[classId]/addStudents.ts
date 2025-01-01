@@ -7,7 +7,8 @@ import { students, student_classes } from '~/server/db/schema'
 import { randomUUID } from "crypto";
 
 const studentSchema = z.object({
-    student_name_en: z.string().min(1, "English name is required"),
+    student_name_first_en: z.string().min(1, "English name is required"),
+    student_name_last_en: z.string().min(1, "English name is required"),
     student_name_alt: z.string().optional().nullable(),
     student_reading_level: z.string().min(1, "Reading level is required"),
     student_grade: z.string().min(1, "Grade is required"),
@@ -48,7 +49,8 @@ export async function addStudents(input: z.infer<typeof addStudentsSchema>) {
         // Insert new student
         await tx.insert(students).values({
           student_id: studentId,
-          student_name_en: student.student_name_en,
+          student_name_first_en: student.student_name_first_en,
+          student_name_last_en: student.student_name_last_en,
           student_name_alt: student.student_name_alt,
           student_reading_level: student.student_reading_level,
           student_grade: student.student_grade,

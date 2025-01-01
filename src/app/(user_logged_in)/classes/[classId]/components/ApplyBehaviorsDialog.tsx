@@ -247,7 +247,7 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
 
   // Sort selected students alphabetically by name
   const sortedSelectedStudents = [...selectedStudents].sort((a, b) =>
-    a.student_name_en.localeCompare(b.student_name_en),
+    a.student_name_first_en.localeCompare(b.student_name_first_en),
   );
 
   const mainContent = (
@@ -257,7 +257,7 @@ const ApplyBehaviorDialog: React.FC<ApplyBehaviorDialogProps> = ({
         <div className="grid grid-cols-4 overflow-x-clip text-xs md:text-sm">
           {sortedSelectedStudents.map((student) => (
             <div className="col-span-1" key={student.student_id}>
-              {student.student_name_en}
+              {student.student_name_first_en}
             </div>
           ))}
         </div>

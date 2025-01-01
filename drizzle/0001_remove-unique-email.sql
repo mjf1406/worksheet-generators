@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS `students_student_email_unique`;

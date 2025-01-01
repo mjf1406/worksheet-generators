@@ -9,7 +9,8 @@ import { and, eq, ne } from 'drizzle-orm';
 
 const updateStudentSchema = z.object({
   student_id: z.string(),
-  student_name_en: z.string().min(1),
+  student_name_first_en: z.string().min(1),
+  student_name_last_en: z.string().min(1),
   student_name_alt: z.string().optional(),
   student_reading_level: z.string().optional(),
   student_grade: z.string().optional(),
@@ -34,7 +35,8 @@ export async function updateStudent(studentDataFromClient: Omit<StudentData | "j
 
   const {
     student_id,
-    student_name_en,
+    student_name_first_en,
+    student_name_last_en,
     student_name_alt,
     student_reading_level,
     student_grade,
@@ -59,7 +61,8 @@ export async function updateStudent(studentDataFromClient: Omit<StudentData | "j
     // Update the student in the database
     await db.update(students)
       .set({
-        student_name_en,
+        student_name_first_en,
+        student_name_last_en,
         student_name_alt,
         student_reading_level,
         student_grade,

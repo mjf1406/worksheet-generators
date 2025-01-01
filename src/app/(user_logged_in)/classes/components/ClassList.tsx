@@ -61,7 +61,10 @@ import {
 } from "~/components/ui/tooltip";
 
 export default function ClassList() {
-  const [courseToDelete, setCourseToDelete] = useState<string | null>(null);
+  const [courseToDelete, setCourseToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
   const [deleteCourseText, setDeleteCourseText] = useState("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -94,8 +97,10 @@ export default function ClassList() {
     },
   });
 
-  async function handleDeleteClass(classId: string, className: string) {
-    if (className !== deleteCourseText) {
+  async function handleDeleteClass() {
+    if (!courseToDelete) return;
+
+    if (courseToDelete.name !== deleteCourseText) {
       toast({
         title: "Class names do not match!",
         description:
@@ -104,7 +109,10 @@ export default function ClassList() {
       });
       return;
     }
-    deleteMutation.mutate(classId);
+    deleteMutation.mutate(courseToDelete.id);
+    // Reset the dialog state after deletion
+    setCourseToDelete(null);
+    setDeleteCourseText("");
   }
 
   if (isLoading) {
@@ -168,74 +176,18 @@ export default function ClassList() {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={() => setCourseToDelete(course.class_name)}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-md">
-                        <DialogHeader>
-                          <DialogTitle>Delete class</DialogTitle>
-                          <DialogDescription>
-                            Please type the class name,{" "}
-                            <span id="class-id" className="font-bold">
-                              {courseToDelete}
-                            </span>
-                            , below to confirm deletion. Deleting a class is{" "}
-                            <b>IRREVERSIBLE</b>.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="flex items-center space-x-2">
-                          <div className="grid flex-1 gap-2">
-                            <Label
-                              htmlFor="class-to-delete"
-                              className="sr-only"
-                            >
-                              Class to delete
-                            </Label>
-                            <Input
-                              id="class-to-delete"
-                              placeholder="Type class name"
-                              value={deleteCourseText}
-                              onChange={(e) =>
-                                setDeleteCourseText(e.target.value)
-                              }
-                            />
-                          </div>
-                        </div>
-                        <DialogFooter className="sm:justify-start">
-                          <DialogClose asChild>
-                            <Button type="button" variant="outline">
-                              Cancel
-                            </Button>
-                          </DialogClose>
-                          <Button
-                            onClick={() =>
-                              handleDeleteClass(
-                                course.class_id,
-                                course.class_name,
-                              )
-                            }
-                            variant="destructive"
-                            disabled={deleteMutation.isPending}
-                          >
-                            {deleteMutation.isPending ? (
-                              <>
-                                <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                                Deleting...
-                              </>
-                            ) : (
-                              "Delete class"
-                            )}
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
-                    </Dialog>
+                    <DropdownMenuItem
+                      className="cursor-pointer text-destructive"
+                      onSelect={() =>
+                        setCourseToDelete({
+                          id: course.class_id,
+                          name: course.class_name,
+                        })
+                      }
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Delete
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
 
@@ -320,6 +272,59 @@ export default function ClassList() {
           ))
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      {courseToDelete && (
+        <Dialog
+          open={!!courseToDelete}
+          onOpenChange={(open) => !open && setCourseToDelete(null)}
+        >
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Delete class</DialogTitle>
+              <DialogDescription>
+                Please type the class name,{" "}
+                <span className="font-bold">{courseToDelete.name}</span>, below
+                to confirm deletion. Deleting a class is <b>IRREVERSIBLE</b>.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex items-center space-x-2">
+              <div className="grid flex-1 gap-2">
+                <Label htmlFor="class-to-delete" className="sr-only">
+                  Class to delete
+                </Label>
+                <Input
+                  id="class-to-delete"
+                  placeholder="Type class name"
+                  value={deleteCourseText}
+                  onChange={(e) => setDeleteCourseText(e.target.value)}
+                />
+              </div>
+            </div>
+            <DialogFooter className="sm:justify-start">
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                onClick={handleDeleteClass}
+                variant="destructive"
+                disabled={deleteMutation.isPending}
+              >
+                {deleteMutation.isPending ? (
+                  <>
+                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  "Delete class"
+                )}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 }

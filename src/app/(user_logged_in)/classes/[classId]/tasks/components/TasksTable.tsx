@@ -261,6 +261,8 @@ export default function TasksTable({ params }: { params: Params }) {
           {
             student_id: studentId,
             student_name_en: "",
+            student_name_first_en: "",
+            student_name_last_en: "",
             student_name_alt: null,
             student_reading_level: null,
             student_grade: null,
@@ -390,8 +392,8 @@ export default function TasksTable({ params }: { params: Params }) {
               bValue = b.student_number ?? 0;
               break;
             case "student_name":
-              aValue = a.student_name_en.split(" ")[1] ?? "";
-              bValue = b.student_name_en.split(" ")[1] ?? "";
+              aValue = a.student_name_first_en ?? "";
+              bValue = b.student_name_first_en ?? "";
               break;
             case "group":
               const aGroup = groups.find((g) =>
@@ -566,7 +568,7 @@ export default function TasksTable({ params }: { params: Params }) {
           <div className="grid grid-cols-3">
             {incompleteStudents.map((student) => (
               <div className="col-span-1" key={student.student_id}>
-                {student.student_name_en.split(" ")[1]}
+                {student.student_name_first_en}
               </div>
             ))}
           </div>
@@ -692,7 +694,7 @@ export default function TasksTable({ params }: { params: Params }) {
                       onClick={() => handleNameClick(student)}
                       className="text-primary hover:underline"
                     >
-                      {student.student_name_en.split(" ")[1]}
+                      {student.student_name_first_en}
                     </button>
                     <StudentActions
                       student={student}

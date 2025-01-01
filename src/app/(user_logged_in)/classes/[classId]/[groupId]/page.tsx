@@ -11,8 +11,15 @@ import {
   BreadcrumbItem,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
-import { ArrowBigRight, ChevronRight } from "lucide-react";
+import {
+  ArrowBigRight,
+  ChevronRight,
+  CircleCheckBig,
+  LayoutDashboard,
+  NotebookPen,
+} from "lucide-react";
 import Link from "next/link";
+import { Button } from "~/components/ui/button";
 
 interface Params {
   classId: string;
@@ -43,6 +50,23 @@ export default function ClassDetails({ params }: { params: Params }) {
   return (
     <ContentLayout title={courseData.group_name ?? ""}>
       <div className="container flex flex-col items-center gap-4 px-4 py-4">
+        <div className="flex gap-2 self-start">
+          <Button asChild variant="outline" className="w-fit">
+            <Link href={`/classes/${courseData.class_id}/dashboard`}>
+              <LayoutDashboard className="mr-2 h-5 w-5" /> Dashboard
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="w-fit">
+            <Link href={`/classes/${courseData.class_id}/tasks`}>
+              <NotebookPen className="mr-2 h-5 w-5" /> Tasks
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="w-fit">
+            <Link href={`/classes/${courseData.class_id}/expectations`}>
+              <CircleCheckBig className="mr-2 h-5 w-5" /> Expectations
+            </Link>
+          </Button>
+        </div>
         <div className="semi-bold flex items-center justify-center gap-2 self-start text-left text-3xl">
           <Link
             className="font-extrabold text-primary hover:underline"

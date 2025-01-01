@@ -2,7 +2,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { StudentData } from "~/app/api/getClassesGroupsStudents/route";
@@ -35,7 +35,8 @@ interface EditStudentDialogProps {
 }
 
 const studentSchema = z.object({
-  student_name_en: z.string().min(1, "English name is required"),
+  student_name_first_en: z.string().min(1, "First English name is required"),
+  student_name_last_en: z.string().min(1, "Last English name is required"),
   student_name_alt: z.string().optional(),
   student_reading_level: z.string().optional(),
   student_grade: z.string().optional(),
@@ -56,11 +57,13 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors, isSubmitting },
   } = useForm<StudentFormData>({
     resolver: zodResolver(studentSchema),
     defaultValues: {
-      student_name_en: student.student_name_en,
+      student_name_first_en: student.student_name_first_en,
+      student_name_last_en: student.student_name_last_en,
       student_name_alt: student.student_name_alt ?? "",
       student_reading_level: student.student_reading_level ?? "",
       student_grade: student.student_grade ?? "",
@@ -72,7 +75,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
 
   const onSubmit = async (data: StudentFormData) => {
     try {
-      const updatedStudent: {
+      const updatedStudentResponse: {
         success: boolean;
         message: string;
         data: StudentData | null;
@@ -80,18 +83,27 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
         student_id: student.student_id,
         ...data,
       });
-      onUpdate({
-        ...updatedStudent.data!,
-        points: student.points,
-        point_history: student.point_history,
-        absent_dates: student.absent_dates,
-      });
-      onClose();
+      if (updatedStudentResponse.success && updatedStudentResponse.data) {
+        onUpdate({
+          ...updatedStudentResponse.data,
+          points: student.points,
+          point_history: student.point_history,
+          absent_dates: student.absent_dates,
+        });
+        onClose();
+        toast({
+          title: "Success",
+          description: "Student updated successfully.",
+        });
+      } else {
+        throw new Error(updatedStudentResponse.message);
+      }
     } catch (error) {
       console.error(error);
       toast({
         title: "Error!",
         description: `Failed to update student. Please try again.`,
+        variant: "destructive",
       });
     }
   };
@@ -117,17 +129,34 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
             <Input value={student.student_id} readOnly className="mt-1" />
           </div>
 
-          {/* English Name */}
+          {/* First English Name */}
           <div>
-            <label className="block text-sm font-medium">English Name</label>
+            <label className="block text-sm font-medium">
+              First Name (EN)*
+            </label>
             <Input
-              {...register("student_name_en")}
+              {...register("student_name_first_en")}
               className="mt-1"
-              placeholder="Enter English name"
+              placeholder="Enter first English name"
             />
-            {errors.student_name_en && (
+            {errors.student_name_first_en && (
               <p className="mt-1 text-xs text-red-500">
-                {errors.student_name_en.message}
+                {errors.student_name_first_en.message}
+              </p>
+            )}
+          </div>
+
+          {/* Last English Name */}
+          <div>
+            <label className="block text-sm font-medium">Last Name (EN)*</label>
+            <Input
+              {...register("student_name_last_en")}
+              className="mt-1"
+              placeholder="Enter last English name"
+            />
+            {errors.student_name_last_en && (
+              <p className="mt-1 text-xs text-red-500">
+                {errors.student_name_last_en.message}
               </p>
             )}
           </div>
@@ -179,19 +208,26 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
 
           {/* Sex */}
           <div>
-            <label className="block text-sm font-medium">Sex</label>
-            <Select
-              {...register("student_sex")}
-              defaultValue={student.student_sex ?? undefined}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select sex" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-              </SelectContent>
-            </Select>
+            <label className="block text-sm font-medium">Sex*</label>
+            <Controller
+              control={control}
+              name="student_sex"
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select sex" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
             {errors.student_sex && (
               <p className="mt-1 text-xs text-red-500">
                 {errors.student_sex.message}
@@ -201,7 +237,7 @@ const EditStudentDialog: React.FC<EditStudentDialogProps> = ({
 
           {/* Student Number */}
           <div>
-            <label className="block text-sm font-medium">Student Number</label>
+            <label className="block text-sm font-medium">Student Number*</label>
             <Input
               type="number"
               {...register("student_number", { valueAsNumber: true })}

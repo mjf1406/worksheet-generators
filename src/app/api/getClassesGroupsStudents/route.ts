@@ -75,6 +75,8 @@ export type AssignmentData = {
 export type StudentData = {
   student_id: string;
   student_name_en: string;
+  student_name_first_en: string;
+  student_name_last_en: string;
   student_name_alt: string | null;
   student_reading_level: string | null;
   student_grade: string | null;
@@ -151,6 +153,8 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         .select({
           student_id: students.student_id,
           student_name_en: students.student_name_en,
+          student_name_first_en: students.student_name_first_en,
+          student_name_last_en: students.student_name_last_en,
           student_name_alt: students.student_name_alt,
           student_reading_level: students.student_reading_level,
           student_grade: students.student_grade,
@@ -214,6 +218,8 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
             .select({
               student_id: students.student_id,
               student_name_en: students.student_name_en,
+              student_name_first_en: students.student_name_first_en,
+              student_name_last_en: students.student_name_last_en,
               student_name_alt: students.student_name_alt,
               student_reading_level: students.student_reading_level,
               student_grade: students.student_grade,

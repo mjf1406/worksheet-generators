@@ -6,26 +6,13 @@ import { students } from '~/server/db/schema'
 import { db } from '~/server/db/index'
 import { eq } from 'drizzle-orm'
 
-type DatabaseStudent = {
-  student_id: string;
-  student_name_en: string;
-  student_name_alt: string | null;
-  student_grade: string | null;
-  student_reading_level: string | null;
-  student_email: string | null;
-  joined_date: string;
-  updated_date: string;
-  student_sex: "male" | "female" | null;
-  student_number: number | null;
-}
-
 export async function updateStudents(updatedStudents: Partial<Student>[]) {
   try {
     await db.transaction(async (tx) => {
       for (const student of updatedStudents) {
         if (!student.student_id) continue;
 
-        const updateFields: Partial<DatabaseStudent> = {};
+        const updateFields: Partial<Student> = {};
 
         (Object.entries(student) as [keyof Student, Student[keyof Student]][]).forEach(([key, value]) => {
           if (key !== 'student_id' && value !== undefined && value !== null && key in students) {

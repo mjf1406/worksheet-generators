@@ -89,7 +89,8 @@ export default function EditStudentExpectationsDialog({
       <DialogContent className="max-w-xl">
         <DialogHeader>
           <DialogTitle>
-            Edit Expectations for {student.student_name_en}
+            Edit Expectations for {student.student_name_first_en}{" "}
+            {student.student_name_last_en}
           </DialogTitle>
           <DialogDescription>
             Make changes to the student expectations below and click

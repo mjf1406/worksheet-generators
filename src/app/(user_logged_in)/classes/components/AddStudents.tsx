@@ -33,7 +33,8 @@ import { GRADES } from "~/lib/constants";
 import { z } from "zod";
 
 const studentSchema = z.object({
-  student_name_en: z.string().min(1, "English name is required"),
+  student_name_first_en: z.string().min(1, "First English name is required"),
+  student_name_last_en: z.string().min(1, "Last English name is required"),
   student_name_alt: z.string().optional().nullable(),
   student_reading_level: z.string().min(1, "Reading level is required"),
   student_grade: z.string().min(1, "Grade is required"),
@@ -53,7 +54,8 @@ interface AddStudentsDialogProps {
 }
 
 const initialStudentState: Partial<Student> = {
-  student_name_en: "",
+  student_name_first_en: "",
+  student_name_last_en: "",
   student_name_alt: "",
   student_reading_level: "",
   student_grade: "",
@@ -170,7 +172,10 @@ export function AddStudentsDialog({
               <TableHeader>
                 <TableRow>
                   <TableHead className="whitespace-nowrap">
-                    Name (EN)*
+                    First Name (EN)*
+                  </TableHead>
+                  <TableHead className="whitespace-nowrap">
+                    Last Name (EN)*
                   </TableHead>
                   <TableHead className="whitespace-nowrap">
                     Name (Alt)
@@ -191,14 +196,30 @@ export function AddStudentsDialog({
                       <Input
                         required
                         className="w-full"
-                        value={student.student_name_en}
+                        value={student.student_name_first_en}
                         onChange={(e) =>
                           handleInputChange(
                             index,
-                            "student_name_en",
+                            "student_name_first_en",
                             e.target.value,
                           )
                         }
+                        placeholder="First Name"
+                      />
+                    </TableCell>
+                    <TableCell className="px-2 py-1">
+                      <Input
+                        required
+                        className="w-full"
+                        value={student.student_name_last_en}
+                        onChange={(e) =>
+                          handleInputChange(
+                            index,
+                            "student_name_last_en",
+                            e.target.value,
+                          )
+                        }
+                        placeholder="Last Name"
                       />
                     </TableCell>
                     <TableCell className="px-2 py-1">
@@ -212,6 +233,7 @@ export function AddStudentsDialog({
                             e.target.value,
                           )
                         }
+                        placeholder="Alternative Name"
                       />
                     </TableCell>
                     <TableCell className="px-2 py-1">
@@ -279,7 +301,7 @@ export function AddStudentsDialog({
                       <Input
                         type="email"
                         className="w-full"
-                        value={student.student_email!}
+                        value={student.student_email ?? ""}
                         onChange={(e) =>
                           handleInputChange(
                             index,
@@ -287,6 +309,7 @@ export function AddStudentsDialog({
                             e.target.value,
                           )
                         }
+                        placeholder="Email"
                       />
                     </TableCell>
                     <TableCell className="px-2 py-1">

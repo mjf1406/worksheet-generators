@@ -209,14 +209,11 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
             Number(b.student_number),
           );
         case "last_name":
-          return compareValues(
-            a.student_name_en.split(" ")[0],
-            b.student_name_en.split(" ")[0],
-          );
+          return compareValues(a.student_name_last_en, b.student_name_last_en);
         case "first_name":
           return compareValues(
-            a.student_name_en.split(" ").pop(),
-            b.student_name_en.split(" ").pop(),
+            a.student_name_first_en,
+            b.student_name_first_en,
           );
         case "points":
           return compareValues(b.points, a.points);
@@ -796,7 +793,7 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
                   {/* Student Name */}
                   <CardHeader className="p-1 pt-5 md:p-6 md:pt-8">
                     <CardTitle className="flex flex-col text-center text-sm md:text-xl">
-                      <div>{student.student_name_en.split(" ").pop()}</div>
+                      <div>{student.student_name_first_en}</div>
                       <div className="text-3xs md:text-xs">
                         {student.student_sex === "male" ? "Boy" : "Girl"}
                       </div>
@@ -864,8 +861,11 @@ const StudentGrid: React.FC<StudentRosterProps> = ({
             <AlertDialogTitle>Confirm Deletion</AlertDialogTitle>
             <AlertDialogDescription>
               Are you sure you want to delete{" "}
-              <strong>{studentToDelete?.student_name_en}</strong>? This action
-              CANNOT be undone.
+              <strong>
+                {studentToDelete?.student_name_first_en}{" "}
+                {studentToDelete?.student_name_last_en}
+              </strong>
+              ? This action CANNOT be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

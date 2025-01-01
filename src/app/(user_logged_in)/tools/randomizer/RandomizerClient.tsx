@@ -49,7 +49,9 @@ const RandomizerClient = () => {
               .find((c) => c.class_id === selectedCourse)
               ?.students.map(
                 (s) =>
-                  s.student_name_en ?? s.student_name_alt ?? "Unnamed Student",
+                  s.student_name_first_en ??
+                  s.student_name_alt ??
+                  "Unnamed Student",
               ) ?? [])
           : [];
       case "studentInGroup":
@@ -59,7 +61,9 @@ const RandomizerClient = () => {
               ?.groups?.find((g) => g.group_id === selectedGroup)
               ?.students.map(
                 (s) =>
-                  s.student_name_en ?? s.student_name_alt ?? "Unnamed Student",
+                  s.student_name_first_en ??
+                  s.student_name_alt ??
+                  "Unnamed Student",
               ) ?? [])
           : [];
       default:
@@ -85,7 +89,8 @@ const RandomizerClient = () => {
         const studentData = courses
           ?.find((c) => c.class_id === selectedCourse)
           ?.students.find(
-            (s) => s.student_name_en === item || s.student_name_alt === item,
+            (s) =>
+              s.student_name_first_en === item || s.student_name_alt === item,
           );
         detailedResult = `Student: ${item}\nGrade: ${studentData?.student_grade}\nReading Level: ${studentData?.student_reading_level}`;
         break;

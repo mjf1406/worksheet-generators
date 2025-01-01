@@ -305,9 +305,7 @@ export default async function studentDashboard({ params }: { params: Params }) {
         </div>
         <Card className="col-span-1 mb-5 h-fit md:col-span-4">
           <CardHeader>
-            <CardTitle>
-              Hey there, {getFirstName(student?.student_name_en)}!
-            </CardTitle>
+            <CardTitle>Hey there, {student?.student_name_first_en}!</CardTitle>
             <CardDescription className="text-gray-500">
               Ask or discuss with your desk partner/teammate this
               question/sentence for bonus points: {randomConversationStarter}

@@ -234,7 +234,7 @@ export default function ClassDashboard({ params }: { params: Params }) {
   // Current points leaderboard
   const currentPointsLeaderboard = (courseData.students ?? [])
     .map((student) => ({
-      name: student.student_name_en,
+      name: student.student_name_first_en,
       value: student.points ?? 0,
     }))
     .sort((a, b) => b.value - a.value);
@@ -242,7 +242,7 @@ export default function ClassDashboard({ params }: { params: Params }) {
   // Most points earned leaderboard
   const pointsEarnedLeaderboard = (courseData.students ?? [])
     .map((student) => ({
-      name: student.student_name_en,
+      name: student.student_name_first_en,
       value: (student.point_history ?? []).reduce(
         (sum, point) =>
           sum + (point.number_of_points > 0 ? point.number_of_points : 0),
@@ -254,7 +254,7 @@ export default function ClassDashboard({ params }: { params: Params }) {
   // Most points spent leaderboard
   const pointsSpentLeaderboard = (courseData.students ?? [])
     .map((student) => ({
-      name: student.student_name_en,
+      name: student.student_name_first_en,
       value: (student.redemption_history ?? []).reduce(
         (sum, redemption) => sum + Math.abs(redemption.quantity),
         0,
@@ -315,7 +315,7 @@ export default function ClassDashboard({ params }: { params: Params }) {
   // Most Absent Students Leaderboard
   const mostAbsentStudents = (courseData.students ?? [])
     .map((student) => ({
-      name: student.student_name_en,
+      name: student.student_name_first_en,
       value: student.absent_dates?.length ?? 0,
     }))
     .sort((a, b) => b.value - a.value)
@@ -325,7 +325,7 @@ export default function ClassDashboard({ params }: { params: Params }) {
   // Most Negative Behaviors Leaderboard
   const mostNegativeBehaviorsStudents = (courseData.students ?? [])
     .map((student) => ({
-      name: student.student_name_en,
+      name: student.student_name_first_en,
       value: (student.point_history ?? []).filter(
         (point) => point.number_of_points < 0,
       ).length,
@@ -484,7 +484,7 @@ export default function ClassDashboard({ params }: { params: Params }) {
                   "Most Negative Behaviors",
                   (courseData.students ?? [])
                     .map((student) => ({
-                      name: student.student_name_en,
+                      name: student.student_name_first_en,
                       value: (student.point_history ?? []).filter(
                         (point) => point.number_of_points < 0,
                       ).length,
@@ -527,7 +527,7 @@ export default function ClassDashboard({ params }: { params: Params }) {
                   "Most Absent Students",
                   (courseData.students ?? [])
                     .map((student) => ({
-                      name: student.student_name_en,
+                      name: student.student_name_first_en,
                       value: student.absent_dates?.length ?? 0,
                     }))
                     .sort((a, b) => b.value - a.value),
@@ -544,10 +544,8 @@ export default function ClassDashboard({ params }: { params: Params }) {
             {(courseData.students ?? [])
               .slice()
               .sort((a, b) => {
-                const nameA =
-                  a.student_name_en.split(" ")[1]?.toLowerCase() ?? "";
-                const nameB =
-                  b.student_name_en.split(" ")[1]?.toLowerCase() ?? "";
+                const nameA = a.student_name_first_en?.toLowerCase() ?? "";
+                const nameB = b.student_name_first_en?.toLowerCase() ?? "";
                 return nameA.localeCompare(nameB);
               })
               .map((student) => (
@@ -560,8 +558,8 @@ export default function ClassDashboard({ params }: { params: Params }) {
                     <Card className="transition-shadow hover:shadow-lg">
                       <CardContent className="flex flex-col items-center justify-center p-2">
                         <div className="text-xs font-medium md:text-base">
-                          {student.student_name_en.split(" ")[0] ??
-                            student.student_name_en}
+                          {student.student_name_first_en ??
+                            student.student_name_first_en}
                         </div>
                         <div className="text-xs md:text-base">
                           Points: {student.points ?? 0}

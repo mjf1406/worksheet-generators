@@ -3,6 +3,50 @@ import { google, type classroom_v1 } from 'googleapis';
 import { type NextRequest, NextResponse } from 'next/server';
 export const dynamic = 'force-dynamic'
 
+export type GoogleClassroom = {
+  id: string;
+  name: string;
+  descriptionHeading: string;
+  room: string;
+  ownerId: string;
+  creationTime: string;
+  updateTime: string;
+  enrollmentCode: string;
+  courseState: 'ACTIVE' | 'ARCHIVED' | 'PROVISIONED' | 'DECLINED' | 'SUSPENDED';
+  alternateLink: string;
+  teacherGroupEmail: string;
+  courseGroupEmail: string;
+  teacherFolder: {
+    id: string;
+    title: string;
+    alternateLink: string;
+  };
+  guardiansEnabled: boolean;
+  calendarId: string;
+  gradebookSettings: {
+    calculationType: 'TOTAL_POINTS' | 'WEIGHTED_CATEGORIES';
+    displaySetting: 'HIDE_OVERALL_GRADE' | 'SHOW_OVERALL_GRADE';
+  };
+  students: GoogleClassroomStudent[];
+}
+
+export type GoogleClassroomStudent = {
+  courseId: string;
+  userId: string;
+  profile: {
+    id: string;
+    name: {
+      givenName: string;
+      familyName: string;
+      fullName: string;
+    };
+    emailAddress: string;
+    permissions: {
+      permission: string;
+    }[];
+  };
+}
+
 async function fetchStudents(classroomClient: classroom_v1.Classroom, courseId: string) {
   try {
     const res = await classroomClient.courses.students.list({

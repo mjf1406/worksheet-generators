@@ -266,7 +266,7 @@ export async function runAssignerSeats(
               const seatNumber = seatingAssignments.get(student.student_id)?.toString() ?? "-1"
               const group = seatGroups?.find(i => i.items.includes(seatNumber))?.name ?? "?";
               return {
-                studentName: student.student_name_en,
+                studentName: student.student_name_first_en,
                 studentNumber: student.student_number,
                 studentSex: student.student_sex,
                 item: `${group} ${seatNumber}`,
@@ -289,7 +289,7 @@ export async function runAssignerSeats(
             const seatNumber = seatingAssignments.get(student.student_id)?.toString() ?? "-1";
             const group = seatGroups?.find(g => g.items.includes(seatNumber))?.name ?? "?";
             return {
-            studentName: student.student_name_en,
+            studentName: student.student_name_first_en,
             studentNumber: student.student_number,
             studentSex: student.student_sex,
             item: `${group} ${seatNumber}`,

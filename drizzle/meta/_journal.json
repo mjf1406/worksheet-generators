@@ -5,85 +5,22 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1726367422433,
-      "tag": "0000_great_venus",
+      "when": 1735701647962,
+      "tag": "0000_reset",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "6",
-      "when": 1731568465082,
-      "tag": "0001_add-redemption_history",
+      "when": 1735745435125,
+      "tag": "0001_remove-unique-email",
       "breakpoints": true
     },
     {
       "idx": 2,
       "version": "6",
-      "when": 1732180622138,
-      "tag": "0002_add-points-attendance-tables",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "6",
-      "when": 1732272124595,
-      "tag": "0003_add-achievements-and-titles",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "6",
-      "when": 1732273321874,
-      "tag": "0004_outstanding_the_fallen",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "6",
-      "when": 1733542057240,
-      "tag": "0005_add-assignments-topics",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "6",
-      "when": 1733544737166,
-      "tag": "0006_add-assignments-topics-updates",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "6",
-      "when": 1733545122945,
-      "tag": "0007_add-assignments-topics-updates-1",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "6",
-      "when": 1733546377576,
-      "tag": "0008_add-student-assignment-table",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "6",
-      "when": 1733626118353,
-      "tag": "0009_add-excused-column",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "6",
-      "when": 1734519261467,
-      "tag": "0010_add-expectations-table",
-      "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "6",
-      "when": 1734522443636,
-      "tag": "0011_add-student-expectations-table",
+      "when": 1735745901591,
+      "tag": "0002_remove-name",
       "breakpoints": true
     }
   ]

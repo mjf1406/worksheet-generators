@@ -53,7 +53,7 @@ export const columns: ColumnDef<StudentData>[] = [
     },
   },
   {
-    accessorKey: "student_name_en",
+    accessorKey: "student_name_first_en",
     header: "Name",
     cell: ({ row, table }): JSX.Element => {
       const meta = table.options.meta as CustomTableMeta;
@@ -61,13 +61,13 @@ export const columns: ColumnDef<StudentData>[] = [
 
       return isEditing ? (
         <Input
-          value={row.getValue("student_name_en")}
+          value={row.getValue("student_name_first_en")}
           onChange={(e) =>
-            meta.updateData(row.index, "student_name_en", e.target.value)
+            meta.updateData(row.index, "student_name_first_en", e.target.value)
           }
         />
       ) : (
-        <>{row.getValue("student_name_en")}</>
+        <div>{row.getValue("student_name_first_en")}</div>
       );
     },
   },
@@ -108,7 +108,7 @@ export const columns: ColumnDef<StudentData>[] = [
           {/* ... SelectContent ... */}
         </Select>
       ) : (
-        <>{row.getValue("student_sex")}</>
+        <div>{row.getValue("student_sex")}</div>
       );
     },
   },

@@ -102,6 +102,8 @@ export type RedemptionRecord = {
 export type Student = {
     student_id?: string | undefined;
     student_name_en: string | undefined;
+    student_name_first_en: string | undefined;
+    student_name_last_en: string | undefined;
     student_name_alt: string | undefined;
     student_grade: string | undefined;
     student_reading_level: string | undefined;

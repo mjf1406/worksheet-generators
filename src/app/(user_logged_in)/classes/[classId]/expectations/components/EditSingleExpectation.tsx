@@ -144,7 +144,8 @@ export default function EditSingleExpectationDialog({
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>
-            Editing {expectation.name} for {student.student_name_en}
+            Editing {expectation.name} for {student.student_name_first_en}{" "}
+            {student.student_name_last_en}
           </DialogTitle>
           <DialogDescription>
             Make changes to the selected expectation and click &quot;Save&quot;

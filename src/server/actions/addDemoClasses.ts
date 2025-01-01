@@ -257,7 +257,7 @@ export default async function addDemoClasses() {
     const { userId } = auth()
     if (!userId) throw new Error("User not authenticated:")
     // Insert complete demo class
-    const completeStudentIds: string = await insertClass(completeClassDemo, userId, true) 
+    const completeStudentIds: string = await insertClass(completeClassDemo, userId, true, "template") 
     const completeStudentIdsJson: StudentId[] = JSON.parse(completeStudentIds) as StudentId[]
     const completeData = completeStudentIdsJson.map(student => {
       return generateStudentFieldData(true, student)
@@ -265,7 +265,7 @@ export default async function addDemoClasses() {
     // await updateStudentField(completeData)
     
     // Insert incomplete demo class
-    const incompleteStudentIds: string = await insertClass(incompleteClassDemo, userId, false) 
+    const incompleteStudentIds: string = await insertClass(incompleteClassDemo, userId, false, "template") 
     const incompleteStudentIdsJson: StudentId[] = JSON.parse(incompleteStudentIds) as StudentId[]
     const incompleteData = incompleteStudentIdsJson.map(student => {
       return generateStudentFieldData(false, student)

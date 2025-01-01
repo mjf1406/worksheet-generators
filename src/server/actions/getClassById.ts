@@ -59,7 +59,8 @@ export type DataButt = {
             student_id: string
         },
         students: {
-            student_name_en: string | undefined,
+            student_name_first_en: string | undefined,
+            student_name_last_en: string | undefined,
             student_name_alt: string | undefined,
             student_email: string | undefined,
             joined_date: string | undefined,
@@ -135,7 +136,8 @@ async function databaseClassToCourseMap(data: DataButt): Promise<Course | undefi
             enrollment_date: student?.student_classes.enrollment_date,
             enrollment_id: student?.student_classes.enrollment_id,
             student_id: student?.student_classes.student_id,
-            student_name_en: student?.students.student_name_en,
+            student_name_first_en: student?.students.student_name_first_en,
+            student_name_last_en: student?.students.student_name_last_en,
             student_name_alt: student?.students.student_name_alt,
             student_grade: student?.students.student_grade,
             student_reading_level: student?.students.student_reading_level,
@@ -144,6 +146,7 @@ async function databaseClassToCourseMap(data: DataButt): Promise<Course | undefi
             updated_date: student?.students.updated_date,
             student_sex: student?.students.student_sex,
             student_number: student?.students.student_number,
+            student_name_en: undefined
         })
     }
   

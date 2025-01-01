@@ -86,7 +86,7 @@ export function BreadcrumbBuilder() {
             (s) => s.student_id === studentId,
           );
           if (student) {
-            matchedStudentName = student.student_name_en;
+            matchedStudentName = student.student_name_first_en;
             break;
           }
         }
@@ -98,7 +98,7 @@ export function BreadcrumbBuilder() {
                 (s) => s.student_id === studentId,
               );
               if (student) {
-                matchedStudentName = student.student_name_en;
+                matchedStudentName = student.student_name_first_en;
                 break;
               }
             }

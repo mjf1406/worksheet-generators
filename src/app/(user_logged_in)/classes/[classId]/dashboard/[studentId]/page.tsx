@@ -179,14 +179,17 @@ export default function StudentDashboard({ params }: { params: Params }) {
   };
 
   return (
-    <ContentLayout title={`${student.student_name_en}'s Dashboard`}>
+    <ContentLayout
+      title={`${student.student_name_first_en} ${student?.student_name_last_en}'s Dashboard`}
+    >
       <div className="container space-y-8 px-4 py-4">
         {/* Student Info */}
         <div className="flex items-center space-x-4">
           {/* You can add an avatar or image here if available */}
           <div>
             <h1 className="text-3xl font-bold">
-              {student.student_name_en} ({student.student_name_alt})
+              {student.student_name_first_en} {student.student_name_last_en} (
+              {student.student_name_alt})
             </h1>
             <p className="text-sm text-muted-foreground">
               Grade: {student.student_grade} | Sex: {student.student_sex} |

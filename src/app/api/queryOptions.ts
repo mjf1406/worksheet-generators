@@ -1,5 +1,14 @@
 import { queryOptions } from '@tanstack/react-query'
 import type { Assigner, Behavior, RandomEvent, RewardItem, TeacherCourse } from '~/server/db/types';
+import type { GoogleClassroom } from './GoogleClasses/route';
+
+export const GoogleClassOptions = queryOptions<GoogleClassroom[]>({
+  queryKey: ["google-classes"],
+  queryFn: async () => {
+    const response = await fetch("/api/GoogleClasses");
+    return response.json()
+  }
+})
 
 export const assignerOptions = queryOptions<Assigner[]>({
     queryKey: ["assigners"],

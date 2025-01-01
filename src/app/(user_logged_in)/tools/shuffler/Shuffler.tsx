@@ -50,7 +50,9 @@ const ShufflerClient = () => {
               .find((c) => c.class_id === selectedCourse)
               ?.students.map(
                 (s) =>
-                  s.student_name_en ?? s.student_name_alt ?? "Unnamed Student",
+                  s.student_name_first_en ??
+                  s.student_name_alt ??
+                  "Unnamed Student",
               ) ?? [])
           : [];
       case "studentInGroup":
@@ -60,7 +62,9 @@ const ShufflerClient = () => {
               ?.groups?.find((g) => g.group_id === selectedGroup)
               ?.students.map(
                 (s) =>
-                  s.student_name_en ?? s.student_name_alt ?? "Unnamed Student",
+                  s.student_name_first_en ??
+                  s.student_name_alt ??
+                  "Unnamed Student",
               ) ?? [])
           : [];
       default:

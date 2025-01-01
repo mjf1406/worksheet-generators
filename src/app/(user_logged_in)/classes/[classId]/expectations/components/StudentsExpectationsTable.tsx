@@ -53,7 +53,7 @@ export default function StudentsExpectationsTable({
             return (
               <tr key={student.student_id} className="hover:bg-gray-50">
                 <td className="border border-gray-300 p-2">
-                  {student.student_name_en}
+                  {student.student_name_first_en} {student.student_name_last_en}
                 </td>
 
                 {expectations.map((exp) => {
