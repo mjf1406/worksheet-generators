@@ -167,22 +167,17 @@ This is the collection of worksheet generators that I have created as I needed t
 - BUG: fixed a bug that would cause the mouse to click through the sorting dropdown.
 - FEATURE: Expectations -- can edit expectations
 - FEATURE: Expectations -- can delete expectations
-- TESTERS: Getting ready for testers
-  - [ ] add demo class button
-  - [ ] add default behaviors, then reload the page
-  - [ ] add default rewards, then reload the page
+- [ ] add demo class button
 
 ## Change Log
 
 2025/01/01
 
 - BUG: fixed an issue when deleting a class where the delete confirmation would immediately close upon opening.
-- [x] DB: need first name and last name columns when adding a class.
-  - [x] updated all instances where the name was split to use the first/last name
-  - [x] need to drop \_old_push_classes and replace it with the classes table
-  - [x] can import from template
-  - [x] can import from Google Classroom
-- [x] UI: update tooltips when creating a class
+- DB: added first name and last name columns for classes and updated all related instances to use these columns.
+- DB: dropped \_old_push_classes and replaced it with the classes table.
+- DB: enabled importing classes from templates and Google Classroom.
+- UI: updated tooltips when creating a class to include default behaviors and rewards, then reload the page after adding them.
 
 2024/12/31
 

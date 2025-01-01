@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import {
   Dialog,
-  DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
@@ -361,9 +360,10 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                     variant={"outline"}
                     onClick={() => {
                       void addDefaultBehaviors(classId);
+                      window.location.reload();
                     }}
                   >
-                    Add Defaults
+                    Add Default Behaviors
                   </Button>
                 </div>
                 {/* Optional: Add NumberInput to specify custom quantity */}
@@ -399,9 +399,10 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                     variant={"outline"}
                     onClick={() => {
                       void addDefaultBehaviors(classId);
+                      window.location.reload();
                     }}
                   >
-                    Add Defaults
+                    Add Default Behaviors
                   </Button>
                 </div>
                 <p>No positive behaviors created yet.</p>
@@ -423,9 +424,10 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                     variant={"outline"}
                     onClick={() => {
                       void addDefaultBehaviors(classId);
+                      window.location.reload();
                     }}
                   >
-                    Add Defaults
+                    Add Default Behaviors
                   </Button>
                 </div>
                 {/* Optional: Add NumberInput to specify custom quantity */}
@@ -461,9 +463,10 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                     variant={"outline"}
                     onClick={() => {
                       void addDefaultBehaviors(classId);
+                      window.location.reload();
                     }}
                   >
-                    Add Defaults
+                    Add Default Behaviors
                   </Button>
                 </div>
                 <p>No negative behaviors created yet.</p>
@@ -485,9 +488,10 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                     variant={"outline"}
                     onClick={() => {
                       void addDefaultRewardItems(classId);
+                      window.location.reload();
                     }}
                   >
-                    Add Defaults
+                    Add Default Rewards
                   </Button>
                 </div>
                 {/* Optional: Add NumberInput to specify quantity */}
@@ -523,9 +527,10 @@ const StudentDialog: React.FC<StudentDialogProps> = ({
                     variant={"outline"}
                     onClick={() => {
                       void addDefaultRewardItems(classId);
+                      window.location.reload();
                     }}
                   >
-                    Add Defaults
+                    Add Default Rewards
                   </Button>
                 </div>
                 <p>No reward items created yet.</p>

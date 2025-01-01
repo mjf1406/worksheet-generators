@@ -22,6 +22,13 @@
       "when": 1735745901591,
       "tag": "0002_remove-name",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1735764615338,
+      "tag": "0003_added-added_demo-columnp-to-users",
+      "breakpoints": true
     }
   ]
 }

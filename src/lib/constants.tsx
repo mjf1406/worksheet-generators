@@ -545,6 +545,14 @@ export const DEFAULT_BEHAVIORS: Omit<
     color: "#DC3545",
     title: "Off-Task Obstructor",
   },
+  {
+    name: "Swear Word",
+    description: "The student said a swear word.",
+    point_value: -5,
+    icon: "fas heart-crack",
+    color: "#ff0000",
+    title: "Potty Mouth",
+  },
 ];
 
 export type ConversationStarter = {
