@@ -8,7 +8,21 @@ import StudentGrid from "./components/StudentGrid";
 import ClassGroupsComponent from "../components/ClassGroups";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import { CircleCheckBig, LayoutDashboard, NotebookPen } from "lucide-react";
+import {
+  CircleCheckBig,
+  HelpCircle,
+  LayoutDashboard,
+  NotebookPen,
+} from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
+import { dmMono } from "~/app/fonts";
+import { useToast } from "~/components/ui/use-toast";
+import ClassCodeDisplay from "../components/ClassCode";
 
 interface Params {
   classId: string;
@@ -16,6 +30,7 @@ interface Params {
 
 export default function ClassDetails({ params }: { params: Params }) {
   const classId = params.classId;
+  const { toast } = useToast();
 
   const { data: coursesData = [] } = useSuspenseQuery(classesOptions);
 
@@ -51,6 +66,10 @@ export default function ClassDetails({ params }: { params: Params }) {
                 <CircleCheckBig className="mr-2 h-5 w-5" /> Expectations
               </Link>
             </Button>
+            <ClassCodeDisplay
+              classCode={courseData.class_code}
+              role={courseData.role}
+            />
           </div>
           <ClassGroupsComponent class={courseData} />
           <div className="text-3xl">Students</div>

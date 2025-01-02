@@ -277,7 +277,7 @@ export default function NewClassDialog() {
             <span className="pr-2">
               <Plus />
             </span>
-            New Class
+            Create Class
           </Button>
         </DialogTrigger>
         <DialogContent className="flex h-full flex-col p-6 sm:w-full sm:max-w-4xl">

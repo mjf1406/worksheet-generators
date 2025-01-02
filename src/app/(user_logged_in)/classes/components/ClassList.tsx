@@ -59,6 +59,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import JoinClassDialog from "./JoinClassDialog";
+import ClassCodeDisplay from "./ClassCode";
 
 export default function ClassList() {
   const [courseToDelete, setCourseToDelete] = useState<{
@@ -130,6 +132,7 @@ export default function ClassList() {
     <>
       <div className="mb-8 flex gap-5">
         <NewClassDialog />
+        <JoinClassDialog />
         <Button variant="secondary" disabled onClick={addDemos}>
           {isLoading ? (
             <>
@@ -206,7 +209,10 @@ export default function ClassList() {
                 </div>
               </CardHeader>
               <CardContent className="flex-1 px-6 py-4">
-                {/* Additional content can be added here */}
+                <ClassCodeDisplay
+                  classCode={course.class_code}
+                  role={course.role}
+                />
               </CardContent>
               <CardFooter className="flex items-center justify-start gap-2">
                 <Button asChild variant="outline">

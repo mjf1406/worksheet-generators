@@ -104,11 +104,6 @@ This is the collection of worksheet generators that I have created as I needed t
 - FEATURE: achievements
   - given to students once they reach certain thresholds for each behavior/redemption item
   - if they have the achievement, a badge is displayed on their profile
-- PAGE: Expectations grid to manage expectations for each student for
-  - word count
-  - presentation length
-  - vocab. sentence length
-  - put a card for this on the student dashboard
 - PAGE: Class Dashboard
   - behavior streaks
     - positive
@@ -167,12 +162,13 @@ This is the collection of worksheet generators that I have created as I needed t
 - BUG: fixed a bug that would cause the mouse to click through the sorting dropdown.
 - FEATURE: Expectations -- can edit expectations
 - FEATURE: Expectations -- can delete expectations
-- [ ] add demo class button
+- UX: Users can now add demo classes
 
 ## Change Log
 
 2025/01/01
 
+- UX: Each class now has a class code which can be used to join as an assistant teacher
 - BUG: fixed an issue when deleting a class where the delete confirmation would immediately close upon opening.
 - DB: added first name and last name columns for classes and updated all related instances to use these columns.
 - DB: dropped \_old_push_classes and replaced it with the classes table.

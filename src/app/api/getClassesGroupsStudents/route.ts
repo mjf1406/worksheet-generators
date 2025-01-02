@@ -31,6 +31,7 @@ export type ClassData = {
   class_language: string;
   class_grade: string | null;
   class_year: string | null;
+  class_code: string;
   created_date: string;
   updated_date: string;
   complete: {
@@ -128,6 +129,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
       class_language: classes.class_language,
       class_grade: classes.class_grade,
       class_year: classes.class_year,
+      class_code: classes.class_code,
       created_date: classes.created_date,
       updated_date: classes.updated_date,
       complete: classes.complete,
@@ -331,7 +333,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         };
       });
 
-      // Fetch reward items associated with the class and user
+      // Fetch reward items associated with the class
       const rewardItemsData = await db
         .select({
           item_id: reward_items.item_id,
@@ -348,14 +350,11 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         })
         .from(reward_items)
         .where(
-          and(
-            eq(reward_items.user_id, userId),
-            or(eq(reward_items.class_id, classData.class_id), isNull(reward_items.class_id))
-          )
+          eq(reward_items.class_id, classData.class_id)
         )
         .all();
 
-      // Fetch behaviors associated with the class and user
+      // Fetch behaviors associated with the class
       const behaviorsData = await db
         .select({
           behavior_id: behaviors.behavior_id,
@@ -372,22 +371,16 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         })
         .from(behaviors)
         .where(
-          and(
-            eq(behaviors.user_id, userId),
-            or(eq(behaviors.class_id, classData.class_id), isNull(behaviors.class_id))
-          )
+          eq(behaviors.class_id, classData.class_id)
         )
         .all();
 
-      // Fetch achievements associated with the class and user
+      // Fetch achievements associated with the class
       const achievementsData = await db
         .select()
         .from(achievements)
         .where(
-          and(
-            eq(achievements.class_id, classData.class_id),
-            eq(achievements.user_id, userId)
-          )
+          eq(achievements.class_id, classData.class_id)
         )
         .all();
 
@@ -395,10 +388,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         .select()
         .from(topics)
         .where(
-          and(
-            eq(topics.user_id, userId),
-            eq(topics.class_id, classData.class_id)
-          )
+          eq(topics.class_id, classData.class_id)
         )
         .all();
 
@@ -406,10 +396,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         .select()
         .from(assignments)
         .where(
-          and(
-            eq(assignments.user_id, userId),
-            eq(assignments.class_id, classData.class_id)
-          )
+          eq(assignments.class_id, classData.class_id)
         )
         .all();
 
@@ -417,10 +404,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         .select()
         .from(student_assignments)
         .where(
-          and(
-            eq(student_assignments.user_id, userId),
-            eq(student_assignments.class_id, classData.class_id)
-          )
+          eq(student_assignments.class_id, classData.class_id)
         )
         .all();
 
@@ -428,10 +412,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         .select()
         .from(expectations)
         .where(
-          and(
-            eq(expectations.user_id, userId),
-            eq(expectations.class_id, classData.class_id)
-          )
+          eq(expectations.class_id, classData.class_id)
         )
         .all();
 
@@ -439,10 +420,7 @@ async function fetchClassesWithDetails(userId: string): Promise<ClassData[]> {
         .select()
         .from(student_expectations)
         .where(
-          and(
-            eq(student_expectations.user_id, userId),
-            eq(student_expectations.class_id, classData.class_id)
-          )
+          eq(student_expectations.class_id, classData.class_id)
         )
         .all();
 

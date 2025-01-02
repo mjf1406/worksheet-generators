@@ -29,6 +29,13 @@
       "when": 1735764615338,
       "tag": "0003_added-added_demo-columnp-to-users",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1735772188152,
+      "tag": "0004_add-class-code",
+      "breakpoints": true
     }
   ]
 }

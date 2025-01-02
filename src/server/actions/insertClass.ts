@@ -9,6 +9,7 @@ import {
 } from "~/server/db/schema";
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
+import { generateUniqueClassCode } from "~/lib/classCode";
 
 export type ClassGrade = "1" | "2" | "3" | "4" | "5" | "6";
 export type Role = "primary" | "assistant"
@@ -35,6 +36,7 @@ type ClassData = {
     class_language: string;
     class_grade: ClassGrade;
     class_year: string | undefined;
+    class_code: string;
     complete: {
         s1: boolean,
         s2: boolean
@@ -107,6 +109,7 @@ export default async function insertClass(data: Data, userId: string, complete: 
                 class_language: data.class_language,
                 class_grade: data.class_grade,
                 class_year: data.class_year,
+                class_code: await generateUniqueClassCode(),
                 complete: (complete) ? { s1: true, s2: true } : { s1: false, s2: false }
             }
            //console.log("🚀 ~ insertClass ~ classData:", classData)

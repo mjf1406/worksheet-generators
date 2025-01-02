@@ -10,6 +10,18 @@ export type UserDb = {
     joined_date: string | undefined;
     updated_date: string | undefined;
 }
+export type Class = {
+    class_id: string;
+    class_name: string;
+    class_language: string;
+    class_grade: "1" | "2" | "3" | "4" | "5" | "6" | null;
+    class_year: string | null;
+    class_code: string;
+    complete?: { s1: boolean; s2: boolean } | null;
+    created_date: string;
+    updated_date: string;
+};
+
 export type CommentsDb = {
     id: string,
     grade: string;
@@ -69,6 +81,7 @@ export type TeacherCourse = {
     class_language: string;
     class_grade: string;
     class_year: string;
+    class_code: string;
     created_date: string;
     updated_date: string;
     assigned_date: string;
