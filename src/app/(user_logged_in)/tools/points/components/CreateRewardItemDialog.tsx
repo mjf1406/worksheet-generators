@@ -252,7 +252,7 @@ const CreateRewardItemDialog: React.FC<CreateRewardItemDialogProps> = ({
           </div>
 
           {/* Achievements */}
-          <div>
+          {/* <div>
             <label className="block text-sm font-medium text-gray-700">
               Achievements
             </label>
@@ -305,7 +305,7 @@ const CreateRewardItemDialog: React.FC<CreateRewardItemDialogProps> = ({
             >
               Add Achievement
             </Button>
-          </div>
+          </div> */}
 
           {/* Dialog Footer */}
           <DialogFooter>

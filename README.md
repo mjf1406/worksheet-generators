@@ -175,6 +175,7 @@ b
 
 2025/01/02
 
+- UI: removed achievement inputs when creating a new redemption item or behavior
 - UI: users can now bulk send emails to all students their dashboards
 - PAGE: Student Dashboard == added achievements that work by pulling thresholds from `ACHIEVEMENTS` in `constants.ts`. These achievements are applied to all behaviors and redemption items. Will add to settings in the future so they are adjustable.
 

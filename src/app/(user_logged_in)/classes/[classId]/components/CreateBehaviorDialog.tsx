@@ -233,7 +233,7 @@ const CreateBehaviorDialog: React.FC<CreateBehaviorDialogProps> = ({
           </div>
 
           {/* Achievements */}
-          <div>
+          {/* <div>
             <Label>Achievements</Label>
             <p className="mt-1 text-sm text-gray-500">
               Add thresholds and names for achievements.
@@ -286,7 +286,7 @@ const CreateBehaviorDialog: React.FC<CreateBehaviorDialogProps> = ({
             >
               Add Achievement
             </Button>
-          </div>
+          </div> */}
 
           {/* Dialog Footer */}
           <DialogFooter>
