@@ -163,6 +163,7 @@ This is the collection of worksheet generators that I have created as I needed t
 - FEATURE: Expectations -- can edit expectations
 - FEATURE: Expectations -- can delete expectations
 - UX: Users can now add demo classes
+- DB: Need to ensure assistant teachers can only apply behaviors and mark/unmark tasks.
 
 ## Change Log
 
