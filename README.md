@@ -80,6 +80,8 @@ This is the collection of worksheet generators that I have created as I needed t
 
 ### p1
 
+b
+
 - FEATURE: Points -- track points on a per student, group, and class basis
   - [ ] award points
     - [x] to a single student
@@ -101,9 +103,6 @@ This is the collection of worksheet generators that I have created as I needed t
   - e.g., **the noisiest student** would be the student who has received the most Noisy negative behaviors
   - e.g., **the most helpful** would be the student who has received the most Helping Others behaviors
   - e.g., **the most generous** would be the student who has redeemed the most Gifted to Classmates
-- FEATURE: achievements
-  - given to students once they reach certain thresholds for each behavior/redemption item
-  - if they have the achievement, a badge is displayed on their profile
 - PAGE: Class Dashboard
   - behavior streaks
     - positive
@@ -128,7 +127,7 @@ This is the collection of worksheet generators that I have created as I needed t
       - [ ] created date
       - [ ] working date
       - [ ] automatically exclude assignments that all students have done
-    - [ ] alert teacher every x minutes if a student hasn't completed an assignment
+    - [x] alert teacher every x minutes if a student hasn't completed an assignment
     - [ ] easily export URLs for each student
   - Student Page
     - fixed: resources links are now properly formatted as a list of links
@@ -163,7 +162,11 @@ This is the collection of worksheet generators that I have created as I needed t
 - FEATURE: Expectations -- can edit expectations
 - FEATURE: Expectations -- can delete expectations
 - UX: Users can now add demo classes
+- FEATURE: achievements
+  - given to students once they reach certain thresholds for each behavior/redemption item
+  - if they have the achievement, a badge is displayed on their profile
 - DB: Need to ensure assistant teachers can only apply behaviors and mark/unmark tasks.
+- Branding: Pick a [name](https://docs.google.com/spreadsheets/d/1RoLmZ_o2Bnqvu4a_prFKneWKNbPndqWqoSxR9zfRgLE/edit?gid=0#gid=0)
 
 ## Change Log
 

@@ -49,6 +49,7 @@ export async function addStudents(input: z.infer<typeof addStudentsSchema>) {
         // Insert new student
         await tx.insert(students).values({
           student_id: studentId,
+          student_name_en: `${student.student_name_first_en} ${student.student_name_last_en}`,
           student_name_first_en: student.student_name_first_en,
           student_name_last_en: student.student_name_last_en,
           student_name_alt: student.student_name_alt,
