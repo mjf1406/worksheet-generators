@@ -346,6 +346,10 @@ export default async function studentDashboard({ params }: { params: Params }) {
         <div className="col-span-1">
           <ExpectationsCard expectations={studentExpectationsData} />
         </div>
+        {/* Achievements Card */}
+        <div className="col-span-1"></div>
+        {/* Streaks Card */}
+        <div className="col-span-1"></div>
       </div>
     </main>
   );

@@ -43,7 +43,7 @@ export const ExpectationsCard: React.FC<ExpectationsCardProps> = ({
   }
 
   return (
-    <Card>
+    <Card className="mx-auto w-full max-w-2xl">
       <CardHeader>
         <CardTitle>Expectations</CardTitle>
       </CardHeader>
