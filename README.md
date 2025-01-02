@@ -167,8 +167,16 @@ b
   - if they have the achievement, a badge is displayed on their profile
 - DB: Need to ensure assistant teachers can only apply behaviors and mark/unmark tasks.
 - Branding: Pick a [name](https://docs.google.com/spreadsheets/d/1RoLmZ_o2Bnqvu4a_prFKneWKNbPndqWqoSxR9zfRgLE/edit?gid=0#gid=0)
+- PAGE: Settings -- Need...
+  1. Customizable achievement thresholds
+  2. Select off days for Streaks
 
 ## Change Log
+
+2025/01/02
+
+- UI: users can now bulk send emails to all students their dashboards
+- PAGE: Student Dashboard == added achievements that work by pulling thresholds from `ACHIEVEMENTS` in `constants.ts`. These achievements are applied to all behaviors and redemption items. Will add to settings in the future so they are adjustable.
 
 2025/01/01
 

@@ -3,43 +3,60 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconName, IconPrefix } from "@fortawesome/fontawesome-svg-core";
 import { library } from "@fortawesome/fontawesome-svg-core";
+
+// Import all icons used in your ACHIEVEMENTS
 import {
-  faBookMedical,
-  faBrain,
-  faMusic,
-  faUtensils,
-  faChair,
-  faGhost,
-  faCandyCane,
-  faCouch,
-  faChampagneGlasses,
-  faHandHoldingHeart,
-  faArrowsSpin,
+  faSeedling,
+  faShoePrints,
   faGraduationCap,
-  faCat,
-  faCalculator,
+  faMapSigns,
+  faBookOpen,
+  faHammer,
+  faTools,
+  faScroll,
+  faMicroscope,
+  faTrophy,
+  faCompass,
+  faChessKnight,
+  faPalette,
+  faMusic,
+  faCrown,
+  faMedal,
+  faShieldAlt,
+  faStar,
+  faDragon,
+  faCloudBolt,
   faGift,
 } from "@fortawesome/free-solid-svg-icons";
 
-// Add all icons to the library
+// Add them all to the library
 library.add(
-  faBookMedical,
-  faBrain,
-  faMusic,
-  faUtensils,
-  faChair,
-  faGhost,
-  faCandyCane,
-  faCouch,
-  faChampagneGlasses,
-  faHandHoldingHeart,
-  faArrowsSpin,
+  faSeedling,
+  faShoePrints,
   faGraduationCap,
-  faCat,
-  faCalculator,
+  faMapSigns,
+  faBookOpen,
+  faHammer,
+  faTools,
+  faScroll,
+  faMicroscope,
+  faTrophy,
+  faCompass,
+  faChessKnight,
+  faPalette,
+  faMusic,
+  faCrown,
+  faMedal,
+  faShieldAlt,
+  faStar,
+  faDragon,
+  faCloudBolt,
   faGift,
 );
 
+// ------------------------------------------------------------------
+// FontAwesomeIconClient
+// ------------------------------------------------------------------
 interface FontAwesomeIconClientProps {
   icon: string | null | undefined;
   size?: number;
@@ -56,6 +73,7 @@ export function FontAwesomeIconClient({
     height: `${size}px`,
   };
 
+  // If no icon is provided, use faGift as a fallback
   if (!icon) {
     return (
       <FontAwesomeIcon icon={faGift} style={iconStyle} className={className} />
@@ -63,11 +81,15 @@ export function FontAwesomeIconClient({
   }
 
   try {
+    // icon is something like "fas seedling"
+    // so iconParts = ["fas", "seedling"]
     const iconParts = icon.split(" ");
+    const prefix = iconParts[0] as IconPrefix;
     const iconName = iconParts[1] as IconName;
+
     return (
       <FontAwesomeIcon
-        icon={[iconParts[0] as IconPrefix, iconName]}
+        icon={[prefix, iconName]}
         style={iconStyle}
         className={className}
       />

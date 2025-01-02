@@ -1,11 +1,7 @@
 // pages/studentDashboard.tsx
 
 import { eq, and } from "drizzle-orm";
-import Link from "next/link";
-import Logo from "~/components/brand/Logo";
-import { ModeToggle } from "~/components/mode-toggle";
-import { Button } from "~/components/ui/button";
-import { APP_NAME, conversationStarters } from "~/lib/constants";
+import { conversationStarters } from "~/lib/constants";
 import { db } from "~/server/db";
 import {
   assignments,
@@ -25,19 +21,29 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
 import Image from "next/image";
-import RewardItemsViewGrid from "./components/RewardItemsViewCard";
 import RewardItemsViewCard from "./components/RewardItemsViewCard";
 import ExpectationsCard from "./components/ExpectationsCard";
+import AchievementsCard from "./components/AchievementsCard";
 
 interface Params {
   classId: string;
   studentId: string;
 }
+
+export type AllClassPointsDataClient = {
+  id: number;
+  student_id: number;
+  behavior_id: number;
+  type: "positive" | "negative" | "redemption";
+  number_of_points: number;
+  created_date: Date;
+  behavior_name: string | null;
+  reward_item_name: string | null;
+};
 
 interface StudentAssignmentWithDetails {
   sa_id: string;
@@ -58,7 +64,7 @@ interface StudentAssignmentWithDetails {
 }
 
 // PointClient type as defined in PointsCard
-type PointClient = {
+export type PointClient = {
   id: string;
   type: "positive" | "negative" | "redemption";
   number_of_points: number;
@@ -117,7 +123,6 @@ export default async function studentDashboard({ params }: { params: Params }) {
         sa_assignment_id: student_assignments.assignment_id,
         sa_complete: student_assignments.complete,
         sa_completed_ts: student_assignments.completed_ts,
-        // Assignment Details
         assignment_name: assignments.name,
         assignment_description: assignments.description,
         assignment_data: assignments.data,
@@ -138,6 +143,7 @@ export default async function studentDashboard({ params }: { params: Params }) {
           eq(student_assignments.class_id, classId),
         ),
       ),
+    // allClassPointsData
     db
       .select({
         id: points.id,
@@ -153,6 +159,7 @@ export default async function studentDashboard({ params }: { params: Params }) {
       .leftJoin(behaviors, eq(behaviors.behavior_id, points.behavior_id))
       .leftJoin(reward_items, eq(reward_items.item_id, points.reward_item_id))
       .where(eq(points.class_id, classId)),
+    // rewardItems
     db
       .select({
         price: reward_items.price,
@@ -162,15 +169,14 @@ export default async function studentDashboard({ params }: { params: Params }) {
       })
       .from(reward_items)
       .where(eq(reward_items.class_id, classId)),
+    // studentExpectationsData
     db
       .select({
-        // Student Expectation fields
         id: student_expectations.id,
         student_id: student_expectations.student_id,
         class_id: student_expectations.class_id,
         value: student_expectations.value,
         number: student_expectations.number,
-        // Expectation fields
         expectation_name: expectations.name,
         expectation_description: expectations.description,
         expectation_class_id: expectations.class_id,
@@ -347,7 +353,13 @@ export default async function studentDashboard({ params }: { params: Params }) {
           <ExpectationsCard expectations={studentExpectationsData} />
         </div>
         {/* Achievements Card */}
-        <div className="col-span-1"></div>
+        <div className="col-span-1">
+          <AchievementsCard
+            pointsHistory={allClassPointsData.filter(
+              (i) => i.student_id === studentId,
+            )}
+          />
+        </div>
         {/* Streaks Card */}
         <div className="col-span-1"></div>
       </div>

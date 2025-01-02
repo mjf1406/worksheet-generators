@@ -6,6 +6,7 @@ import { db } from '../db';
 import { student_classes, students } from '../db/schema'; // Import students schema
 import { eq } from 'drizzle-orm'; // Import eq from Drizzle ORM
 import { NextResponse } from 'next/server';
+import { APP_NAME } from '~/lib/constants';
 
 // Removed the unused GoogleTokens interface
 
@@ -54,12 +55,12 @@ export async function sendEmails(input: { classId: string }) {
     const emailContent = [
       `To: ${to}`,
       'Content-Type: text/html; charset=UTF-8',
-      'Subject: Your ClassQuest Dashboard',
+      `Subject: Your ${APP_NAME} Dashboard`,
       '',
-      `<p>Hey there, ClassQuester!</p>
+      `<p>Hey there, ${APP_NAME}er!</p>
        <p>Do NOT share this link with anyone! Also, please add the below link to your Bookmarks bar so you can easily access it later.</p>
        <p>Please access your dashboard using the link below:</p>
-       <a href="${dashboardUrl}">Go to your ClassQuest Dashboard</a>`,
+       <a href="${dashboardUrl}">Go to your ${APP_NAME} Dashboard</a>`,
     ].join('\n');
 
     return Buffer.from(emailContent)

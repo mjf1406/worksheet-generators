@@ -770,3 +770,115 @@ export const conversationStarters: ConversationStarter[] = [
     category: "goals",
   },
 ];
+
+export interface AchievementData {
+  name: string;
+  icon: string; // e.g. "fas-seedling"
+  colorClass: string; // e.g. "text-green-500"
+}
+
+type AchievementsMap = Record<string, AchievementData>;
+
+// These increment at times 1.35 rounding up to nearest whole
+export const ACHIEVEMENTS: AchievementsMap = {
+  "1": {
+    name: "Novice",
+    icon: "fas seedling",
+    colorClass: "text-green-500",
+  },
+  "2": {
+    name: "Beginner",
+    icon: "fas shoe-prints",
+    colorClass: "text-purple-500",
+  },
+  "3": {
+    name: "Amateur",
+    icon: "fas graduation-cap",
+    colorClass: "text-yellow-500",
+  },
+  "5": {
+    name: "Initiate",
+    icon: "fas map-signs",
+    colorClass: "text-blue-500",
+  },
+  "7": {
+    name: "Learner",
+    icon: "fas book-open",
+    colorClass: "text-pink-500",
+  },
+  "10": {
+    name: "Apprentice",
+    icon: "fas hammer",
+    colorClass: "text-orange-500",
+  },
+  "14": {
+    name: "Adept",
+    icon: "fas tools",
+    colorClass: "text-lime-500",
+  },
+  "19": {
+    name: "Practitioner",
+    icon: "fas scroll",
+    colorClass: "text-red-500",
+  },
+  "26": {
+    name: "Specialist",
+    icon: "fas microscope",
+    colorClass: "text-emerald-500",
+  },
+  "36": {
+    name: "Competitor",
+    icon: "fas trophy",
+    colorClass: "text-indigo-500",
+  },
+  "49": {
+    name: "Journeyman",
+    icon: "fas compass",
+    colorClass: "text-sky-500",
+  },
+  "67": {
+    name: "Expert",
+    icon: "fas chess-knight",
+    colorClass: "text-purple-500",
+  },
+  "91": {
+    name: "Artisan",
+    icon: "fas palette",
+    colorClass: "text-teal-500",
+  },
+  "123": {
+    name: "Virtuoso",
+    icon: "fas music",
+    colorClass: "text-rose-500",
+  },
+  "166": {
+    name: "Master",
+    icon: "fas crown",
+    colorClass: "text-fuchsia-500",
+  },
+  "224": {
+    name: "Champion",
+    icon: "fas medal",
+    colorClass: "text-green-500",
+  },
+  "303": {
+    name: "Hero",
+    icon: "fas shield-alt",
+    colorClass: "text-yellow-500",
+  },
+  "409": {
+    name: "Icon",
+    icon: "fas star",
+    colorClass: "text-orange-500",
+  },
+  "552": {
+    name: "Myth",
+    icon: "fas cloud-bolt",
+    colorClass: "text-red-500",
+  },
+  "745": {
+    name: "Legend",
+    icon: "fas dragon",
+    colorClass: "text-violet-500",
+  },
+};
