@@ -17,7 +17,6 @@ import {
   RockingChair,
   Text,
   AudioLines,
-  Image,
   CheckSquare,
   CirclePlus,
 } from "lucide-react";
@@ -874,3 +873,305 @@ export const ACHIEVEMENTS: AchievementsMap = {
     colorClass: "text-violet-500",
   },
 };
+
+interface EventVariable {
+  name: string;
+  description: string;
+  examples: string[] | number[];
+}
+
+interface Event {
+  title: string;
+  description: string;
+  vars: EventVariable[];
+  event_sentence: string;
+}
+
+export const RANDOM_EVENTS: Event[] = [
+  {
+    title: "Word of the Day",
+    description:
+      "Everyone must include a specific word in every sentence they say.",
+    vars: [
+      {
+        name: "word",
+        description: "The word that must be included in every sentence.",
+        examples: ["banana", "sparkle", "dinosaur"],
+      },
+    ],
+    event_sentence:
+      "Everyone must include the word '{word}' in every sentence they say.",
+  },
+  {
+    title: "Accent Challenge",
+    description:
+      "Students must speak in a non-native accent for the class period.",
+    vars: [
+      {
+        name: "accent",
+        description: "The accent students must use.",
+        examples: ["British", "Australian", "Southern"],
+      },
+    ],
+    event_sentence:
+      "Students must speak in a {accent} accent for the class period.",
+  },
+  {
+    title: "Royal Treatment",
+    description:
+      "When talking to boys, end sentences with a title for boys, and for girls, use a title for girls.",
+    vars: [
+      {
+        name: "title_for_boys",
+        description: "The title used when addressing boys.",
+        examples: ["Mi'Lord", "Your Highness", "Captain"],
+      },
+      {
+        name: "title_for_girls",
+        description: "The title used when addressing girls.",
+        examples: ["Mi'Lady", "Your Majesty", "Commander"],
+      },
+    ],
+    event_sentence:
+      "When addressing boys, end sentences with '{title_for_boys}', and for girls, use '{title_for_girls}'.",
+  },
+  {
+    title: "Silent Mode",
+    description:
+      "For a set amount of time, students can only communicate through gestures or written notes.",
+    vars: [
+      {
+        name: "duration",
+        description: "The length of time silent mode is active.",
+        examples: ["10 minutes", "15 minutes", "until the next break"],
+      },
+    ],
+    event_sentence:
+      "For {duration}, students can only communicate through gestures or written notes.",
+  },
+  {
+    title: "Backwards Day",
+    description: "Students must say their sentences backwards.",
+    vars: [
+      {
+        name: "reverse_rule",
+        description: "The rule for reversing sentences.",
+        examples: ["Entire sentence", "Only the last word", "Every other word"],
+      },
+    ],
+    event_sentence: "Students must say their sentences {reverse_rule}.",
+  },
+  {
+    title: "Rhyme Time",
+    description:
+      "Every sentence must rhyme with the last word of the previous sentence.",
+    vars: [
+      {
+        name: "theme",
+        description: "An optional theme for the rhyming words.",
+        examples: ["Animals", "Food", "Nonsense words"],
+      },
+    ],
+    event_sentence:
+      "Every sentence must rhyme with the last word of the previous sentence{theme ? `, with the theme '${theme}'` : ''}.",
+  },
+  {
+    title: "Question Mode",
+    description: "Every statement must be turned into a question.",
+    vars: [
+      {
+        name: "question_type",
+        description: "The type of questions allowed.",
+        examples: [
+          "Yes/No questions",
+          "Open-ended questions",
+          "Rhetorical questions",
+        ],
+      },
+    ],
+    event_sentence: "Every statement must be turned into a {question_type}.",
+  },
+  {
+    title: "Animal Impressions",
+    description: "Students must end their sentences with an animal sound.",
+    vars: [
+      {
+        name: "animal",
+        description: "The animal sound students must use.",
+        examples: ["Moo", "Oink", "Roar"],
+      },
+    ],
+    event_sentence:
+      "Students must end their sentences with an animal sound: '{animal}'.",
+  },
+  {
+    title: "Opposite Day",
+    description: "Students must say the opposite of what they mean.",
+    vars: [
+      {
+        name: "scope",
+        description: "The extent of the opposite rule.",
+        examples: ["Entire sentence", "Only adjectives", "Specific words"],
+      },
+    ],
+    event_sentence:
+      "Students must say the opposite of what they mean for {scope}.",
+  },
+  {
+    title: "Whisper Zone",
+    description: "Everyone must whisper for a set amount of time.",
+    vars: [
+      {
+        name: "duration",
+        description: "The length of time whispering is required.",
+        examples: [
+          "15 minutes",
+          "Until the next activity",
+          "The entire class period",
+        ],
+      },
+    ],
+    event_sentence: "Everyone must whisper for {duration}.",
+  },
+  {
+    title: "Compliment Chain",
+    description:
+      "Before speaking, students must give a compliment to the person who last spoke.",
+    vars: [
+      {
+        name: "compliment_type",
+        description: "The type of compliment required.",
+        examples: [
+          "Specific (e.g., 'I like your shoes')",
+          "General (e.g., 'You're awesome')",
+        ],
+      },
+    ],
+    event_sentence:
+      "Before speaking, students must give a {compliment_type} to the person who last spoke.",
+  },
+  {
+    title: "Story Builders",
+    description:
+      "Each student adds one sentence to a collective story when they speak.",
+    vars: [
+      {
+        name: "theme",
+        description: "The theme of the story.",
+        examples: ["Pirates", "Space", "Jungle"],
+      },
+    ],
+    event_sentence:
+      "Each student adds one sentence to a collective story with the theme '{theme}' when they speak.",
+  },
+  {
+    title: "Pirate Talk",
+    description: "Everyone must speak like a pirate.",
+    vars: [
+      {
+        name: "actions",
+        description: "Optional pirate actions to accompany speech.",
+        examples: [
+          "Walking with a limp",
+          "Using a pretend telescope",
+          "Saying 'Arrr!' frequently",
+        ],
+      },
+    ],
+    event_sentence:
+      "Everyone must speak like a pirate{actions ? ` and perform actions like ${actions}` : ''}.",
+  },
+  {
+    title: "Emoji Only",
+    description: "Students can only communicate using emojis.",
+    vars: [
+      {
+        name: "allow_words",
+        description: "Whether to allow one-word clues alongside emojis.",
+        examples: ["Yes", "No"],
+      },
+    ],
+    event_sentence:
+      "Students can only communicate using emojis{allow_words === 'Yes' ? ', with one-word clues allowed' : ''}.",
+  },
+  {
+    title: "Superhero Mode",
+    description:
+      "Students must introduce themselves with a superhero name and power before speaking.",
+    vars: [
+      {
+        name: "theme",
+        description: "The theme for superhero names and powers.",
+        examples: ["Villains", "Wizards", "Animals"],
+      },
+    ],
+    event_sentence:
+      "Students must introduce themselves with a superhero name and power based on the theme '{theme}' before speaking.",
+  },
+  {
+    title: "Time Traveler",
+    description:
+      "Students must speak as if they’re from a different time period.",
+    vars: [
+      {
+        name: "era",
+        description: "The time period students must emulate.",
+        examples: ["Medieval", "Futuristic", "1950s"],
+      },
+    ],
+    event_sentence: "Students must speak as if they’re from the '{era}' era.",
+  },
+  {
+    title: "Sing It Out",
+    description: "Students must sing their sentences instead of speaking them.",
+    vars: [
+      {
+        name: "genre",
+        description: "The musical genre for singing.",
+        examples: ["Opera", "Rap", "Country"],
+      },
+    ],
+    event_sentence:
+      "Students must sing their sentences in the '{genre}' genre instead of speaking them.",
+  },
+  {
+    title: "Word Limit",
+    description: "Students can only use a set number of words per sentence.",
+    vars: [
+      {
+        name: "word_count",
+        description: "The maximum number of words allowed per sentence.",
+        examples: [3, 5, 7],
+      },
+    ],
+    event_sentence:
+      "Students can only use up to {word_count} words per sentence.",
+  },
+  {
+    title: "Mystery Object",
+    description:
+      "A random object becomes the 'talking stick.' Only the person holding it can speak.",
+    vars: [
+      {
+        name: "object",
+        description: "The object used as the talking stick.",
+        examples: ["Pencil", "Stuffed animal", "Toy"],
+      },
+    ],
+    event_sentence:
+      "A random object, such as a '{object}', becomes the 'talking stick.' Only the person holding it can speak.",
+  },
+  {
+    title: "Doodle Dialogue",
+    description: "Students must draw their response instead of speaking.",
+    vars: [
+      {
+        name: "allow_captions",
+        description: "Whether to allow one-word captions with drawings.",
+        examples: ["Yes", "No"],
+      },
+    ],
+    event_sentence:
+      "Students must draw their response instead of speaking{allow_captions === 'Yes' ? ', with one-word captions allowed' : ''}.",
+  },
+];

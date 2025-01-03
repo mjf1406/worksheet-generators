@@ -49,9 +49,16 @@ This is the collection of worksheet generators that I have created as I needed t
 
 - tool: classroom clock (duplicates [Class Timers](https://mjf1406.github.io/class-timers/index.html))
 - tool: MagniText -- (duplicates [MagniText](https://mjf1406.github.io/magni-text/index.html))
-- tool: Random Event
+- TOOL: Random Event -- randomly select an event for the class for the day
+  - [ ] with/without replacement option
+  - [ ] edit random event
+  - [ ] create random event
+  - [ ] delete random event
+  - [ ] add default random events
+  - [ ] per class basis
+  - [ ] per group basis
 - FEATURE: Power-ups -- For rewards that can be saved
-  - THings like when you spin the wheel, you get 5 minutes of free time
+  - Things like when you spin the wheel, you get 5 minutes of free time
   - needs a card on the Student Dashboard
 - FEATURE: Levels
   - Allows student to choose, at each new level, new powers that they can use during class.
@@ -79,8 +86,6 @@ This is the collection of worksheet generators that I have created as I needed t
   - [ ] prevents absent students from redeeming points
 
 ### p1
-
-b
 
 - FEATURE: Points -- track points on a per student, group, and class basis
   - [ ] award points
