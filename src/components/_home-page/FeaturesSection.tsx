@@ -5,6 +5,8 @@ import {
   assignersData,
 } from "~/lib/constants";
 import ItemGrid from "../ItemGrid";
+import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 export default function FeaturesSection() {
   return (
@@ -30,6 +32,18 @@ export default function FeaturesSection() {
         </div>
         <div>
           <h3 className="mb-4 text-2xl font-semibold">Generators</h3>
+          <p className="text-muted-foreground">
+            Looking for something we don&apos;t have? Maybe{" "}
+            <Link
+              className="inline-flex items-start gap-1 whitespace-nowrap underline"
+              href="https://web.diffit.me/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div>Diffit</div> <ExternalLink size={18} />
+            </Link>{" "}
+            has it!
+          </p>
           <ItemGrid data={generatorsData} />
         </div>
         <div>
