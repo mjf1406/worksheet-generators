@@ -48,15 +48,7 @@ export default function FAQ() {
           <AccordionContent>
             {APP_NAME} is currently free for authorized users because we are in
             alpha. Alpha means that not all of the core features are
-            implemented. At some point, we will have a public beta. Sign up to
-            be notified{" "}
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSeE-DqpOUqjmKFm-W4QodtpgO3m0BV7LWdxYF-QgTZ6ntPlrQ/viewform?usp=sf_link"
-              className="underline"
-            >
-              here
-            </a>
-            .
+            implemented. At some point, we will have a public beta.
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="item-3">

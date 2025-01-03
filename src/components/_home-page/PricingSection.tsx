@@ -15,15 +15,7 @@ export default function PricingSection() {
           </h2>
           <p className="mt-1 text-muted-foreground">
             {APP_NAME} is currently in alpha and free for authorized users. Stay
-            tuned for pricing information and sign up to be notified about the
-            free public beta{" "}
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSeE-DqpOUqjmKFm-W4QodtpgO3m0BV7LWdxYF-QgTZ6ntPlrQ/viewform?usp=sf_link"
-              className="underline"
-            >
-              here
-            </a>
-            .
+            tuned for pricing information.
           </p>
         </div>
         {/* <PricingCardGrid /> */}
