@@ -1,11 +1,5 @@
 // components/HeroSection.tsx
-import {
-  AlertTriangleIcon,
-  ArrowRight,
-  Check,
-  MessageSquareWarning,
-  Star,
-} from "lucide-react";
+import { AlertTriangleIcon, ArrowRight, Check } from "lucide-react";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { FlipWords } from "../ui/flip-words";
