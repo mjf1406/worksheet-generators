@@ -1,5 +1,5 @@
-import { sqliteTable, text, integer, index } from "drizzle-orm/sqlite-core";
-import { sql } from "drizzle-orm";
+import { sqliteTable, text, integer, index, uniqueIndex, AnySQLiteColumn } from "drizzle-orm/sqlite-core";
+import { SQL, sql } from "drizzle-orm";
 import type { AssignerItemStatuses, PointRecord, RedemptionRecord } from "./types";
 
 // Core Tables
@@ -331,3 +331,18 @@ export const student_expectations = sqliteTable('student_expectations',
         }
     }
 )
+
+export const beta_signups = sqliteTable("beta_signups", 
+    {
+        id: text('id').notNull().primaryKey(),
+        email: text('email').notNull(),
+        created_date: text('created_date').default(sql`CURRENT_TIMESTAMP`).notNull(),
+    },
+    (table) => ({
+      emailUniqueIndex: uniqueIndex('emailUniqueIndex').on(lower(table.email)),
+    }),
+)
+
+export function lower(email: AnySQLiteColumn): SQL {
+    return sql`lower(${email})`;
+}

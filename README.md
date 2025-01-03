@@ -173,6 +173,11 @@ b
 
 ## Change Log
 
+2025/01/03
+
+- UI: redid the hero section to be more in line with [this vid](https://youtu.be/Toonu-cTE60?si=QoogG30Nb3JOD3nW&t=199).
+- UX: added a way for users to sign up for the public beta
+
 2025/01/02
 
 - UI: removed achievement inputs when creating a new redemption item or behavior

@@ -36,6 +36,20 @@
       "when": 1735772188152,
       "tag": "0004_add-class-code",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1735914684706,
+      "tag": "0005_added-beta-signups",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1735914834902,
+      "tag": "0006_good_silhouette",
+      "breakpoints": true
     }
   ]
 }

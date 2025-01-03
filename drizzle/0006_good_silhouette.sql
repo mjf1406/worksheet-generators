@@ -1,0 +1,1 @@
+ALTER TABLE `beta_signups` ADD `created_date` text DEFAULT CURRENT_TIMESTAMP NOT NULL;
