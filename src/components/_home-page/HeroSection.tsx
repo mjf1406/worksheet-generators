@@ -29,7 +29,7 @@ const clearDoubts = [
 
 export default function HeroSection() {
   return (
-    <div className="mx-auto grid min-h-[50vh] w-full max-w-4xl grid-cols-2 gap-8">
+    <div className="mx-auto grid min-h-[50vh] w-full max-w-5xl grid-cols-2 gap-8">
       {/* Left Column */}
       <div className="col-span-1 flex flex-col items-start justify-center gap-5">
         {/* Kicker with Stars and Reviews */}
