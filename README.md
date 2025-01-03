@@ -180,6 +180,7 @@ This is the collection of worksheet generators that I have created as I needed t
 
 2025/01/03
 
+- BE: fixed an error when the user has 0 Google Classroom courses.
 - UI: redid the hero section to be more in line with [this vid](https://youtu.be/Toonu-cTE60?si=QoogG30Nb3JOD3nW&t=199).
 - UX: added a way for users to sign up for the public beta
 

@@ -43,7 +43,8 @@ export default function GoogleClassroomStudentTableDialog({
   classGrade: ClassGrade;
   classYear?: string;
 }) {
-  const { data: courses = [] } = useSuspenseQuery(GoogleClassOptions);
+  const { data: coursesResponse = [] } = useSuspenseQuery(GoogleClassOptions);
+  const courses = Array.isArray(coursesResponse) ? coursesResponse : [];
 
   // 1. Identify selected course
   const selectedCourse: GoogleClassroom | undefined = useMemo(() => {
