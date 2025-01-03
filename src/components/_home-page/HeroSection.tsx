@@ -29,9 +29,9 @@ const clearDoubts = [
 
 export default function HeroSection() {
   return (
-    <div className="mx-auto grid min-h-[50vh] w-full max-w-5xl grid-cols-2 gap-8">
+    <div className="mx-auto grid min-h-[50vh] w-full max-w-5xl grid-cols-5 gap-8">
       {/* Left Column */}
-      <div className="col-span-1 flex flex-col items-start justify-center gap-5">
+      <div className="col-span-3 flex flex-col items-start justify-center gap-5">
         {/* Kicker with Stars and Reviews */}
         <div className="text-xs">
           <div className="flex items-center justify-start gap-1">
@@ -102,7 +102,7 @@ export default function HeroSection() {
       </div>
 
       {/* Right Column with Custom WaitlistCard */}
-      <div className="col-span-1 flex items-center justify-center">
+      <div className="col-span-2 flex items-center justify-center">
         <WaitlistCard />
       </div>
     </div>
