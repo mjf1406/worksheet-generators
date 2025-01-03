@@ -36,8 +36,6 @@ import {
 import addDemoClasses from "~/server/actions/addDemoClasses";
 import NewClassDialog from "./NewClassDialog";
 import { classesOptions } from "~/app/api/queryOptions";
-
-// Import Card and DropdownMenu components from shadcn
 import {
   Card,
   CardHeader,
@@ -63,6 +61,7 @@ import {
 import JoinClassDialog from "./JoinClassDialog";
 import ClassCodeDisplay from "./ClassCode";
 import { sendEmails } from "~/server/actions/sendStudentDashboardEmails"; // Import Server Action
+import { FontAwesomeIconClient } from "~/components/FontAwesomeIconClient";
 
 export default function ClassList() {
   const [courseToDelete, setCourseToDelete] = useState<{
@@ -204,174 +203,193 @@ export default function ClassList() {
               </div>
             </div>
           ) : (
-            courses.map((course) => (
-              <Card
-                key={course.class_id}
-                className="flex h-full flex-col rounded-lg bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))] shadow-lg"
-              >
-                <CardHeader className="relative">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        className="absolute right-4 top-4 h-8 w-8 p-0"
-                        disabled={isSendingEmails}
-                      >
-                        <MoreVertical className="h-5 w-5" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem asChild>
-                        <Link href={`/classes/${course.class_id}/edit`}>
-                          <SquarePen className="mr-2 h-4 w-4" />
-                          Edit
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <TooltipProvider>
-                          <Tooltip delayDuration={0}>
-                            <TooltipTrigger>
-                              <Button
-                                variant="ghost"
-                                onClick={() =>
-                                  handleSendEmails(course.class_id)
-                                }
-                                disabled={isSendingEmails}
-                                className="px-2"
-                              >
-                                <Mail className="mr-2 h-4 w-4" />
-                                Email dashboards
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent className="max-w-sm">
-                              <p>
-                                It may take up to several hours for the emails
-                                to arrive. In testing, they never took more than
-                                10 minutes to arrive. Nonetheless, please plan
-                                accordingly.
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className="cursor-pointer text-destructive"
-                        onSelect={() =>
-                          setCourseToDelete({
-                            id: course.class_id,
-                            name: course.class_name,
-                          })
-                        }
-                        disabled={isSendingEmails}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+            courses.map((course) => {
+              // Determine the icon based on the teacher's role
+              const roleIcon =
+                course.role.toLowerCase() === "primary"
+                  ? "fas crown"
+                  : "fas shield";
 
-                  <div className="flex items-center p-6">
-                    <div className="flex-shrink-0">
-                      <School className="h-12 w-12 text-[hsl(var(--accent))]" />
+              return (
+                <Card
+                  key={course.class_id}
+                  className="flex h-full flex-col rounded-lg bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))] shadow-lg"
+                >
+                  <CardHeader className="relative">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          className="absolute right-4 top-4 h-8 w-8 p-0"
+                          disabled={isSendingEmails}
+                        >
+                          <MoreVertical className="h-5 w-5" />
+                          <span className="sr-only">Open menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem asChild>
+                          <Link href={`/classes/${course.class_id}/edit`}>
+                            <SquarePen className="mr-2 h-4 w-4" />
+                            Edit
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <TooltipProvider>
+                            <Tooltip delayDuration={0}>
+                              <TooltipTrigger>
+                                <Button
+                                  variant="ghost"
+                                  onClick={() =>
+                                    handleSendEmails(course.class_id)
+                                  }
+                                  disabled={isSendingEmails}
+                                  className="px-2"
+                                >
+                                  <Mail className="mr-2 h-4 w-4" />
+                                  Email dashboards
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent className="max-w-sm">
+                                <p>
+                                  It may take up to several hours for the emails
+                                  to arrive. In testing, they never took more
+                                  than 10 minutes to arrive. Nonetheless, please
+                                  plan accordingly.
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          className="cursor-pointer text-destructive"
+                          onSelect={() =>
+                            setCourseToDelete({
+                              id: course.class_id,
+                              name: course.class_name,
+                            })
+                          }
+                          disabled={isSendingEmails}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    <div className="flex items-center p-6">
+                      <div className="flex-shrink-0">
+                        <School className="h-12 w-12 text-[hsl(var(--accent))]" />
+                      </div>
+                      <div className="ml-4">
+                        <CardTitle className="text-2xl font-bold">
+                          {`${course.class_name} (${course.class_year})`}
+                        </CardTitle>
+                        <CardDescription className="mt-1 flex items-center text-sm">
+                          <FontAwesomeIconClient
+                            icon={roleIcon}
+                            size={16}
+                            className="mr-2 text-[hsl(var(--accent))]"
+                          />
+                          Grade {course.class_grade} - {course.role} teacher
+                        </CardDescription>
+                      </div>
                     </div>
-                    <div className="ml-4">
-                      <CardTitle className="text-2xl font-bold">
-                        {`${course.class_name} (${course.class_year})`}
-                      </CardTitle>
-                      <CardDescription className="mt-1 text-sm">
-                        Grade {course.class_grade} - {course.role} teacher
-                      </CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="flex-1 px-6 py-4">
-                  <ClassCodeDisplay
-                    classCode={course.class_code}
-                    role={course.role}
-                  />
-                </CardContent>
-                <CardFooter className="flex items-center justify-start gap-2">
-                  <Button asChild variant="outline" disabled={isSendingEmails}>
-                    <Link
-                      href={{
-                        pathname: `/classes/${course.class_id}`,
-                        query: {
-                          class_name: course?.class_name,
-                          class_id: course?.class_id,
-                        },
-                      }}
+                  </CardHeader>
+                  <CardContent className="flex-1 px-6 py-4">
+                    <ClassCodeDisplay
+                      classCode={course.class_code}
+                      role={course.role}
+                    />
+                  </CardContent>
+                  <CardFooter className="flex items-center justify-start gap-2">
+                    <Button
+                      asChild
+                      variant="outline"
+                      disabled={isSendingEmails}
                     >
-                      <School className="mr-2 h-4 w-4" />
-                      Open
-                    </Link>
-                  </Button>
-                  <TooltipProvider>
-                    <Tooltip delayDuration={0}>
-                      <TooltipTrigger>
-                        <Button
-                          asChild
-                          variant="ghost"
-                          size={"icon"}
-                          disabled={isSendingEmails}
-                        >
-                          <Link href={`/classes/${course.class_id}/dashboard`}>
-                            <LayoutDashboard size={20} />
-                          </Link>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Dashboard</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-
-                  <TooltipProvider>
-                    <Tooltip delayDuration={0}>
-                      <TooltipTrigger>
-                        <Button
-                          asChild
-                          variant="ghost"
-                          size={"icon"}
-                          disabled={isSendingEmails}
-                        >
-                          <Link href={`/classes/${course.class_id}/tasks`}>
-                            <NotebookPen size={20} />
-                          </Link>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Tasks</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-
-                  <TooltipProvider>
-                    <Tooltip delayDuration={0}>
-                      <TooltipTrigger>
-                        <Button
-                          asChild
-                          variant="ghost"
-                          size={"icon"}
-                          disabled={isSendingEmails}
-                        >
-                          <Link
-                            href={`/classes/${course.class_id}/expectations`}
+                      <Link
+                        href={{
+                          pathname: `/classes/${course.class_id}`,
+                          query: {
+                            class_name: course?.class_name,
+                            class_id: course?.class_id,
+                          },
+                        }}
+                      >
+                        <School className="mr-2 h-4 w-4" />
+                        Open
+                      </Link>
+                    </Button>
+                    <TooltipProvider>
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger>
+                          <Button
+                            asChild
+                            variant="ghost"
+                            size={"icon"}
+                            disabled={isSendingEmails}
                           >
-                            <CircleCheckBig size={20} />
-                          </Link>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Expectations</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </CardFooter>
-              </Card>
-            ))
+                            <Link
+                              href={`/classes/${course.class_id}/dashboard`}
+                            >
+                              <LayoutDashboard size={20} />
+                            </Link>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Dashboard</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <TooltipProvider>
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger>
+                          <Button
+                            asChild
+                            variant="ghost"
+                            size={"icon"}
+                            disabled={isSendingEmails}
+                          >
+                            <Link href={`/classes/${course.class_id}/tasks`}>
+                              <NotebookPen size={20} />
+                            </Link>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Tasks</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+
+                    <TooltipProvider>
+                      <Tooltip delayDuration={0}>
+                        <TooltipTrigger>
+                          <Button
+                            asChild
+                            variant="ghost"
+                            size={"icon"}
+                            disabled={isSendingEmails}
+                          >
+                            <Link
+                              href={`/classes/${course.class_id}/expectations`}
+                            >
+                              <CircleCheckBig size={20} />
+                            </Link>
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Expectations</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </CardFooter>
+                </Card>
+              );
+            })
           )}
         </div>
 

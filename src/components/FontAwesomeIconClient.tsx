@@ -1,7 +1,7 @@
 "use client";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { IconName, IconPrefix } from "@fortawesome/fontawesome-svg-core";
+import type { IconName, IconPrefix } from "@fortawesome/fontawesome-svg-core";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
 // Import all icons used in your ACHIEVEMENTS
@@ -27,6 +27,9 @@ import {
   faDragon,
   faCloudBolt,
   faGift,
+  faUserShield,
+  faUserTie,
+  faShield,
 } from "@fortawesome/free-solid-svg-icons";
 
 // Add them all to the library
@@ -52,6 +55,9 @@ library.add(
   faDragon,
   faCloudBolt,
   faGift,
+  faUserShield,
+  faUserTie,
+  faShield,
 );
 
 // ------------------------------------------------------------------
