@@ -14,9 +14,11 @@ export default function HomePage() {
       <main className="text-text flex min-h-screen flex-col items-center justify-center bg-background">
         <section
           id="hero"
-          className="container flex h-dvh flex-col items-center justify-center gap-12 px-4 py-16"
+          className="container relative flex h-dvh flex-col items-center justify-center gap-12 px-4 py-16"
+          // className="container relative flex h-dvh flex-col items-center justify-center gap-12 bg-gradient-to-br from-transparent via-accent/30 to-transparent px-4 py-16"
         >
           <HeroSection />
+          {/* <div className="absolute bottom-0 left-0 h-48 w-full bg-gradient-to-t from-background to-transparent"></div> */}
         </section>
 
         <section

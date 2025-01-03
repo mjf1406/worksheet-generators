@@ -14,6 +14,9 @@ import { Check, ArrowRight } from "lucide-react";
 import { z } from "zod";
 import { useTransition } from "react";
 import { joinBetaWaitlist } from "./actions/joinBetaWaitlist";
+import PulsatingButton from "../ui/pulsating-button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 // Define the Zod schema for email validation
 const emailSchema = z.object({
@@ -69,7 +72,7 @@ export const WaitlistCard = () => {
   };
 
   return (
-    <Card className="w-full max-w-xs p-2 shadow-md">
+    <Card className="w-full max-w-xs bg-white p-2 shadow-md dark:bg-black">
       <CardHeader className="pb-2">
         <CardTitle>Join the Beta!</CardTitle>
         <CardDescription>
@@ -84,32 +87,30 @@ export const WaitlistCard = () => {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex w-full flex-col gap-3">
-            <label htmlFor="email" className="sr-only">
+            <Label htmlFor="email" className="sr-only">
               Email Address
-            </label>
-            <input
+            </Label>
+            <Input
               type="email"
               id="email"
               name="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
               required
             />
             {error && (
               <p className="text-sm font-semibold text-red-500">{error}</p>
             )}
-            <Button
+            <PulsatingButton
               type="submit"
               disabled={status === "loading" || isPending}
-              className="flex items-center justify-center"
+              pulseColor="hsl(var(--accent))"
             >
               {status === "loading" || isPending
                 ? "Submitting..."
                 : "Join Waitlist"}
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            </PulsatingButton>
           </form>
         )}
       </CardFooter>
